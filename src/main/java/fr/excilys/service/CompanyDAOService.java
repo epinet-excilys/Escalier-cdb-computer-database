@@ -34,7 +34,7 @@ public final class CompanyDAOService {
 		return Optional.ofNullable(company);
 	}
 
-	public List<Company> getAllComput() {
+	public List<Company> getAllCompany() {
 		List<Company> listCompany = new ArrayList<>();
 		listCompany = companyDAO.findAll();
 		return listCompany;

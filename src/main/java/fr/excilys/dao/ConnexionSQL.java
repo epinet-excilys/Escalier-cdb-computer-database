@@ -7,8 +7,11 @@ import java.sql.DriverManager;
 import java.sql.SQLException;
 import java.util.Properties;
 
-//import org.slf4j.Logger;
-//import org.slf4j.LoggerFactory;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 
 
@@ -27,7 +30,7 @@ public class ConnexionSQL {
 	private static final String CONNECTION_LOG = "L'ouverture de connexion a echoué";
 	private static final String CLASS_NOT_FOUND_LOG = "La classe n'est pas trouver ";
 
-
+	public static Logger LOGGER = LoggerFactory.getLogger(ConnexionSQL.class);
 	
 	private ConnexionSQL() {
 		super();
@@ -66,11 +69,11 @@ public class ConnexionSQL {
 			return DriverManager.getConnection(url, user, password);
 
 		} catch (IOException e1) {
-//			LOGGER.error(IOE_LOG + e1.getMessage());
+			LOGGER.error(IOE_LOG + e1.getMessage());
 		} catch (SQLException e2) {
-//			LOGGER.error(CONNECTION_LOG + e2.getMessage());
+			LOGGER.error(CONNECTION_LOG + e2.getMessage());
 		} catch (ClassNotFoundException e3) {
-//			LOGGER.error(CLASS_NOT_FOUND_LOG + e3.getMessage());
+			LOGGER.error(CLASS_NOT_FOUND_LOG + e3.getMessage());
 		}
 
 		// TODO Hikari va permettre d'enlever le return null;

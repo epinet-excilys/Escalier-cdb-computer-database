@@ -19,7 +19,7 @@
 <body>
 	<header class="navbar navbar-inverse navbar-fixed-top">
 		<div class="container">
-			<a class="navbar-brand" href="dashboard.html"> Application -
+			<a class="navbar-brand" href="DashBoard"> Application -
 				Computer Database </a>
 		</div>
 	</header>
@@ -33,29 +33,33 @@
 						<fieldset>
 							<div class="form-group">
 								<label for="computerName">Computer name</label> <input
-									type="text" class="form-control" id="computerName"
-									placeholder="Computer name">
+									type="text" class="form-control" id="computerName" name="computerName"
+									placeholder="Computer name" required>
 							</div>
 							<div class="form-group">
 								<label for="introduced">Introduced date</label> <input
-									type="date" class="form-control" id="introduced"
-									placeholder="Introduced date">
+									type="date" class="form-control" id="introduced" name="introduced"
+									placeholder="Introduced date" min="1971-01-01">
 							</div>
 							<div class="form-group">
 								<label for="discontinued">Discontinued date</label> <input
-									type="date" class="form-control" id="discontinued"
-									placeholder="Discontinued date">
+									type="date" class="form-control" id="discontinued" name="discontinued"
+									placeholder="Discontinued date" min="1971-01-01">
 							</div>
 							<div class="form-group">
 								<label for="companyId">Company</label> <select
-									class="form-control" id="companyId">
+									class="form-control" id="companyId" name="companyId">
 									<option value="0">--</option>
+									<c:forEach items="${ companyDTOList }" var="company">
+										<option value="${ company.id }"><c:out
+												value="${ company.name }" /></option>
+									</c:forEach>
 								</select>
 							</div>
 						</fieldset>
 						<div class="actions pull-right">
 							<input type="submit" value="Add" class="btn btn-primary">
-							or <a href="dashboard.html" class="btn btn-default">Cancel</a>
+							or <a href="DashBoard" class="btn btn-default">Cancel</a>
 						</div>
 					</form>
 				</div>

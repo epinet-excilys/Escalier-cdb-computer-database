@@ -3,6 +3,7 @@ package fr.excilys.mapper;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 
+import fr.excilys.dto.CompanyDTO;
 import fr.excilys.model.Company;
 
 public final class CompanyMapper {
@@ -37,6 +38,11 @@ public final class CompanyMapper {
 		return company;
 		
 		
+	}
+
+	public static CompanyDTO fromCompanyToCompanyDTO(Company company) {
+		
+		return new CompanyDTO.Builder().setIdBuild(company.getId()).setNameBuild(company.getName()).build();
 	}
 	
 

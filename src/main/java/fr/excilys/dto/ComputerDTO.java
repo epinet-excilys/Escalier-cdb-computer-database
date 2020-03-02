@@ -1,5 +1,11 @@
 package fr.excilys.dto;
 
+import java.time.LocalDate;
+
+import fr.excilys.model.Company;
+import fr.excilys.model.Computer;
+import fr.excilys.model.Computer.Builder;
+
 public class ComputerDTO {
 
 	private int id;
@@ -14,6 +20,46 @@ public class ComputerDTO {
 		this.discontinuedDate = discoDateString;
 		this.company = companyDTO;
 	}
+	public ComputerDTO(Builder builder) {
+		// TODO Auto-generated constructor stub
+	}
+	public static class Builder {
+		private int idBuild;
+		private String nameBuild;
+		private LocalDate introducedDateBuild;
+		private LocalDate discontinuedDateBuild;
+		private Company companyBuild;
+
+		public Builder setIdBuild(int id) {
+			this.idBuild = id;
+			return this;
+		}
+
+		public Builder setNameBuild(String name) {
+			this.nameBuild = name;
+			return this;
+		}
+
+		public Builder setIntroducedDateBuild(LocalDate introduced) {
+			this.introducedDateBuild = introduced;
+			return this;
+		}
+
+		public Builder setDiscontinuedDateBuild(LocalDate dicontinued) {
+			this.discontinuedDateBuild = dicontinued;
+			return this;
+		}
+
+		public Builder setIdCompagnyBuild(Company company) {
+			this.companyBuild = company;
+			return this;
+		}
+
+		public ComputerDTO build() {
+			return new ComputerDTO(this);
+		}
+	}
+	
 
 	public int getId() {
 		return id;
@@ -47,9 +93,6 @@ public class ComputerDTO {
 		this.discontinuedDate = discoDateString;
 	}
 
-	public CompanyDTO getCompanyDTO() {
-		return company;
-	}
 
 	public void setCompanyDTO(CompanyDTO companyDTO) {
 		this.company = companyDTO;

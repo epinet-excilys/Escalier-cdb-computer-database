@@ -72,14 +72,13 @@ public final class ComputerMapper {
 		Company company = new Company.Builder().build();
 		company = CompanyDAO.getInstance().findByID(idComp).get();
 
-		Computer computer = new Computer.Builder().setIdBuild(id).setNameBuild(name)
-				.setIntroducedDateBuild(introDate).setDiscontinuedDateBuild(discoDate).setIdCompagnyBuild(company).build();
+		Computer computer = new Computer.Builder().setIdBuild(id).setNameBuild(name).setIntroducedDateBuild(introDate)
+				.setDiscontinuedDateBuild(discoDate).setIdCompagnyBuild(company).build();
 
 		return computer;
 	}
 
 	public LocalDate fromStringToLocalDate(String s) {
-
 		if ((s != null) && !s.isEmpty()) {
 			DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd");
 			LocalDate dateTime;
@@ -92,9 +91,8 @@ public final class ComputerMapper {
 	}
 
 	public ComputerDTO fromComputerToComputerDTO(Computer computer) {
-		CompanyDTO companyDTO = new CompanyDTO();
-		companyDTO.setId(computer.getCompany().getId());
-		companyDTO.setName(computer.getCompany().getName());
+		CompanyDTO companyDTO = new CompanyDTO.Builder().setIdBuild(computer.getCompany().getId())
+				.setNameBuild(computer.getCompany().getName()).build();
 
 		ComputerDTO computerDTO = new ComputerDTO(computer.getName(),
 				computer.getIntroducedDate() == null ? null : computer.getIntroducedDate().toString(),

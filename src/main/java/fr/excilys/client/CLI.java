@@ -217,7 +217,7 @@ public class CLI {
 	// Compan-----------------------------------------------------------------------------------
 
 	public void affiAllCompan() {
-		List<Company> list = CompanyDAOService.getInstance().getAllComput();
+		List<Company> list = CompanyDAOService.getInstance().getAllCompany();
 
 		for (Company c : list) {
 			afficher(c);
