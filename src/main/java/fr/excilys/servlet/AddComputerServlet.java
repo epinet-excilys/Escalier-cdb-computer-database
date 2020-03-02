@@ -45,23 +45,17 @@ public class AddComputerServlet extends HttpServlet {
 		ComputerDAOService computerService = ComputerDAOService.getInstance();
 		CompanyDAOService companyService = CompanyDAOService.getInstance();
 
-		String computerName = request.getParameter("computerName");
-		
+		String computerName = request.getParameter("computerName");		
 		LocalDate introducedDate = ComputerMapper.getInstance()
 				.fromStringToLocalDate(request.getParameter("introduced"));
 		LocalDate discontinuedDate = ComputerMapper.getInstance()
-				.fromStringToLocalDate(request.getParameter("discontinued"));
-		
+				.fromStringToLocalDate(request.getParameter("discontinued"));		
 		int companyId = Integer.parseInt(request.getParameter("companyId"));
 
-		
-		
 		Company company = (companyService.findByID((companyId))).isPresent()?(companyService.findByID((companyId))).get():new Company.Builder().build();
 
 		Computer computer = new Computer.Builder().setNameBuild(computerName).setIntroducedDateBuild(introducedDate)
 				.setDiscontinuedDateBuild(discontinuedDate).setIdCompagnyBuild(company).build();
-		
-		System.out.println(computer);
 		
 		if(Validator.getInstance().Validation(computer))computerService.add(computer);
 

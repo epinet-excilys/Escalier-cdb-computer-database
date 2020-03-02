@@ -26,6 +26,7 @@
 		<h2-version>1.4.195</h2-version>
 		<servlet-api-version>4.0.0-b06</servlet-api-version>
 		<jstl-version>1.2</jstl-version>
+		<HickariCP-version>2.6.1</HickariCP-version>
 	</properties>
 
 	<dependencies>
@@ -68,13 +69,19 @@
 		<dependency>
 			<groupId>javax.servlet</groupId>
 			<artifactId>javax.servlet-api</artifactId>
-			<version>${servlet-api-version}</version>		
+			<version>${servlet-api-version}</version>
 		</dependency>
 		<dependency>
 			<groupId>javax.servlet</groupId>
 			<artifactId>jstl</artifactId>
 			<version>${jstl-version}</version>
 		</dependency>
+		<dependency>
+			<groupId>com.zaxxer</groupId>
+			<artifactId>HikariCP</artifactId>
+			<version>${HickariCP-version}</version>
+		</dependency>
+
 	</dependencies>
 
 	<build>

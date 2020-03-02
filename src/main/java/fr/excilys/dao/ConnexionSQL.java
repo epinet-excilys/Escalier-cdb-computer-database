@@ -13,22 +13,19 @@ import org.slf4j.LoggerFactory;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-
+import com.zaxxer.hikari.HikariConfig;
+import com.zaxxer.hikari.HikariDataSource;
 
 public class ConnexionSQL {
 
 	private static volatile ConnexionSQL instance = null;
+	
+	private static HikariConfig config;
+	private static HikariDataSource ds;
 
-	private static Properties connectionProperties;
-	private static String url;
-	private static String user;
-	private static String password;
-	private static String driver;
-	private static final String CONFIGURATION_LOCATION = "database.properties";
+	private static final String CONFIGURATION_LOCATION = "/database.properties";
 
-	private static final String IOE_LOG = "Le chargement des proprieté";
 	private static final String CONNECTION_LOG = "L'ouverture de connexion a echoué";
-	private static final String CLASS_NOT_FOUND_LOG = "La classe n'est pas trouver ";
 
 	public static Logger LOGGER = LoggerFactory.getLogger(ConnexionSQL.class);
 	
@@ -53,36 +50,21 @@ public class ConnexionSQL {
 
 	public Connection getConn() {
 
-		connectionProperties = new Properties();
 
+		
+		config = new HikariConfig(CONFIGURATION_LOCATION);
+		ds = new HikariDataSource( config );
+		
+	
 		try {
-			connectionProperties
-					.load(Thread.currentThread().getContextClassLoader().getResourceAsStream(CONFIGURATION_LOCATION));
-
-			driver = connectionProperties.getProperty("driver");
-			url = connectionProperties.getProperty("url");
-			user = connectionProperties.getProperty("user");
-			password = connectionProperties.getProperty("password");
-
-			Class.forName(driver);
-
-			return DriverManager.getConnection(url, user, password);
-
-		} catch (IOException e1) {
-			LOGGER.error(IOE_LOG + e1.getMessage());
-		} catch (SQLException e2) {
-			LOGGER.error(CONNECTION_LOG + e2.getMessage());
-		} catch (ClassNotFoundException e3) {
-			LOGGER.error(CLASS_NOT_FOUND_LOG + e3.getMessage());
+			return ds.getConnection();
+		} catch (SQLException e) {
+			// TODO Auto-generated catch block
+			LOGGER.error(CONNECTION_LOG + e.getMessage());
 		}
+		return null;
 
-		// TODO Hikari va permettre d'enlever le return null;
-		{
-			System.exit(0);
 
-			return null;
-
-		}
 	}
 
 }
