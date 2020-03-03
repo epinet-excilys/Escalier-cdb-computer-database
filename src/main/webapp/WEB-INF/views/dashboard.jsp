@@ -92,7 +92,7 @@
 						<tr>
 							<td class="editMode"><input type="checkbox" name="cb"
 								class="cb" value="0"></td>
-							<td><a href="editComputer.jsp" onclick=""><c:out
+							<td><a href="editComputer?computerId=${computer.id}" onclick=""><c:out
 										value="${computer.name}"></c:out></a></td>
 							<td><c:out value="${computer.introducedDate}"></c:out></td>
 							<td><c:out value="${computer.discontinuedDate}"></c:out></td>

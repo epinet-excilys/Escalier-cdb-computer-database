@@ -42,7 +42,8 @@ public class CompanyDTO {
 	}
 	
 	
-	
+
+
 	public int getId() {
 		return id;
 	}
@@ -51,11 +52,19 @@ public class CompanyDTO {
 		return name;
 	}
 
+	public void setId(int id) {
+		this.id = id;
+	}
+
+	public void setName(String name) {
+		this.name = name;
+	}
 
 	@Override
 	public String toString() {
 		return "CompanyDTO [id=" + id + ", name=" + name + "]";
 	}
+
 	
 	
 

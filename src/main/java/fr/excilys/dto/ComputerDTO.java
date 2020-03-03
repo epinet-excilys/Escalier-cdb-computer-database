@@ -12,13 +12,13 @@ public class ComputerDTO {
 	private String name;
 	private String introducedDate;
 	private String discontinuedDate;
-	private CompanyDTO company;
+	private CompanyDTO companyDTO;
 
 	public ComputerDTO(String name, String introDateString, String discoDateString, CompanyDTO companyDTO) {
 		this.name = name;
 		this.introducedDate = introDateString;
 		this.discontinuedDate = discoDateString;
-		this.company = companyDTO;
+		this.companyDTO = companyDTO;
 	}
 	public ComputerDTO(Builder builder) {
 		// TODO Auto-generated constructor stub
@@ -77,7 +77,7 @@ public class ComputerDTO {
 		this.name = name;
 	}
 
-	public String getIntroducedDateString() {
+	public String getIntroducedDate() {
 		return introducedDate;
 	}
 
@@ -85,7 +85,7 @@ public class ComputerDTO {
 		this.introducedDate = introDateString;
 	}
 
-	public String getDiscontinuedDateString() {
+	public String getDiscontinuedDate() {
 		return discontinuedDate;
 	}
 
@@ -95,13 +95,13 @@ public class ComputerDTO {
 
 
 	public void setCompanyDTO(CompanyDTO companyDTO) {
-		this.company = companyDTO;
+		this.companyDTO = companyDTO;
 	}
 
 	@Override
 	public String toString() {
 		return "ComputerDTO [id=" + id + ", name=" + name + ", introducedDate=" + introducedDate + ", discontinuedDate="
-				+ discontinuedDate + ", company=" + company + "]";
+				+ discontinuedDate + ", company=" + companyDTO + "]";
 	}
 
 }

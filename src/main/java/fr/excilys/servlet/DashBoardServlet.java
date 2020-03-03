@@ -53,16 +53,12 @@ public class DashBoardServlet extends HttpServlet {
 
 		request.setAttribute("maxPage", maxPage);
 		request.setAttribute("pageIterator", pageIterator);
-
 		request.setAttribute("NbRowComputer", NbRowComputer);
 		request.setAttribute("computerList", computerList);
 		request.getRequestDispatcher(DASHBOARD).forward(request, response);
 	}
 
-	/**
-	 * @see HttpServlet#doPost(HttpServletRequest request, HttpServletResponse
-	 *      response)
-	 */
+
 	protected void doPost(HttpServletRequest request, HttpServletResponse response)
 			throws ServletException, IOException {
 		// TODO Auto-generated method stub
