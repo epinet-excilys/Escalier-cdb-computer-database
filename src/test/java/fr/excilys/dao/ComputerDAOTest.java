@@ -171,7 +171,9 @@ public class ComputerDAOTest {
 
 	@Test
 	public void testFindAllPaginateCorrectSize() {
-		assertTrue(ComputerDAO.getInstance().findAllPaginate(0, TAILLE_PAGE).size() == TAILLE_PAGE);
+		List<Computer> computers = new ArrayList<>();
+		computers = ComputerDAO.getInstance().findAllPaginate(0, TAILLE_PAGE);
+		assertTrue(computers.size() == TAILLE_PAGE);
 	}
 
 	@Test
