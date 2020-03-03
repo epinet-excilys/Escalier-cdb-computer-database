@@ -43,6 +43,7 @@ public class EditComputerServlet extends HttpServlet {
 
 		request.setAttribute("companysDTO", companyDTOList);
 		request.setAttribute("computerDTO", computerDTO);
+		
 		request.getRequestDispatcher(EDIT_COMPUTER).forward(request, response);
 	}
 
