@@ -22,7 +22,7 @@ import fr.excilys.validator.Validator;
 @WebServlet(name = "AddComputerServlet", urlPatterns = "/addComputer")
 public class AddComputerServlet extends HttpServlet {
 
-	private static final String ADDCOMPUTER = "/WEB-INF/views/addComputer.jsp";
+	private static final String ADD_COMPUTER = "/WEB-INF/views/addComputer.jsp";
 
 
 	protected void doGet(HttpServletRequest request, HttpServletResponse response)
@@ -37,7 +37,7 @@ public class AddComputerServlet extends HttpServlet {
 
 		request.setAttribute("companyDTOList", companyDTOList);
 
-		this.getServletContext().getRequestDispatcher(ADDCOMPUTER).forward(request, response);
+		this.getServletContext().getRequestDispatcher(ADD_COMPUTER).forward(request, response);
 	}
 
 	protected void doPost(HttpServletRequest request, HttpServletResponse response)

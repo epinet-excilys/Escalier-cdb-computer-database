@@ -22,7 +22,7 @@ public final class CompanyDAO {
 	private final String getAllStatement = "SELECT company.id, company.name FROM company";
 	private final String getNbRowsStatement = "SELECT COUNT(*) as \"Rows\" FROM company;";
 
-	private static ConnexionSQL connection = ConnexionSQL.getInstance();
+	
 	public static Logger LOGGER = LoggerFactory.getLogger(ConnexionSQL.class);
 
 	private final static String BDD_ACCESS_LOG = "Impossible d'acceder à la BDD niveau DAO";
@@ -44,7 +44,7 @@ public final class CompanyDAO {
 
 	public Optional<Company> findByID(int idSearch) {
 		Company company = new Company.Builder().build();
-		try (Connection connect = connection.getConn();
+		try (Connection connect = ConnexionSQL.getInstance().getConn();
 				PreparedStatement stmt = connect.prepareStatement(getStatement);) {
 			stmt.setInt(1, idSearch);
 			try (ResultSet result = stmt.executeQuery()) {
@@ -61,7 +61,7 @@ public final class CompanyDAO {
 	public List<Company> findAll() {
 		List<Company> listCompany = new ArrayList<>();
 		Company company = new Company.Builder().build();
-		try (Connection connect = connection.getConn();
+		try (Connection connect = ConnexionSQL.getInstance().getConn();
 				PreparedStatement stmt = connect.prepareStatement(getAllStatement);) {
 			try (ResultSet result = stmt.executeQuery()) {
 				while (result.next()) {
@@ -78,7 +78,7 @@ public final class CompanyDAO {
 
 	public int getNbRow() {
 		int nbRow = 0;
-		try (Connection connect = connection.getConn();
+		try (Connection connect = ConnexionSQL.getInstance().getConn();
 				PreparedStatement stmt = connect.prepareStatement(getNbRowsStatement);) {
 			
 			try (ResultSet result = stmt.executeQuery()) {

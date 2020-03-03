@@ -21,7 +21,7 @@ public class ConnexionSQL {
 	private static volatile ConnexionSQL instance = null;
 	
 	private static HikariConfig config;
-	private static HikariDataSource ds;
+	private static HikariDataSource datasource;
 
 	private static final String CONFIGURATION_LOCATION = "/database.properties";
 
@@ -48,18 +48,17 @@ public class ConnexionSQL {
 		return ConnexionSQL.instance;
 	}
 
-	public Connection getConn() {
+	public static Connection getConn() {
 
 
-		
 		config = new HikariConfig(CONFIGURATION_LOCATION);
-		ds = new HikariDataSource( config );
+		datasource = new HikariDataSource( config );
+
 		
 	
 		try {
-			return ds.getConnection();
+			return datasource.getConnection();
 		} catch (SQLException e) {
-			// TODO Auto-generated catch block
 			LOGGER.error(CONNECTION_LOG + e.getMessage());
 		}
 		return null;

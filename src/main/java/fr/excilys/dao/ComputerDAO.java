@@ -32,10 +32,8 @@ public final class ComputerDAO {
 
 	private static final String BDD_ACCESS_LOG = "Impossible de se connecter à la  BDD niveau DAO";
 	private static final String BDD_NULL_OBJECT_LOG = "Tentative de manipulation d'un objet null";
-
-	private static ConnexionSQL connection = ConnexionSQL.getInstance();
 	
-
+	public static Logger LOGGER = LoggerFactory.getLogger(ConnexionSQL.class);
 
 	private ComputerDAO() {
 		super();
@@ -58,7 +56,7 @@ public final class ComputerDAO {
 		int nbOfRowInsertedInDB = 0;
 
 		if (computer != null) {
-			try (Connection connect = connection.getConn();
+			try (Connection connect = ConnexionSQL.getInstance().getConn();
 					PreparedStatement stmt = connect.prepareStatement(createStatement);) {
 				stmt.setString(1, computer.getName());
 				stmt.setTimestamp(2,
@@ -74,9 +72,9 @@ public final class ComputerDAO {
 				nbOfRowInsertedInDB = stmt.executeUpdate();
 
 			} catch (SQLException e1) {
-//				LOGGER.error(BDD_ACCESS_LOG + e1.getMessage());
+				LOGGER.error(BDD_ACCESS_LOG + e1.getMessage());
 			} catch (NullPointerException e2) {
-//				LOGGER.error(BDD_NULL_OBJECT_LOG + e2.getMessage());
+				LOGGER.error(BDD_NULL_OBJECT_LOG + e2.getMessage());
 			}
 		}
 		return nbOfRowInsertedInDB;
@@ -85,13 +83,13 @@ public final class ComputerDAO {
 
 	public int delete(int idSuppression) {
 		int nbOfDeletedRowsinDB = 0;
-		try (Connection connect = connection.getConn();
+		try (Connection connect = ConnexionSQL.getInstance().getConn();
 				PreparedStatement stmt = connect.prepareStatement(deleteStatement);) {
 			stmt.setInt(1, idSuppression);
 			nbOfDeletedRowsinDB = stmt.executeUpdate();
 
 		} catch (SQLException e) {
-//			LOGGER.error(BDD_ACCESS_LOG);
+			LOGGER.error(BDD_ACCESS_LOG);
 		}
 		return nbOfDeletedRowsinDB;
 	}
@@ -100,7 +98,7 @@ public final class ComputerDAO {
 		int nbOfUpdatedRowsinDB = 0;
 
 		if (computer != null) {
-			try (Connection connect = connection.getConn();
+			try (Connection connect = ConnexionSQL.getInstance().getConn();
 					PreparedStatement stmt = connect.prepareStatement(updateStatement);) {
 
 				stmt.setInt(5, computer.getId());
@@ -113,9 +111,9 @@ public final class ComputerDAO {
 				nbOfUpdatedRowsinDB = stmt.executeUpdate();
 
 			} catch (SQLException e1) {
-//				LOGGER.error(BDD_ACCESS_LOG + e1.getMessage());
+				LOGGER.error(BDD_ACCESS_LOG + e1.getMessage());
 			} catch (NullPointerException e2) {
-//				LOGGER.error(BDD_NULL_OBJECT_LOG + e2.getMessage());
+				LOGGER.error(BDD_NULL_OBJECT_LOG + e2.getMessage());
 			}
 		}
 		return nbOfUpdatedRowsinDB;
@@ -124,7 +122,7 @@ public final class ComputerDAO {
 
 	public Optional<Computer> findByID(int idSearch) {
 		Optional<Computer> computer = Optional.empty();
-		try (Connection connect = connection.getConn();
+		try (Connection connect = ConnexionSQL.getInstance().getConn();
 				PreparedStatement stmt = connect.prepareStatement(getStatement);) {
 			stmt.setInt(1, idSearch);
 
@@ -136,7 +134,7 @@ public final class ComputerDAO {
 			}
 
 		} catch (SQLException e1) {
-//			LOGGER.error(BDD_ACCESS_LOG + e1.getMessage());
+			LOGGER.error(BDD_ACCESS_LOG + e1.getMessage());
 		}
 		return computer;
 	}
@@ -144,7 +142,7 @@ public final class ComputerDAO {
 	public List<Computer> findAll() {
 		List<Computer> computerList = new ArrayList<>();
 		Computer computer = new Computer.Builder().build();
-		try (Connection connect = connection.getConn();
+		try (Connection connect = ConnexionSQL.getInstance().getConn();
 				PreparedStatement stmt = connect.prepareStatement(getAllStatement);) {
 			try (ResultSet result = stmt.executeQuery();) {
 				while (result.next()) {
@@ -153,7 +151,7 @@ public final class ComputerDAO {
 				}
 			}
 		} catch (SQLException e) {
-//			LOGGER.error(BDD_ACCESS_LOG);
+			LOGGER.error(BDD_ACCESS_LOG);
 		}
 		return computerList;
 	}
@@ -161,7 +159,7 @@ public final class ComputerDAO {
 	public List<Computer> findAllPaginate(int ligneDebutOffSet, int taillePage) {
 		List<Computer> computerList = new ArrayList<>();
 		Computer computer = new Computer.Builder().build();
-		try (Connection connect = connection.getConn();
+		try (Connection connect = ConnexionSQL.getInstance().getConn();
 				PreparedStatement stmt = connect.prepareStatement(getAllPaginateStatement);) {
 			stmt.setInt(1, ligneDebutOffSet);
 			stmt.setInt(2, taillePage);
@@ -172,14 +170,14 @@ public final class ComputerDAO {
 				}
 			}
 		} catch (SQLException e) {
-//			LOGGER.error(BDD_ACCESS_LOG);
+			LOGGER.error(BDD_ACCESS_LOG);
 		}
 		return computerList;
 	}
 
 	public int getNbRow() {
 		int nbRow = -1;
-		try (Connection connect = connection.getConn();
+		try (Connection connect = ConnexionSQL.getInstance().getConn();
 				PreparedStatement stmt = connect.prepareStatement(getNbRowsStatement);) {
 			try (ResultSet result = stmt.executeQuery()) {
 				if (result.first()) {
@@ -187,7 +185,7 @@ public final class ComputerDAO {
 				}
 			}
 		} catch (SQLException e) {
-//			LOGGER.error(BDD_ACCESS_LOG);
+			LOGGER.error(BDD_ACCESS_LOG);
 		}
 		return nbRow;
 	}

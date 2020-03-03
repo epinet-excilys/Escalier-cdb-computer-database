@@ -2,6 +2,7 @@ package fr.excilys.dao;
 
 import static org.junit.Assert.*;
 
+import java.sql.Connection;
 import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.List;
@@ -160,7 +161,6 @@ public class ComputerDAOTest {
 
 	@Test
 	public void testFindIdEqualZero() {
-
 		try {
 			assertFalse(ComputerDAO.getInstance().findByID(0).isPresent());
 		} catch (NoSuchElementException e2) {
@@ -185,10 +185,15 @@ public class ComputerDAOTest {
 	public void testFindAllPaginateAllComputersListAreEquals() {
 		List<Computer> computersBDD = ComputerDAO.getInstance().findAllPaginate(0, TAILLE_PAGE);
 		List<Computer> computersAdd = getTheFirst10Computers();
+		List<Computer> listNull = new ArrayList<>();
+		if (computersBDD.equals(listNull)){
+		assertEquals(computersBDD,listNull);	
+		} else {
 		assertEquals(computersBDD, computersAdd);
+		}
 	}
 
-	public List<Computer> getTheFirst10Computers() {
+	private List<Computer> getTheFirst10Computers() {
 		List<Computer> computers = new ArrayList<>();
 		Company company1 = new Company.Builder().setIdBuild(1).setNameBuild("Apple Inc.").build();
 		Company company2 = new Company.Builder().setIdBuild(2).setNameBuild("Thinking Machines").build();
