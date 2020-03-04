@@ -25,8 +25,8 @@
 <body>
 	<header class="navbar navbar-inverse navbar-fixed-top">
 		<div class="container">
-			<a class="navbar-brand" href="DashBoard"> Application -
-				Computer Database </a>
+			<a class="navbar-brand" href="DashBoard"> Application - Computer
+				Database </a>
 		</div>
 	</header>
 
@@ -50,8 +50,7 @@
 				</div>
 				<div class="pull-right">
 					<a class="btn btn-success" id="addComputer" href="addComputer">Add
-						Computer</a> 
-						<a class="btn btn-default" id="editComputer" href="#"
+						Computer</a> <a class="btn btn-default" id="editComputer" href="#"
 						onclick="$.fn.toggleEditMode();">Edit</a>
 				</div>
 			</div>
@@ -75,16 +74,13 @@
 									class="fa fa-trash-o fa-lg"></i>
 							</a>
 						</span></th>
-						<th>Computer name</th>
+						<th><input type="checkbox" id="order" name="order" value ="checked" checked>Computer name</th>
 						<th>Introduced date</th>
-						<!-- Table header for Discontinued Date -->
 						<th>Discontinued date</th>
-						<!-- Table header for Company -->
 						<th>Company</th>
 
 					</tr>
 				</thead>
-				<!-- Browse attribute computers -->
 
 				<tbody id="results">
 					<c:out value="Alors peut être" />
@@ -92,8 +88,8 @@
 						<tr>
 							<td class="editMode"><input type="checkbox" name="cb"
 								class="cb" value="${computer.id }"></td>
-							<td><a href="editComputer?computerId=${computer.id}" onclick=""><c:out
-										value="${computer.name}"></c:out></a></td>
+							<td><a href="editComputer?computerId=${computer.id}"
+								onclick=""><c:out value="${computer.name}"></c:out></a></td>
 							<td><c:out value="${computer.introducedDate}"></c:out></td>
 							<td><c:out value="${computer.discontinuedDate}"></c:out></td>
 							<td><c:out value="${computer.company.name}"></c:out></td>

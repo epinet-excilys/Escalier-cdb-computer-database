@@ -222,6 +222,8 @@ public class ComputerDAOTest {
 		assertEquals(computersBDD, computersAdd);
 		}
 	}
+	
+	//TODO COMPLETER LES DERNIERES FONCTIONS DE TESTS
 
 	private List<Computer> getTheFirst10Computers() {
 		List<Computer> computers = new ArrayList<>();

@@ -65,10 +65,28 @@ public final class ComputerService {
 		return listComputer;
 
 	}
+	
+	public List<Computer> findAllPaginateSearchLike(String search, int ligneDebutOffSet, int taillePage) {
+		List<Computer> listComputer = new ArrayList<>();
+		listComputer = computerDAO.findAllPaginateSearchLike(search,ligneDebutOffSet, taillePage);
+		return listComputer;
+	}
+	
+	public List<Computer> findAllPaginateAlphabeticOrder(int ligneDebutOffSet, int taillePage) {
+		List<Computer> listComputer = new ArrayList<>();
+		listComputer = computerDAO.findAllPaginateAlphabeticOrder(ligneDebutOffSet, taillePage);
+		return listComputer;
+	}
 
 	public int getNbRows() {
 		int nbRow = -1;
 		nbRow = computerDAO.getNbRow();
+		return nbRow;
+	}
+	
+	public int getNbRowsSearch(String search) {
+		int nbRow = -1;
+		nbRow = computerDAO.getNbRowSearch(search);
 		return nbRow;
 	}
 

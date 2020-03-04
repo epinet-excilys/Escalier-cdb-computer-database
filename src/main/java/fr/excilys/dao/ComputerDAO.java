@@ -21,19 +21,26 @@ import fr.excilys.model.Computer;
 public final class ComputerDAO {
 
 	private static volatile ComputerDAO instance = null;
-	private final String createStatement = "INSERT INTO computer(name, introduced, discontinued, company_id) "
+	private static final String CREATE_STATEMENT = "INSERT INTO computer(name, introduced, discontinued, company_id) "
 			+ "VALUES(?, ?, ?, ?);";
-	private final String updateStatement = "UPDATE computer set name=?, introduced=? , discontinued=?, company_id=? where id=?;";
-	private final String deleteStatement = "DELETE from computer where id=?;";
-	private final String getStatement = "SELECT computer.id, computer.name, computer.introduced, computer.discontinued, computer.company_id, company.name"
+	private static final String UPDATE_STATEMENT = "UPDATE computer set name=?, introduced=? , discontinued=?, company_id=? where id=?;";
+	private static final String DELETE_STATEMENT = "DELETE from computer where id=?;";
+	private static final String GET_STATEMENT = "SELECT computer.id, computer.name, computer.introduced, computer.discontinued, computer.company_id, company.name"
 			+ " FROM computer  LEFT JOIN company ON company_id = company.id WHERE computer.id = ?;";
-	private final String getAllStatement = "SELECT computer.id, computer.name, computer.introduced, computer.discontinued, computer.company_id, company.name FROM computer LEFT JOIN company ON company_id = company.id ;";
-	private final String getAllPaginateStatement = "SELECT computer.id, computer.name, computer.introduced, computer.discontinued, computer.company_id, company.name FROM computer LEFT JOIN company ON company_id = company.id LIMIT ?, ?;";
-	private final String getNbRowsStatement = "SELECT COUNT(*) as \"Rows\" FROM computer;";
-
+	private static final String GET_ALL_STATEMENT = "SELECT computer.id, computer.name, computer.introduced, computer.discontinued, computer.company_id, company.name "
+			+ "FROM computer LEFT JOIN company ON company_id = company.id ;";
+	private static final String GET_ALL_PAGINATE_STATEMENT = "SELECT computer.id, computer.name, computer.introduced, computer.discontinued, computer.company_id, company.name "
+			+ "FROM computer LEFT JOIN company ON company_id = company.id LIMIT ?, ?;";
+	private static final String GET_ALL_PAGINATE_ORDER_LIKE_NAME_STATEMENT = "SELECT computer.id, computer.name, computer.introduced , computer.discontinued , company_id, company.name "
+			+ "FROM computer LEFT JOIN company ON company_id = company.id WHERE computer.name LIKE ? LIMIT ?,?;";
+	private static final String GET_ALL_PAGINATE_ORDER_BY_NAME_STATEMENT = "SELECT computer.id, computer.name, computer.introduced , computer.discontinued , company_id, company.name "
+			+ "FROM computer LEFT JOIN company ON company_id = company.id ORDER BY computer.name LIMIT ?,?;";
+	private static final String GET_NB_ROW_STATEMENT = "SELECT COUNT(*) as \"Rows\" FROM computer;";
+	private static final String GET_NB_ROW_LIKE_STATEMENT = "SELECT COUNT(*) as \"Rows\" FROM computer WHERE computer.name LIKE ?;";
+	
 	private static final String BDD_ACCESS_LOG = "Impossible de se connecter à la  BDD niveau DAO";
 	private static final String BDD_NULL_OBJECT_LOG = "Tentative de manipulation d'un objet null";
-	
+
 	public static Logger LOGGER = LoggerFactory.getLogger(ConnexionSQL.class);
 
 	private ComputerDAO() {
@@ -56,10 +63,10 @@ public final class ComputerDAO {
 	public int create(Computer computer) {
 		int nbOfRowInsertedInDB = 0;
 
-		if(computer != null) {
+		if (computer != null) {
 			if (!computer.getName().isEmpty()) {
 				try (Connection connect = ConnexionSQL.getInstance().getConn();
-						PreparedStatement stmt = connect.prepareStatement(createStatement);) {
+						PreparedStatement stmt = connect.prepareStatement(CREATE_STATEMENT);) {
 					stmt.setString(1, computer.getName());
 					stmt.setTimestamp(2,
 							computer.getIntroducedDate() != null
@@ -69,10 +76,10 @@ public final class ComputerDAO {
 							computer.getDiscontinuedDate() != null
 									? Timestamp.valueOf(computer.getDiscontinuedDate().atTime(LocalTime.MIDNIGHT))
 									: null);
-					if(computer.getCompany()!= null ) {
-						stmt.setInt(4,computer.getCompany().getId());
+					if (computer.getCompany() != null) {
+						stmt.setInt(4, computer.getCompany().getId());
 					} else {
-						stmt.setNull(4,java.sql.Types.BIGINT);
+						stmt.setNull(4, java.sql.Types.BIGINT);
 					}
 
 					nbOfRowInsertedInDB = stmt.executeUpdate();
@@ -83,7 +90,7 @@ public final class ComputerDAO {
 					LOGGER.error(BDD_NULL_OBJECT_LOG + e2.getMessage());
 				}
 			}
-			
+
 		}
 		return nbOfRowInsertedInDB;
 
@@ -92,7 +99,7 @@ public final class ComputerDAO {
 	public int delete(int idSuppression) {
 		int nbOfDeletedRowsinDB = 0;
 		try (Connection connect = ConnexionSQL.getInstance().getConn();
-				PreparedStatement stmt = connect.prepareStatement(deleteStatement);) {
+				PreparedStatement stmt = connect.prepareStatement(DELETE_STATEMENT);) {
 			stmt.setInt(1, idSuppression);
 			nbOfDeletedRowsinDB = stmt.executeUpdate();
 
@@ -102,23 +109,27 @@ public final class ComputerDAO {
 		return nbOfDeletedRowsinDB;
 	}
 
-	public int update(Computer computer){
+	public int update(Computer computer) {
 		int nbOfUpdatedRowsinDB = 0;
 
 		if (computer != null) {
 			try (Connection connect = ConnexionSQL.getInstance().getConn();
-					PreparedStatement stmt = connect.prepareStatement(updateStatement);) {
+					PreparedStatement stmt = connect.prepareStatement(UPDATE_STATEMENT);) {
 
 				stmt.setInt(5, computer.getId());
 				stmt.setString(1, computer.getName());
-				stmt.setTimestamp(2,  computer.getIntroducedDate()!=null?
-						Timestamp.valueOf(computer.getIntroducedDate().atTime(LocalTime.MIDNIGHT)):null);
-				stmt.setTimestamp(3, computer.getDiscontinuedDate()!=null?
-						Timestamp.valueOf(computer.getDiscontinuedDate().atTime(LocalTime.MIDNIGHT)):null);
-				if(computer.getCompany()!= null) {
-					stmt.setInt(4,computer.getCompany().getId());
+				stmt.setTimestamp(2,
+						computer.getIntroducedDate() != null
+								? Timestamp.valueOf(computer.getIntroducedDate().atTime(LocalTime.MIDNIGHT))
+								: null);
+				stmt.setTimestamp(3,
+						computer.getDiscontinuedDate() != null
+								? Timestamp.valueOf(computer.getDiscontinuedDate().atTime(LocalTime.MIDNIGHT))
+								: null);
+				if (computer.getCompany() != null) {
+					stmt.setInt(4, computer.getCompany().getId());
 				} else {
-					stmt.setNull(4,java.sql.Types.BIGINT);
+					stmt.setNull(4, java.sql.Types.BIGINT);
 				}
 				nbOfUpdatedRowsinDB = stmt.executeUpdate();
 			} catch (SQLException e1) {
@@ -134,7 +145,7 @@ public final class ComputerDAO {
 	public Optional<Computer> findByID(int idSearch) {
 		Optional<Computer> computer = Optional.empty();
 		try (Connection connect = ConnexionSQL.getInstance().getConn();
-				PreparedStatement stmt = connect.prepareStatement(getStatement);) {
+				PreparedStatement stmt = connect.prepareStatement(GET_STATEMENT);) {
 			stmt.setInt(1, idSearch);
 
 			try (ResultSet result = stmt.executeQuery()) {
@@ -154,7 +165,7 @@ public final class ComputerDAO {
 		List<Computer> computerList = new ArrayList<>();
 		Computer computer = new Computer.Builder().build();
 		try (Connection connect = ConnexionSQL.getInstance().getConn();
-				PreparedStatement stmt = connect.prepareStatement(getAllStatement);) {
+				PreparedStatement stmt = connect.prepareStatement(GET_ALL_STATEMENT);) {
 			try (ResultSet result = stmt.executeQuery();) {
 				while (result.next()) {
 					computer = ComputerMapper.getInstance().getComputerFromResultSet(result).get();
@@ -171,7 +182,46 @@ public final class ComputerDAO {
 		List<Computer> computerList = new ArrayList<>();
 		Computer computer = new Computer.Builder().build();
 		try (Connection connect = ConnexionSQL.getInstance().getConn();
-				PreparedStatement stmt = connect.prepareStatement(getAllPaginateStatement);) {
+				PreparedStatement stmt = connect.prepareStatement(GET_ALL_PAGINATE_STATEMENT);) {
+			stmt.setInt(1, ligneDebutOffSet);
+			stmt.setInt(2, taillePage);
+			try (ResultSet result = stmt.executeQuery()) {
+				while (result.next()) {
+					computer = ComputerMapper.getInstance().getComputerFromResultSet(result).get();
+					computerList.add(computer);
+				}
+			}
+		} catch (SQLException e) {
+			LOGGER.error(BDD_ACCESS_LOG);
+		}
+		return computerList;
+	}
+	
+	public List<Computer> findAllPaginateSearchLike(String search, int ligneDebutOffSet, int taillePage) {
+		List<Computer> computerList = new ArrayList<>();
+		Computer computer = new Computer.Builder().build();
+		try (Connection connect = ConnexionSQL.getInstance().getConn();
+				PreparedStatement stmt = connect.prepareStatement(GET_ALL_PAGINATE_ORDER_LIKE_NAME_STATEMENT);) {
+			stmt.setString(1, "%" + search + "%");
+			stmt.setInt(2, ligneDebutOffSet);
+			stmt.setInt(3, taillePage);
+			try (ResultSet result = stmt.executeQuery()) {
+				while (result.next()) {
+					computer = ComputerMapper.getInstance().getComputerFromResultSet(result).get();
+					computerList.add(computer);
+				}
+			}
+		} catch (SQLException e) {
+			LOGGER.error(BDD_ACCESS_LOG);
+		}
+		return computerList;
+	}
+	
+	public List<Computer> findAllPaginateAlphabeticOrder(int ligneDebutOffSet, int taillePage) {
+		List<Computer> computerList = new ArrayList<>();
+		Computer computer = new Computer.Builder().build();
+		try (Connection connect = ConnexionSQL.getInstance().getConn();
+				PreparedStatement stmt = connect.prepareStatement(GET_ALL_PAGINATE_ORDER_BY_NAME_STATEMENT);) {
 			stmt.setInt(1, ligneDebutOffSet);
 			stmt.setInt(2, taillePage);
 			try (ResultSet result = stmt.executeQuery()) {
@@ -189,10 +239,27 @@ public final class ComputerDAO {
 	public int getNbRow() {
 		int nbRow = -1;
 		try (Connection connect = ConnexionSQL.getInstance().getConn();
-				PreparedStatement stmt = connect.prepareStatement(getNbRowsStatement);) {
+				PreparedStatement stmt = connect.prepareStatement(GET_NB_ROW_STATEMENT);) {
 			try (ResultSet result = stmt.executeQuery()) {
 				if (result.first()) {
 					nbRow = result.getInt("Rows");
+				}
+			}
+		} catch (SQLException e) {
+			LOGGER.error(BDD_ACCESS_LOG);
+		}
+		return nbRow;
+	}
+	
+	public int getNbRowSearch(String search) {
+		int nbRow = -1;
+		try (Connection connect = ConnexionSQL.getInstance().getConn();
+				PreparedStatement stmt = connect.prepareStatement(GET_NB_ROW_LIKE_STATEMENT);) {
+			stmt.setString(1, "%" + search + "%");
+			try (ResultSet result = stmt.executeQuery()) {
+				if (result.first()) {
+					nbRow = result.getInt("Rows");
+					System.err.println("TO ERR IS HUMAN ----------------------" + nbRow);
 				}
 			}
 		} catch (SQLException e) {

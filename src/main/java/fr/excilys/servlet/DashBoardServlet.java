@@ -25,6 +25,8 @@ public class DashBoardServlet extends HttpServlet {
 	private int pageSize = 20;
 	private double maxPage = 0.00;
 	private int NbRowComputer = 0;
+	private String searchTerm;
+	
 	
 	private static final String DASHBOARD = "/WEB-INF/views/dashboard.jsp";
 
@@ -42,18 +44,31 @@ public class DashBoardServlet extends HttpServlet {
 		}
 		if (request.getParameter("pageIterator") != null) {
 			pageIterator = Integer.parseInt(request.getParameter("pageIterator"));
-			computerList = ComputerService.getInstance().getAllPaginateComput(pageIterator * pageSize, pageSize);
-		} else {
-			pageIterator = 0;
-			computerList = ComputerService.getInstance().getAllPaginateComput(0, 20);
 		}
-
+		
+		request.setAttribute("maxPage", maxPage);
+		request.setAttribute("NbRowComputer", NbRowComputer);
+	
+		if( (request.getParameter("search") != null) && !request.getParameter("search").isBlank() ) {
+			searchTerm = request.getParameter("search");
+			NbRowComputer = ComputerService.getInstance().getNbRowsSearch(searchTerm);
+			computerList = ComputerService.getInstance().findAllPaginateSearchLike(searchTerm, pageIterator * pageSize, pageSize);
+			request.setAttribute("search", searchTerm);
+			request.setAttribute("NbRowComputer", NbRowComputer);
+		} else {
+			computerList = ComputerService.getInstance().getAllPaginateComput(pageIterator * pageSize, pageSize);
+		}
+	
+		if(request.getParameter("order") != null) {
+			computerList = ComputerService.getInstance().findAllPaginateAlphabeticOrder(pageIterator * pageSize, pageSize);
+			request.setAttribute("order", "checked");
+		}
+		
 		computerList.stream().forEach(
 				computer -> computerDTOList.add(ComputerMapper.getInstance().fromComputerToComputerDTO(computer)));
 
-		request.setAttribute("maxPage", maxPage);
+
 		request.setAttribute("pageIterator", pageIterator);
-		request.setAttribute("NbRowComputer", NbRowComputer);
 		request.setAttribute("computerList", computerList);
 		request.getRequestDispatcher(DASHBOARD).forward(request, response);
 	}
@@ -76,7 +91,7 @@ public class DashBoardServlet extends HttpServlet {
 		doGet(request, response);
 	}
 	
-	public static <String> List<String> convertArrayToList(String array[]) 
+	private <String> List<String> convertArrayToList(String array[]) 
     { 
         return Arrays 
             .stream(array) 
