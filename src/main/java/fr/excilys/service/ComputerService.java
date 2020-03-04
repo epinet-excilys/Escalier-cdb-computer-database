@@ -28,7 +28,6 @@ public final class ComputerService {
 	}
 
 	public int update(Computer computer) {
-		System.err.println("AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAComputer = " + computer);
 		int nbOfRowUpdatedInDB = 0;
 		nbOfRowUpdatedInDB = computerDAO.update(computer);
 		return nbOfRowUpdatedInDB;

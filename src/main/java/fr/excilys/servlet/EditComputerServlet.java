@@ -73,11 +73,9 @@ public class EditComputerServlet extends HttpServlet {
 		Computer computer = new Computer.Builder().setIdBuild(computerId).setNameBuild(computerName).setIntroducedDateBuild(introducedDate)
 				.setDiscontinuedDateBuild(discontinuedDate).setIdCompagnyBuild(company).build();
 		
-		int a = computerService.update(computer);
-		System.err.println("AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA = " + a);
-		System.err.println("AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAID = " + computerId);
+		
 		if(Validator.getInstance().Validation(computer)) {
-			
+			computerService.update(computer);
 		}
 		doGet(request, response);
 	}
