@@ -52,6 +52,21 @@ public class ComputerDAOTest {
 		}
 
 	}
+	
+	@Test
+	public void testAddComputerIntendedUseNullComp() {
+		Company company = new Company.Builder().setIdBuild(1).build();
+		Computer computer = new Computer.Builder().setNameBuild("Nom")
+				.setIntroducedDateBuild(LocalDate.now().minusYears(5))
+				.setDiscontinuedDateBuild(LocalDate.now().minusYears(1)).build();
+
+		try {
+			assertTrue(ComputerDAO.getInstance().create(computer) == INTENDED_USE_RETURN_VALUE);
+		} catch (NoSuchElementException e1) {
+			fail("Ajout n'a pas marcher à la BDD est impossible" + e1.getMessage());
+		}
+
+	}
 
 	@Test
 	public void testAddComputerNull() {
@@ -70,6 +85,20 @@ public class ComputerDAOTest {
 		Computer computer = new Computer.Builder().setIdBuild(1).setNameBuild("MacBook Pro 15.4 inch")
 				.setIntroducedDateBuild(LocalDate.now().minusYears(5))
 				.setDiscontinuedDateBuild(LocalDate.now().minusYears(1)).setIdCompagnyBuild(company).build();
+
+		try {
+			assertTrue(ComputerDAO.getInstance().update(computer) == INTENDED_USE_RETURN_VALUE);
+		} catch (NoSuchElementException e1) {
+			fail("Ajout n'a pas marcher à la BDD est impossible" + e1.getMessage());
+		}
+
+	}
+	
+	@Test
+	public void testModifComputerIntendedUseCompanyNull() {
+		Computer computer = new Computer.Builder().setIdBuild(1).setNameBuild("MacBook Pro 15.4 inch")
+				.setIntroducedDateBuild(LocalDate.now().minusYears(5))
+				.setDiscontinuedDateBuild(LocalDate.now().minusYears(1)).build();
 
 		try {
 			assertTrue(ComputerDAO.getInstance().update(computer) == INTENDED_USE_RETURN_VALUE);

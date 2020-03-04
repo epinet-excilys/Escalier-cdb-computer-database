@@ -68,7 +68,7 @@ public class EditComputerServlet extends HttpServlet {
 				.fromStringToLocalDate(request.getParameter("discontinued"));		
 		int companyId = Integer.parseInt(request.getParameter("companyId"));
 
-		Company company = (companyService.findByID((companyId))).isPresent()?(companyService.findByID((companyId))).get():new Company.Builder().build();
+		Company company = (companyId != 0 ?(companyService.findByID((companyId))).get():(null));
 
 		Computer computer = new Computer.Builder().setIdBuild(computerId).setNameBuild(computerName).setIntroducedDateBuild(introducedDate)
 				.setDiscontinuedDateBuild(discontinuedDate).setIdCompagnyBuild(company).build();

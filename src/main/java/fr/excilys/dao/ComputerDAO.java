@@ -15,6 +15,7 @@ import org.slf4j.LoggerFactory;
 
 import fr.excilys.exception.Logging;
 import fr.excilys.mapper.ComputerMapper;
+import fr.excilys.model.Company;
 import fr.excilys.model.Computer;
 
 public final class ComputerDAO {
@@ -68,7 +69,7 @@ public final class ComputerDAO {
 							computer.getDiscontinuedDate() != null
 									? Timestamp.valueOf(computer.getDiscontinuedDate().atTime(LocalTime.MIDNIGHT))
 									: null);
-					if(computer.getCompany()!=null) {
+					if(computer.getCompany()!= null ) {
 						stmt.setInt(4,computer.getCompany().getId());
 					} else {
 						stmt.setNull(4,java.sql.Types.BIGINT);
@@ -114,7 +115,7 @@ public final class ComputerDAO {
 						Timestamp.valueOf(computer.getIntroducedDate().atTime(LocalTime.MIDNIGHT)):null);
 				stmt.setTimestamp(3, computer.getDiscontinuedDate()!=null?
 						Timestamp.valueOf(computer.getDiscontinuedDate().atTime(LocalTime.MIDNIGHT)):null);
-				if(computer.getCompany()!=null) {
+				if(computer.getCompany()!= null) {
 					stmt.setInt(4,computer.getCompany().getId());
 				} else {
 					stmt.setNull(4,java.sql.Types.BIGINT);

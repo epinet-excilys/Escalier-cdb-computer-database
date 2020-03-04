@@ -51,15 +51,17 @@ public class AddComputerServlet extends HttpServlet {
 		LocalDate discontinuedDate = ComputerMapper.getInstance()
 				.fromStringToLocalDate(request.getParameter("discontinued"));		
 		int companyId = Integer.parseInt(request.getParameter("companyId"));
+		
+		System.err.println("|||||||||||||||||||||||||||||||||||||||||||||||-|||||- = "  + companyId);
 
-		Company company = (companyService.findByID((companyId))).isPresent()?(companyService.findByID((companyId))).get():new Company.Builder().build();
+		Company company = (companyId != 0 ?(companyService.findByID((companyId))).get():(null));
 
 		Computer computer = new Computer.Builder().setNameBuild(computerName).setIntroducedDateBuild(introducedDate)
 				.setDiscontinuedDateBuild(discontinuedDate).setIdCompagnyBuild(company).build();
 		
-		if(Validator.getInstance().Validation(computer))computerService.add(computer);
-
-
+		if(Validator.getInstance().Validation(computer)) {
+			System.err.println("lllllllllllllllllllllllllllllllllllllllllllllllllll = "  + computerService.add(computer));
+		}
 		doGet(request, response);
 	}
 

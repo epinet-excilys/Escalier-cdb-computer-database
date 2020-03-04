@@ -8,6 +8,8 @@ import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;
 
+import fr.excilys.model.Computer;
+
 public class ValidatorTest {
 	private static LocalDate localDate = LocalDate.now().minusYears(2);
 	private LocalDate localDate2 = LocalDate.now().minusYears(1);
@@ -62,6 +64,18 @@ public class ValidatorTest {
 	@Test
 	public void testisDateOKWrongUseOldIntroducedDateAndNull() {
 		assertFalse(Validator.isDateOk(localDateOld, localDateNull));
+	}
+	
+	@Test
+	public void testNameisOKIntendedUse() {
+		Computer computer = new Computer.Builder().setNameBuild("test").build();
+		assertTrue(Validator.isNameOk(computer));
+	}
+	
+	@Test
+	public void testNameisOKWrongUseBlank() {
+		Computer computer = new Computer.Builder().setNameBuild("").build();
+		assertFalse(Validator.isNameOk(computer));
 	}
 	
 
