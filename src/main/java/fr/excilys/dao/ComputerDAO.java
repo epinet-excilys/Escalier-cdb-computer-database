@@ -67,7 +67,11 @@ public final class ComputerDAO {
 						computer.getDiscontinuedDate() != null
 								? Timestamp.valueOf(computer.getDiscontinuedDate().atTime(LocalTime.MIDNIGHT))
 								: null);
-				stmt.setInt(4, computer.getCompany().getId());
+				if(computer.getCompany()!=null) {
+					stmt.setInt(4,computer.getCompany().getId());
+				} else {
+					stmt.setNull(4,java.sql.Types.BIGINT);
+				}
 
 				nbOfRowInsertedInDB = stmt.executeUpdate();
 
@@ -102,14 +106,17 @@ public final class ComputerDAO {
 					PreparedStatement stmt = connect.prepareStatement(updateStatement);) {
 
 				stmt.setInt(5, computer.getId());
-
 				stmt.setString(1, computer.getName());
-				stmt.setTimestamp(2, Timestamp.valueOf(computer.getIntroducedDate().atTime(LocalTime.MIDNIGHT)));
-				stmt.setTimestamp(3, Timestamp.valueOf(computer.getDiscontinuedDate().atTime(LocalTime.MIDNIGHT)));
-				stmt.setInt(4, computer.getCompany().getId());
-
+				stmt.setTimestamp(2,  computer.getIntroducedDate()!=null?
+						Timestamp.valueOf(computer.getIntroducedDate().atTime(LocalTime.MIDNIGHT)):null);
+				stmt.setTimestamp(3, computer.getDiscontinuedDate()!=null?
+						Timestamp.valueOf(computer.getDiscontinuedDate().atTime(LocalTime.MIDNIGHT)):null);
+				if(computer.getCompany()!=null) {
+					stmt.setInt(4,computer.getCompany().getId());
+				} else {
+					stmt.setNull(4,java.sql.Types.BIGINT);
+				}
 				nbOfUpdatedRowsinDB = stmt.executeUpdate();
-
 			} catch (SQLException e1) {
 				LOGGER.error(BDD_ACCESS_LOG + e1.getMessage());
 			} catch (NullPointerException e2) {

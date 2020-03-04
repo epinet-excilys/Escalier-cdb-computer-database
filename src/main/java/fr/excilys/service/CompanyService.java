@@ -8,24 +8,24 @@ import fr.excilys.dao.CompanyDAO;
 import fr.excilys.dao.ComputerDAO;
 import fr.excilys.model.Company;
 
-public final class CompanyDAOService {
+public final class CompanyService {
 
 	private CompanyDAO companyDAO = CompanyDAO.getInstance();
-	private static volatile CompanyDAOService instance = null;
+	private static volatile CompanyService instance = null;
 
-	private CompanyDAOService() {
+	private CompanyService() {
 		super();
 	}
 
-	public final static CompanyDAOService getInstance() {
-		if (CompanyDAOService.instance == null) {
-			synchronized (CompanyDAOService.class) {
-				if (CompanyDAOService.instance == null) {
-					CompanyDAOService.instance = new CompanyDAOService();
+	public final static CompanyService getInstance() {
+		if (CompanyService.instance == null) {
+			synchronized (CompanyService.class) {
+				if (CompanyService.instance == null) {
+					CompanyService.instance = new CompanyService();
 				}
 			}
 		}
-		return CompanyDAOService.instance;
+		return CompanyService.instance;
 	}
 
 	public Optional<Company> findByID(int ID) {

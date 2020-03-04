@@ -15,8 +15,8 @@ import fr.excilys.mapper.CompanyMapper;
 import fr.excilys.mapper.ComputerMapper;
 import fr.excilys.model.Company;
 import fr.excilys.model.Computer;
-import fr.excilys.service.CompanyDAOService;
-import fr.excilys.service.ComputerDAOService;
+import fr.excilys.service.CompanyService;
+import fr.excilys.service.ComputerService;
 import fr.excilys.validator.Validator;
 
 @WebServlet(name = "AddComputerServlet", urlPatterns = "/addComputer")
@@ -27,7 +27,7 @@ public class AddComputerServlet extends HttpServlet {
 
 	protected void doGet(HttpServletRequest request, HttpServletResponse response)
 			throws ServletException, IOException {
-		CompanyDAOService companyService = CompanyDAOService.getInstance();
+		CompanyService companyService = CompanyService.getInstance();
 
 		List<Company> companyList = companyService.getAllCompany();
 
@@ -42,8 +42,8 @@ public class AddComputerServlet extends HttpServlet {
 
 	protected void doPost(HttpServletRequest request, HttpServletResponse response)
 			throws ServletException, IOException {
-		ComputerDAOService computerService = ComputerDAOService.getInstance();
-		CompanyDAOService companyService = CompanyDAOService.getInstance();
+		ComputerService computerService = ComputerService.getInstance();
+		CompanyService companyService = CompanyService.getInstance();
 
 		String computerName = request.getParameter("computerName");		
 		LocalDate introducedDate = ComputerMapper.getInstance()

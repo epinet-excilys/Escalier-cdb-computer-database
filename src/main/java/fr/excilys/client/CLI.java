@@ -8,8 +8,8 @@ import fr.excilys.dao.ComputerDAO;
 import fr.excilys.mapper.ComputerMapper;
 import fr.excilys.model.Company;
 import fr.excilys.model.Computer;
-import fr.excilys.service.CompanyDAOService;
-import fr.excilys.service.ComputerDAOService;;
+import fr.excilys.service.CompanyService;
+import fr.excilys.service.ComputerService;;
 
 public class CLI {
 
@@ -83,7 +83,7 @@ public class CLI {
 
 		afficher("Vous allez saisir les valeurs champs par champs");
 
-		int i = (ComputerDAOService.getInstance().getNbRows() + 1);
+		int i = (ComputerService.getInstance().getNbRows() + 1);
 
 		String passage_1 = "" + i + "";
 
@@ -116,7 +116,7 @@ public class CLI {
 		int commandeId = scannerIdComput("afficher");
 
 		if (commandeId != -1) {
-			Optional<Computer> comp = ComputerDAOService.getInstance().findByID(commandeId);
+			Optional<Computer> comp = ComputerService.getInstance().findByID(commandeId);
 			if (comp.isPresent()) {
 
 				tabRep[0] = String.valueOf(comp.get().getId());
@@ -160,10 +160,10 @@ public class CLI {
 
 		if (commandeId != -1) {
 
-			Computer comp = ComputerDAOService.getInstance().findByID(commandeId).get();
+			Computer comp = ComputerService.getInstance().findByID(commandeId).get();
 			afficher(comp);
 
-			ComputerDAOService.getInstance().delete(comp);
+			ComputerService.getInstance().delete(comp);
 		} else {
 			afficher("Pas de Correspondance en Base");
 		}
@@ -175,7 +175,7 @@ public class CLI {
 		int commandeId = scannerIdComput("afficher");
 
 		if (commandeId != -1) {
-			Optional<Computer> comp = ComputerDAOService.getInstance().findByID(commandeId);
+			Optional<Computer> comp = ComputerService.getInstance().findByID(commandeId);
 			if (comp.isPresent()) {
 				afficher(comp);
 			} else {
@@ -187,7 +187,7 @@ public class CLI {
 	}
 
 	public void affiAllComput() {
-		List<Computer> list = ComputerDAOService.getInstance().getAllComput();
+		List<Computer> list = ComputerService.getInstance().getAllComput();
 
 		for (Computer c : list) {
 			afficher(c);
@@ -196,11 +196,11 @@ public class CLI {
 	}
 
 	public void affiAllPaginateComput() {
-		int nbTotalRows = ComputerDAOService.getInstance().getNbRows();
+		int nbTotalRows = ComputerService.getInstance().getNbRows();
 		int currentRow = 0;
 
 		do {
-			List<Computer> list = ComputerDAOService.getInstance().getAllPaginateComput(currentRow, TAILLE_PAGE);
+			List<Computer> list = ComputerService.getInstance().getAllPaginateComput(currentRow, TAILLE_PAGE);
 			for (Computer c : list) {
 				afficher(c);
 			}
@@ -217,7 +217,7 @@ public class CLI {
 	// Compan-----------------------------------------------------------------------------------
 
 	public void affiAllCompan() {
-		List<Company> list = CompanyDAOService.getInstance().getAllCompany();
+		List<Company> list = CompanyService.getInstance().getAllCompany();
 
 		for (Company c : list) {
 			afficher(c);
@@ -264,7 +264,7 @@ public class CLI {
 
 	// TODO Modifier
 	public int scannerIdComput(String personnalisation) {
-		int valMaxId = ComputerDAOService.getInstance().getNbRows();
+		int valMaxId = ComputerService.getInstance().getNbRows();
 		int repEnInt = -1;
 		String rep = "";
 		if (valMaxId != -1) {
@@ -290,7 +290,7 @@ public class CLI {
 
 	// TODO MODFIER
 	public int scannerIdCompan(String personnalisation) {
-		int valMaxId = CompanyDAOService.getInstance().getNbRows();
+		int valMaxId = CompanyService.getInstance().getNbRows();
 		int repEnInt = -1;
 		String rep = "";
 		if (valMaxId != -1) {

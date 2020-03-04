@@ -13,26 +13,23 @@ import javax.servlet.http.HttpServletResponse;
 import fr.excilys.dto.ComputerDTO;
 import fr.excilys.mapper.ComputerMapper;
 import fr.excilys.model.Computer;
-import fr.excilys.service.ComputerDAOService;
+import fr.excilys.service.ComputerService;
 
 
 @WebServlet(name = "DashBoardServlet", urlPatterns = "/DashBoard")
 public class DashBoardServlet extends HttpServlet {
 	private int pageIterator = 0;
 	private int pageSize = 20;
-	private int maxPage = 0;
+	private double maxPage = 0.00;
 	private int NbRowComputer = 0;
 	
 	private static final String DASHBOARD = "/WEB-INF/views/dashboard.jsp";
 
 	protected void doGet(HttpServletRequest request, HttpServletResponse response)
 			throws ServletException, IOException {
-		NbRowComputer = ComputerDAOService.getInstance().getNbRows();
+		NbRowComputer = ComputerService.getInstance().getNbRows();
 
-		maxPage = NbRowComputer / pageSize;
-		while (NbRowComputer % maxPage != 0) {
-			maxPage++;
-		}
+		maxPage = Math.ceil(NbRowComputer / pageSize);
 		
 		List<Computer> computerList = new ArrayList<>();
 		List<ComputerDTO> computerDTOList = new ArrayList<>();
@@ -42,10 +39,10 @@ public class DashBoardServlet extends HttpServlet {
 		}
 		if (request.getParameter("pageIterator") != null) {
 			pageIterator = Integer.parseInt(request.getParameter("pageIterator"));
-			computerList = ComputerDAOService.getInstance().getAllPaginateComput(pageIterator * pageSize, pageSize);
+			computerList = ComputerService.getInstance().getAllPaginateComput(pageIterator * pageSize, pageSize);
 		} else {
 			pageIterator = 0;
-			computerList = ComputerDAOService.getInstance().getAllPaginateComput(0, 20);
+			computerList = ComputerService.getInstance().getAllPaginateComput(0, 20);
 		}
 
 		computerList.stream().forEach(

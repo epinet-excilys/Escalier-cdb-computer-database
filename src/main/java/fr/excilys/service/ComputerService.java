@@ -7,33 +7,30 @@ import java.util.Optional;
 import fr.excilys.dao.ComputerDAO;
 import fr.excilys.model.Computer;
 
-public final class ComputerDAOService {
+public final class ComputerService {
 
 	private ComputerDAO computerDAO = ComputerDAO.getInstance();
-	private static volatile ComputerDAOService instance = null;
+	private static volatile ComputerService instance = null;
 
-	private ComputerDAOService() {
+	private ComputerService() {
 		super();
 	}
 
-	public final static ComputerDAOService getInstance() {
-		if (ComputerDAOService.instance == null) {
-			synchronized (ComputerDAOService.class) {
-				if (ComputerDAOService.instance == null) {
-					ComputerDAOService.instance = new ComputerDAOService();
+	public final static ComputerService getInstance() {
+		if (ComputerService.instance == null) {
+			synchronized (ComputerService.class) {
+				if (ComputerService.instance == null) {
+					ComputerService.instance = new ComputerService();
 				}
 			}
 		}
-		return ComputerDAOService.instance;
+		return ComputerService.instance;
 	}
 
 	public int update(Computer computer) {
-		Computer computerToUpdate = new Computer.Builder().build();
+		System.err.println("AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAComputer = " + computer);
 		int nbOfRowUpdatedInDB = 0;
-		computerToUpdate = computerDAO.findByID(computer.getId()).get();
-		if (computerToUpdate != null) {
-			computerDAO.update(computer);
-		}
+		nbOfRowUpdatedInDB = computerDAO.update(computer);
 		return nbOfRowUpdatedInDB;
 	}
 

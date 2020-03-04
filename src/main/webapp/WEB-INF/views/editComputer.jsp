@@ -43,7 +43,7 @@
 							<div class="form-group">
 								<label for="computerName">Computer name</label> <input
 									type="text" class="form-control" id="computerName"
-									name="computerName" value="${computerDTO.name}">
+									name="computerNameArenvoyer" value="${computerDTO.name}" required>
 							</div>
 							<div class="form-group">
 								<label for="introduced">Introduced date</label>
@@ -76,7 +76,7 @@
 							</div>
 						</fieldset>
 						<div class="actions pull-right">
-							<input type="submit" value="Edit" class="btn btn-primary">
+							<input type="submit" value="Edit" class="btn btn-primary" href="DashBoard">
 							or <a href="DashBoard" class="btn btn-default">Cancel</a>
 						</div>
 					</form>

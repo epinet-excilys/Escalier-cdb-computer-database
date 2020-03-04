@@ -91,9 +91,10 @@ public final class ComputerMapper {
 	}
 
 	public ComputerDTO fromComputerToComputerDTO(Computer computer) {
-		CompanyDTO companyDTO = new CompanyDTO.Builder().build();
-		companyDTO.setId((computer.getCompany().getId() == 0 ? 0 : computer.getCompany().getId()));
-		companyDTO.setName((computer.getCompany().getName() == null ? null : computer.getCompany().getName()));
+		CompanyDTO companyDTO = new CompanyDTO.Builder()
+				.setIdBuild((computer.getCompany().getId() == 0 ? 0 : computer.getCompany().getId()))
+				.setNameBuild((computer.getCompany().getName() == null ? null : computer.getCompany().getName()))
+				.build();
 
 		ComputerDTO computerDTO = new ComputerDTO(computer.getName(),
 				computer.getIntroducedDate() == null ? null : computer.getIntroducedDate().toString(),
