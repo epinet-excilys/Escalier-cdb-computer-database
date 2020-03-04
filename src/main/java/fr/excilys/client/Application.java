@@ -1,5 +1,6 @@
 package fr.excilys.client;
 
+
 public class Application {
 	
 	

@@ -55,10 +55,9 @@ public class ComputerDAOTest {
 
 	@Test
 	public void testAddComputerNull() {
-		Computer computer = new Computer.Builder().build();
-
+		Computer computer = null;
 		try {
-			assertTrue(ComputerDAO.getInstance().create(computer) == WRONG_USE_RETURN_VALUE);
+			assertTrue( ComputerDAO.getInstance().create(computer) == WRONG_USE_RETURN_VALUE);
 		} catch (NoSuchElementException e1) {
 			fail("Ajout n'a pas marcher à la BDD est impossible" + e1.getMessage());
 		}

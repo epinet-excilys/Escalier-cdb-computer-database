@@ -27,16 +27,15 @@ public class Validator {
 	}
 	
 	public boolean Validation(Computer computer) {
-		return  (!computer.getName().isEmpty())
-//				&& isDateOk(computer.getIntroducedDate(),computer.getDiscontinuedDate())
+		return  isNameOk(computer)&&isDateOk(computer.getIntroducedDate(),computer.getDiscontinuedDate())
 				;
 		
 	}
 	
 
-	private boolean isDateOk (LocalDate introducedDate, LocalDate discontinuedDate) {
-		return (((introducedDate!=null)&&(discontinuedDate)!=null) 
-				&&(discontinuedDate.isAfter(LOCAL_DATE_MAX_BDD)&&(discontinuedDate.isAfter(LOCAL_DATE_MAX_BDD))) 
+	public static boolean isDateOk (LocalDate introducedDate, LocalDate discontinuedDate) {
+		return (
+				((introducedDate!=null)&&(discontinuedDate)!=null)&&(introducedDate.isAfter(LOCAL_DATE_MAX_BDD)&&(discontinuedDate.isAfter(LOCAL_DATE_MAX_BDD))) 
 				&&(discontinuedDate.isAfter(introducedDate)))
 				||( (discontinuedDate==null) && (introducedDate==null) )
 				
@@ -45,6 +44,10 @@ public class Validator {
 				||( (discontinuedDate==null) && ((introducedDate.isAfter(LOCAL_DATE_MAX_BDD))) );
 				
 		
+	}
+	
+	public static boolean isNameOk (Computer computer) {
+		return(!computer.getName().isEmpty())&&(!computer.getName().isBlank());
 	}
 	
 

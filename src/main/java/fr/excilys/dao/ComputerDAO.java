@@ -55,31 +55,34 @@ public final class ComputerDAO {
 	public int create(Computer computer) {
 		int nbOfRowInsertedInDB = 0;
 
-		if (computer != null) {
-			try (Connection connect = ConnexionSQL.getInstance().getConn();
-					PreparedStatement stmt = connect.prepareStatement(createStatement);) {
-				stmt.setString(1, computer.getName());
-				stmt.setTimestamp(2,
-						computer.getIntroducedDate() != null
-								? Timestamp.valueOf(computer.getIntroducedDate().atTime(LocalTime.MIDNIGHT))
-								: null);
-				stmt.setTimestamp(3,
-						computer.getDiscontinuedDate() != null
-								? Timestamp.valueOf(computer.getDiscontinuedDate().atTime(LocalTime.MIDNIGHT))
-								: null);
-				if(computer.getCompany()!=null) {
-					stmt.setInt(4,computer.getCompany().getId());
-				} else {
-					stmt.setNull(4,java.sql.Types.BIGINT);
+		if(computer != null) {
+			if (!computer.getName().isEmpty()) {
+				try (Connection connect = ConnexionSQL.getInstance().getConn();
+						PreparedStatement stmt = connect.prepareStatement(createStatement);) {
+					stmt.setString(1, computer.getName());
+					stmt.setTimestamp(2,
+							computer.getIntroducedDate() != null
+									? Timestamp.valueOf(computer.getIntroducedDate().atTime(LocalTime.MIDNIGHT))
+									: null);
+					stmt.setTimestamp(3,
+							computer.getDiscontinuedDate() != null
+									? Timestamp.valueOf(computer.getDiscontinuedDate().atTime(LocalTime.MIDNIGHT))
+									: null);
+					if(computer.getCompany()!=null) {
+						stmt.setInt(4,computer.getCompany().getId());
+					} else {
+						stmt.setNull(4,java.sql.Types.BIGINT);
+					}
+
+					nbOfRowInsertedInDB = stmt.executeUpdate();
+
+				} catch (SQLException e1) {
+					LOGGER.error(BDD_ACCESS_LOG + e1.getMessage());
+				} catch (NullPointerException e2) {
+					LOGGER.error(BDD_NULL_OBJECT_LOG + e2.getMessage());
 				}
-
-				nbOfRowInsertedInDB = stmt.executeUpdate();
-
-			} catch (SQLException e1) {
-				LOGGER.error(BDD_ACCESS_LOG + e1.getMessage());
-			} catch (NullPointerException e2) {
-				LOGGER.error(BDD_NULL_OBJECT_LOG + e2.getMessage());
 			}
+			
 		}
 		return nbOfRowInsertedInDB;
 
