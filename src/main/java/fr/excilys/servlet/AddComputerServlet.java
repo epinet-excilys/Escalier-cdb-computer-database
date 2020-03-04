@@ -51,8 +51,6 @@ public class AddComputerServlet extends HttpServlet {
 		LocalDate discontinuedDate = ComputerMapper.getInstance()
 				.fromStringToLocalDate(request.getParameter("discontinued"));		
 		int companyId = Integer.parseInt(request.getParameter("companyId"));
-		
-		System.err.println("|||||||||||||||||||||||||||||||||||||||||||||||-|||||- = "  + companyId);
 
 		Company company = (companyId != 0 ?(companyService.findByID((companyId))).get():(null));
 
@@ -60,7 +58,6 @@ public class AddComputerServlet extends HttpServlet {
 				.setDiscontinuedDateBuild(discontinuedDate).setIdCompagnyBuild(company).build();
 		
 		if(Validator.getInstance().Validation(computer)) {
-			System.err.println("lllllllllllllllllllllllllllllllllllllllllllllllllll = "  + computerService.add(computer));
 		}
 		doGet(request, response);
 	}

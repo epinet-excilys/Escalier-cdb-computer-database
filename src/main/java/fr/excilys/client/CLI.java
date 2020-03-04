@@ -163,7 +163,7 @@ public class CLI {
 			Computer comp = ComputerService.getInstance().findByID(commandeId).get();
 			afficher(comp);
 
-			ComputerService.getInstance().delete(comp);
+			ComputerService.getInstance().delete(comp.getId());
 		} else {
 			afficher("Pas de Correspondance en Base");
 		}

@@ -39,9 +39,9 @@ public final class ComputerService {
 		return nbOfRowAddedInDB;
 	}
 
-	public int delete(Computer computer) {
+	public int delete(int iD) {
 		int nbOfRowDeletedInDB = 0;
-		nbOfRowDeletedInDB = computerDAO.delete(computer.getId());
+		nbOfRowDeletedInDB = computerDAO.delete(iD);
 		return nbOfRowDeletedInDB;
 	}
 
