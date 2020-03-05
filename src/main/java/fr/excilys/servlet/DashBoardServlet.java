@@ -35,42 +35,6 @@ public class DashBoardServlet extends HttpServlet {
 			throws ServletException, IOException {
 		
 		NbRowComputer = ComputerService.getInstance().getNbRows();
-
-		
-//		List<Computer> computerList = new ArrayList<>();
-//		List<ComputerDTO> computerDTOList = new ArrayList<>();
-//
-//		if (request.getParameter("taillePage") != null) {
-//			pageSize = Integer.parseInt(request.getParameter("taillePage"));
-//		}
-//		if (request.getParameter("pageIterator") != null) {
-//			pageIterator = Integer.parseInt(request.getParameter("pageIterator"));
-//		}
-//		maxPage = Math.ceil(NbRowComputer / pageSize);
-//		
-//		request.setAttribute("maxPage", maxPage);
-//		request.setAttribute("NbRowComputer", NbRowComputer);
-//	
-//		if( (request.getParameter("search") != null) && !request.getParameter("search").isBlank() ) {
-//			searchTerm = request.getParameter("search");
-//			NbRowComputer = ComputerService.getInstance().getNbRowsSearch(searchTerm);
-//			computerList = ComputerService.getInstance().findAllPaginateSearchLike(searchTerm, pageIterator * pageSize, pageSize);
-//			request.setAttribute("search", searchTerm);
-//			request.setAttribute("NbRowComputer", NbRowComputer);
-//		} else {
-//			computerList = ComputerService.getInstance().getAllPaginateComput(pageIterator * pageSize, pageSize);
-//		}
-//	
-//		if(request.getParameter("order") != null) {
-//			computerList = ComputerService.getInstance().findAllPaginateAlphabeticOrder(pageIterator * pageSize, pageSize);
-//			request.setAttribute("order", "checked");
-//		}
-//		
-//		computerList.stream().forEach(
-//				computer -> computerDTOList.add(ComputerMapper.getInstance().fromComputerToComputerDTO(computer)));
-//
-//
-//		request.setAttribute("pageIterator", pageIterator);
 		Paginate pagination = new Paginate();
 		List<ComputerDTO> computerDTOList = pagination.paginate(request, response);
 		request.setAttribute("computerList", computerDTOList);

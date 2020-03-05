@@ -49,7 +49,6 @@ public class ConnexionSQL {
 
 		config = new HikariConfig(CONFIGURATION_LOCATION);
 		datasource = new HikariDataSource( config );
-
 		
 	
 		try {

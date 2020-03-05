@@ -26,10 +26,7 @@ public class Paginate {
 		getValues(request);
 		whichPaginateToCall(request, response);
 		mapComputerToComputerDTO();
-		request.setAttribute("NbRowComputer", NbRowComputer);
-		request.setAttribute("maxPage", maxPage);
-		request.setAttribute("NbRowComputer", NbRowComputer);
-		request.setAttribute("pageIterator", pageIterator);		
+		setValues(request);
 		return computerDTOListToReturn;
 
 	}
@@ -37,6 +34,7 @@ public class Paginate {
 	private void getValues(HttpServletRequest request) {
 		if (request.getParameter("taillePage") != null) {
 			this.pageSize = Integer.parseInt(request.getParameter("taillePage"));
+			System.err.println("QQQQQQQQQQQQQQQQQQQQQQQQQQQQQQQQ   = "+ pageSize);
 		}
 		if (request.getParameter("pageIterator") != null) {
 			this.pageIterator = Integer.parseInt(request.getParameter("pageIterator"));
@@ -46,11 +44,22 @@ public class Paginate {
 			this.searchTerm = request.getParameter("search");
 		}
 		
-		if (request.getParameter("orderName") != null)  {
+		if ((request.getParameter("orderName") != null)  && !(request.getParameter("orderName").isBlank()))  {
 			this.orderBy = request.getParameter("orderName");
 		}
 	}
 
+	private void setValues(HttpServletRequest request) {
+		
+		request.setAttribute("NbRowComputer", NbRowComputer);
+		request.setAttribute("maxPage", maxPage);
+		request.setAttribute("NbRowComputer", NbRowComputer);
+		request.setAttribute("pageIterator", pageIterator);
+		request.setAttribute("orderName",orderBy);
+		request.setAttribute("search", searchTerm);
+		request.setAttribute("taillePage", pageSize);
+	}
+	
 	private void mapComputerToComputerDTO() {
 		computerList.stream().forEach(computer -> computerDTOListToReturn
 				.add(ComputerMapper.getInstance().fromComputerToComputerDTO(computer)));
@@ -60,7 +69,7 @@ public class Paginate {
 		NbRowComputer = ComputerService.getInstance().getNbRows();
 		computerList = ComputerService.getInstance().findAllPaginateAlphabeticOrder(pageIterator * pageSize, pageSize);
 		maxPage = Math.ceil(NbRowComputer / pageSize);
-		request.setAttribute("orderName",orderBy);
+		searchTerm = "";
 	}
 
 	private void paginateSearchByTerm(HttpServletRequest request, HttpServletResponse response) {
@@ -68,13 +77,15 @@ public class Paginate {
 		NbRowComputer = ComputerService.getInstance().getNbRowsSearch(searchTerm);
 		computerList = ComputerService.getInstance().findAllPaginateSearchLike(searchTerm, pageIterator * pageSize, pageSize);
 		maxPage = Math.ceil(NbRowComputer / pageSize);
-		request.setAttribute("search", searchTerm);
+		orderBy = "";
 	}
 	
 	private void paginateUsual(HttpServletRequest request, HttpServletResponse response) {
 		NbRowComputer = ComputerService.getInstance().getNbRows();
 		computerList = ComputerService.getInstance().getAllPaginateComput(pageIterator * pageSize, pageSize);
 		maxPage = Math.ceil(NbRowComputer / pageSize);
+		orderBy = "";
+		searchTerm = "";
 	}
 
 	private void whichPaginateToCall(HttpServletRequest request, HttpServletResponse response) {
