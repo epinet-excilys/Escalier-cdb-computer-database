@@ -25,9 +25,7 @@ import fr.excilys.validator.Validator;
 @WebServlet(name = "EditComputerServlet", urlPatterns = "/editComputer")
 public class EditComputerServlet extends HttpServlet {
 	private static final long serialVersionUID = 1L;
-	
 	private static final String EDIT_COMPUTER = "/WEB-INF/views/editComputer.jsp";
-	private static final String SUCCESS_MSG = "The computer is updated successfully.";
 
 	protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
 	
@@ -41,9 +39,6 @@ public class EditComputerServlet extends HttpServlet {
 		List<CompanyDTO> companyDTOList = new ArrayList<>();
 		companyList.stream()
 				.forEach(company -> companyDTOList.add(CompanyMapper.getInstance().fromCompanyToCompanyDTO(company)));
-
-
-		
 		Computer computer = computerService.findByID(computerToEditID).get();
 		ComputerDTO computerDTO = ComputerMapper.getInstance()
 				.fromComputerToComputerDTO(computer);
@@ -67,13 +62,9 @@ public class EditComputerServlet extends HttpServlet {
 		LocalDate discontinuedDate = ComputerMapper.getInstance()
 				.fromStringToLocalDate(request.getParameter("discontinued"));		
 		int companyId = Integer.parseInt(request.getParameter("companyId"));
-
 		Company company = (companyId != 0 ?(companyService.findByID((companyId))).get():(null));
-
 		Computer computer = new Computer.Builder().setIdBuild(computerId).setNameBuild(computerName).setIntroducedDateBuild(introducedDate)
 				.setDiscontinuedDateBuild(discontinuedDate).setIdCompagnyBuild(company).build();
-		
-		
 		if(Validator.getInstance().Validation(computer)) {
 			computerService.update(computer);
 		}

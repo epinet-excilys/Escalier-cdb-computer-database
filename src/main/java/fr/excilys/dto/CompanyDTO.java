@@ -1,8 +1,5 @@
 package fr.excilys.dto;
 
-import fr.excilys.model.Company;
-import fr.excilys.model.Company.Builder;
-
 public class CompanyDTO {
 	
 
@@ -16,7 +13,7 @@ public class CompanyDTO {
 	}
 	
 	public CompanyDTO() {
-		// TODO Auto-generated constructor stub
+
 	}
 
 	public static class Builder {

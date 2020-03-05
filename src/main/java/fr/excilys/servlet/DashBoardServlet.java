@@ -13,28 +13,17 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
 import fr.excilys.dto.ComputerDTO;
-import fr.excilys.mapper.CompanyMapper;
-import fr.excilys.mapper.ComputerMapper;
-import fr.excilys.model.Computer;
 import fr.excilys.pagination.Paginate;
 import fr.excilys.service.ComputerService;
 
 
 @WebServlet(name = "DashBoardServlet", urlPatterns = "/DashBoard")
 public class DashBoardServlet extends HttpServlet {
-	private int pageIterator = 0;
-	private int pageSize = 20;
-	private double maxPage = 0.00;
-	private int NbRowComputer = 0;
-	private String searchTerm;
-	
-	
 	private static final String DASHBOARD = "/WEB-INF/views/dashboard.jsp";
 
 	protected void doGet(HttpServletRequest request, HttpServletResponse response)
 			throws ServletException, IOException {
 		
-		NbRowComputer = ComputerService.getInstance().getNbRows();
 		Paginate pagination = new Paginate();
 		List<ComputerDTO> computerDTOList = pagination.paginate(request, response);
 		request.setAttribute("computerList", computerDTOList);
@@ -44,6 +33,7 @@ public class DashBoardServlet extends HttpServlet {
 
 	protected void doPost(HttpServletRequest request, HttpServletResponse response)
 			throws ServletException, IOException {
+		int pageSize = 20;
 		if (request.getParameter("taillePage") != null) {
 			pageSize = Integer.parseInt(request.getParameter("taillePage"));
 		}

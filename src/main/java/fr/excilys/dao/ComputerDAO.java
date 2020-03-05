@@ -13,9 +13,7 @@ import java.util.Optional;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import fr.excilys.exception.Logging;
 import fr.excilys.mapper.ComputerMapper;
-import fr.excilys.model.Company;
 import fr.excilys.model.Computer;
 
 public final class ComputerDAO {

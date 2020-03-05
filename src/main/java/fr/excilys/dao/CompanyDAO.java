@@ -18,9 +18,9 @@ import fr.excilys.model.Company;
 public final class CompanyDAO {
 
 	private static volatile CompanyDAO instance = null;
-	private final String getStatement = "SELECT company.id, company.name FROM company where id=?";
-	private final String getAllStatement = "SELECT company.id, company.name FROM company";
-	private final String getNbRowsStatement = "SELECT COUNT(*) as \"Rows\" FROM company;";
+	private final String GET_STATEMENT = "SELECT company.id, company.name FROM company where id=?";
+	private final String GET_ALL_STATEMENT = "SELECT company.id, company.name FROM company";
+	private final String GET_NB_ROW_STATEMENT = "SELECT COUNT(*) as \"Rows\" FROM company;";
 
 	
 	public static Logger LOGGER = LoggerFactory.getLogger(ConnexionSQL.class);
@@ -45,7 +45,7 @@ public final class CompanyDAO {
 	public Optional<Company> findByID(int idSearch) {
 		Company company = new Company.Builder().build();
 		try (Connection connect = ConnexionSQL.getInstance().getConn();
-				PreparedStatement stmt = connect.prepareStatement(getStatement);) {
+				PreparedStatement stmt = connect.prepareStatement(GET_STATEMENT);) {
 			stmt.setInt(1, idSearch);
 			try (ResultSet result = stmt.executeQuery()) {
 				if (result.first()) {
@@ -62,7 +62,7 @@ public final class CompanyDAO {
 		List<Company> listCompany = new ArrayList<>();
 		Company company = new Company.Builder().build();
 		try (Connection connect = ConnexionSQL.getInstance().getConn();
-				PreparedStatement stmt = connect.prepareStatement(getAllStatement);) {
+				PreparedStatement stmt = connect.prepareStatement(GET_ALL_STATEMENT);) {
 			try (ResultSet result = stmt.executeQuery()) {
 				while (result.next()) {
 					company = CompanyMapper.getInstance().getCompanyFromResultSet(result);
@@ -79,7 +79,7 @@ public final class CompanyDAO {
 	public int getNbRow() {
 		int nbRow = 0;
 		try (Connection connect = ConnexionSQL.getInstance().getConn();
-				PreparedStatement stmt = connect.prepareStatement(getNbRowsStatement);) {
+				PreparedStatement stmt = connect.prepareStatement(GET_NB_ROW_STATEMENT);) {
 			
 			try (ResultSet result = stmt.executeQuery()) {
 

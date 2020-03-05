@@ -3,8 +3,6 @@ package fr.excilys.validator;
 import java.time.LocalDate;
 
 import fr.excilys.model.Computer;
-import fr.excilys.service.CompanyService;
-import fr.excilys.service.ComputerService;
 
 public class Validator {
 	

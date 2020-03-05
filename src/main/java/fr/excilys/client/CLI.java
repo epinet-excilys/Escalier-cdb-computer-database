@@ -262,7 +262,6 @@ public class CLI {
 
 	}
 
-	// TODO Modifier
 	public int scannerIdComput(String personnalisation) {
 		int valMaxId = ComputerService.getInstance().getNbRows();
 		int repEnInt = -1;
@@ -288,7 +287,6 @@ public class CLI {
 
 	}
 
-	// TODO MODFIER
 	public int scannerIdCompan(String personnalisation) {
 		int valMaxId = CompanyService.getInstance().getNbRows();
 		int repEnInt = -1;
