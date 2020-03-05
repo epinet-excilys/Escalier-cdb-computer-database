@@ -16,6 +16,7 @@ import fr.excilys.dto.ComputerDTO;
 import fr.excilys.mapper.CompanyMapper;
 import fr.excilys.mapper.ComputerMapper;
 import fr.excilys.model.Computer;
+import fr.excilys.pagination.Paginate;
 import fr.excilys.service.ComputerService;
 
 
@@ -32,44 +33,47 @@ public class DashBoardServlet extends HttpServlet {
 
 	protected void doGet(HttpServletRequest request, HttpServletResponse response)
 			throws ServletException, IOException {
+		
 		NbRowComputer = ComputerService.getInstance().getNbRows();
 
-		maxPage = Math.ceil(NbRowComputer / pageSize);
 		
-		List<Computer> computerList = new ArrayList<>();
-		List<ComputerDTO> computerDTOList = new ArrayList<>();
-
-		if (request.getParameter("taillePage") != null) {
-			pageSize = Integer.parseInt(request.getParameter("taillePage"));
-		}
-		if (request.getParameter("pageIterator") != null) {
-			pageIterator = Integer.parseInt(request.getParameter("pageIterator"));
-		}
-		
-		request.setAttribute("maxPage", maxPage);
-		request.setAttribute("NbRowComputer", NbRowComputer);
-	
-		if( (request.getParameter("search") != null) && !request.getParameter("search").isBlank() ) {
-			searchTerm = request.getParameter("search");
-			NbRowComputer = ComputerService.getInstance().getNbRowsSearch(searchTerm);
-			computerList = ComputerService.getInstance().findAllPaginateSearchLike(searchTerm, pageIterator * pageSize, pageSize);
-			request.setAttribute("search", searchTerm);
-			request.setAttribute("NbRowComputer", NbRowComputer);
-		} else {
-			computerList = ComputerService.getInstance().getAllPaginateComput(pageIterator * pageSize, pageSize);
-		}
-	
-		if(request.getParameter("order") != null) {
-			computerList = ComputerService.getInstance().findAllPaginateAlphabeticOrder(pageIterator * pageSize, pageSize);
-			request.setAttribute("order", "checked");
-		}
-		
-		computerList.stream().forEach(
-				computer -> computerDTOList.add(ComputerMapper.getInstance().fromComputerToComputerDTO(computer)));
-
-
-		request.setAttribute("pageIterator", pageIterator);
-		request.setAttribute("computerList", computerList);
+//		List<Computer> computerList = new ArrayList<>();
+//		List<ComputerDTO> computerDTOList = new ArrayList<>();
+//
+//		if (request.getParameter("taillePage") != null) {
+//			pageSize = Integer.parseInt(request.getParameter("taillePage"));
+//		}
+//		if (request.getParameter("pageIterator") != null) {
+//			pageIterator = Integer.parseInt(request.getParameter("pageIterator"));
+//		}
+//		maxPage = Math.ceil(NbRowComputer / pageSize);
+//		
+//		request.setAttribute("maxPage", maxPage);
+//		request.setAttribute("NbRowComputer", NbRowComputer);
+//	
+//		if( (request.getParameter("search") != null) && !request.getParameter("search").isBlank() ) {
+//			searchTerm = request.getParameter("search");
+//			NbRowComputer = ComputerService.getInstance().getNbRowsSearch(searchTerm);
+//			computerList = ComputerService.getInstance().findAllPaginateSearchLike(searchTerm, pageIterator * pageSize, pageSize);
+//			request.setAttribute("search", searchTerm);
+//			request.setAttribute("NbRowComputer", NbRowComputer);
+//		} else {
+//			computerList = ComputerService.getInstance().getAllPaginateComput(pageIterator * pageSize, pageSize);
+//		}
+//	
+//		if(request.getParameter("order") != null) {
+//			computerList = ComputerService.getInstance().findAllPaginateAlphabeticOrder(pageIterator * pageSize, pageSize);
+//			request.setAttribute("order", "checked");
+//		}
+//		
+//		computerList.stream().forEach(
+//				computer -> computerDTOList.add(ComputerMapper.getInstance().fromComputerToComputerDTO(computer)));
+//
+//
+//		request.setAttribute("pageIterator", pageIterator);
+		Paginate pagination = new Paginate();
+		List<ComputerDTO> computerDTOList = pagination.paginate(request, response);
+		request.setAttribute("computerList", computerDTOList);
 		request.getRequestDispatcher(DASHBOARD).forward(request, response);
 	}
 

@@ -97,6 +97,10 @@ public class ComputerDTO {
 	public void setCompanyDTO(CompanyDTO companyDTO) {
 		this.companyDTO = companyDTO;
 	}
+	
+	public CompanyDTO getCompanyDTO() {
+		return companyDTO;
+	}
 
 	@Override
 	public String toString() {

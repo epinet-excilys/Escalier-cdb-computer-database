@@ -74,7 +74,7 @@
 									class="fa fa-trash-o fa-lg"></i>
 							</a>
 						</span></th>
-						<th><input type="checkbox" id="order" name="order" value ="checked" checked>Computer name</th>
+						<th><input type="checkbox" id="orderName" name="orderName" value="OrderByName">Computer name</th>
 						<th>Introduced date</th>
 						<th>Discontinued date</th>
 						<th>Company</th>
@@ -92,7 +92,7 @@
 								onclick=""><c:out value="${computer.name}"></c:out></a></td>
 							<td><c:out value="${computer.introducedDate}"></c:out></td>
 							<td><c:out value="${computer.discontinuedDate}"></c:out></td>
-							<td><c:out value="${computer.company.name}"></c:out></td>
+							<td><c:out value="${computer.companyDTO.name}"></c:out></td>
 						</tr>
 					</c:forEach>
 				</tbody>
@@ -110,10 +110,8 @@
 						</a>
 					</c:if></li>
 				<c:if test="${pageIterator < maxPage}">
-					<c:forEach var="i" begin="1" end="3">
-						<li><a href="DashBoard?pageIterator=${pageIterator+i}"><c:out
-									value="${pageIterator+i}"></c:out></a></li>
-					</c:forEach>
+						<li><a href="DashBoard?pageIterator=${pageIterator}"><c:out
+									value="${pageIterator}"></c:out></a></li>
 				</c:if>
 				<li><c:if test="${pageIterator < maxPage}">
 						<a href="DashBoard?pageIterator=${pageIterator+1}"
