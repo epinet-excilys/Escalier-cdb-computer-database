@@ -104,14 +104,14 @@ public final class ComputerDAO {
 				PreparedStatement stmt = connect.prepareStatement(EnumSQLCommand.GET_STATEMENT.getMessage());
 				ResultSet result = setResultSetForFindByID(idSearch, stmt);) {
 			if (result.first()) {
-				OptionalComputer = ComputerMapper.getInstance().getComputerFromResultSet(result);
+				return OptionalComputer = ComputerMapper.getInstance().getComputerFromResultSet(result);
 			}
 			
 		}  catch (SQLException sqlException) {
 			LOGGER.error(EnumErrorSQL.BDD_ACCESS_LOG.getMessage() + sqlException.getMessage());
+			
 		}
-		
-		return OptionalComputer;
+		throw new DatabaseDAOException("FindById");
 	}
 
 	public List<Computer> findAll() {
@@ -126,10 +126,11 @@ public final class ComputerDAO {
 				computerList.add(computer);
 			}
 			
+			return computerList;
 		}  catch (SQLException sqlException) {
 			LOGGER.error(EnumErrorSQL.BDD_ACCESS_LOG.getMessage() + sqlException.getMessage());
+			throw new DatabaseDAOException("findAll");
 		}
-		return computerList;
 	}
 
 	public List<Computer> findAllPaginate(int ligneDebutOffSet, int taillePage) {
@@ -144,10 +145,13 @@ public final class ComputerDAO {
 				computer = ComputerMapper.getInstance().getComputerFromResultSet(result).get();
 				computerList.add(computer);
 			}
+			return computerList;
+			
 		}  catch (SQLException sqlException) {
 			LOGGER.error(EnumErrorSQL.BDD_ACCESS_LOG.getMessage() + sqlException.getMessage());
+			throw new DatabaseDAOException("FindAllPaginate");
 		}
-		return computerList;
+		
 	}
 
 	public List<Computer> findAllPaginateSearchLike(String search, int ligneDebutOffSet, int taillePage) {
@@ -167,7 +171,7 @@ public final class ComputerDAO {
 			return  computerList;
 		} catch (SQLException sqlException) {
 			LOGGER.error(EnumErrorSQL.BDD_ACCESS_LOG.getMessage() + sqlException.getMessage());
-			throw new DatabaseDAOException("FindAllPaginate");
+			throw new DatabaseDAOException("FindAllPaginateSearch");
 		}
 	}
 
@@ -187,7 +191,7 @@ public final class ComputerDAO {
 			return computerList;
 		} catch (SQLException sqlException) {
 			LOGGER.error(EnumErrorSQL.BDD_ACCESS_LOG.getMessage() + sqlException.getMessage());
-			throw new DatabaseDAOException("FindAllPaginate");
+			throw new DatabaseDAOException("FindAllPaginateAplhaOrder");
 		}
 	}
 
