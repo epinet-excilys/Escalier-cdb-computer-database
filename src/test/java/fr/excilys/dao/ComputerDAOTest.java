@@ -135,7 +135,6 @@ public class ComputerDAOTest {
 
 	@Test
 	public void testFindIdEqualZero() {
-
 		assertFalse(ComputerDAO.getInstance().findByID(0).isPresent());
 	}
 

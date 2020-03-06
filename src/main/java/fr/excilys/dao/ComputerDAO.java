@@ -104,14 +104,15 @@ public final class ComputerDAO {
 				PreparedStatement stmt = connect.prepareStatement(EnumSQLCommand.GET_STATEMENT.getMessage());
 				ResultSet result = setResultSetForFindByID(idSearch, stmt);) {
 			if (result.first()) {
-				return OptionalComputer = ComputerMapper.getInstance().getComputerFromResultSet(result);
+				 OptionalComputer = ComputerMapper.getInstance().getComputerFromResultSet(result);
 			}
 			
 		}  catch (SQLException sqlException) {
 			LOGGER.error(EnumErrorSQL.BDD_ACCESS_LOG.getMessage() + sqlException.getMessage());
-			
+			throw new DatabaseDAOException("FindById");
 		}
-		throw new DatabaseDAOException("FindById");
+		
+		return OptionalComputer;
 	}
 
 	public List<Computer> findAll() {
