@@ -27,22 +27,16 @@ public final class ComputerService {
 		return ComputerService.instance;
 	}
 
-	public int update(Computer computer) {
-		int nbOfRowUpdatedInDB = 0;
-		nbOfRowUpdatedInDB = computerDAO.update(computer);
-		return nbOfRowUpdatedInDB;
+	public void update(Computer computer) {
+		computerDAO.update(computer);
 	}
 
-	public int add(Computer computer) {
-		int nbOfRowAddedInDB = 0;
-		nbOfRowAddedInDB = computerDAO.create(computer);
-		return nbOfRowAddedInDB;
+	public void add(Computer computer) {
+		computerDAO.create(computer);
 	}
 
-	public int delete(int iD) {
-		int nbOfRowDeletedInDB = 0;
-		nbOfRowDeletedInDB = computerDAO.delete(iD);
-		return nbOfRowDeletedInDB;
+	public void delete(int iD) {
+		computerDAO.delete(iD);
 	}
 
 	public Optional<Computer> findByID(int ID) {
@@ -78,15 +72,11 @@ public final class ComputerService {
 	}
 
 	public int getNbRows() {
-		int nbRow = -1;
-		nbRow = computerDAO.getNbRow();
-		return nbRow;
+		return computerDAO.getNbRow();
 	}
 	
 	public int getNbRowsSearch(String search) {
-		int nbRow = -1;
-		nbRow = computerDAO.getNbRowSearch(search);
-		return nbRow;
+		return computerDAO.getNbRowSearch(search);
 	}
 
 }

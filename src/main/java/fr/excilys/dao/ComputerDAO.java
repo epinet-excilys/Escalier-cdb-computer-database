@@ -11,6 +11,9 @@ import java.util.List;
 import java.util.Optional;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+
+import fr.excilys.exception.DatabaseDAOException;
+import fr.excilys.exception.DatabaseManipulationException;
 import fr.excilys.exception.EnumErrorSQL;
 import fr.excilys.mapper.ComputerMapper;
 import fr.excilys.model.Computer;
@@ -22,7 +25,6 @@ public final class ComputerDAO {
 	public static Logger LOGGER = LoggerFactory.getLogger(ConnexionSQL.class);
 
 	private ComputerDAO() {
-		super();
 	}
 
 	public final static ComputerDAO getInstance() {
@@ -36,54 +38,67 @@ public final class ComputerDAO {
 	}
 
 	public int create(Computer computer) {
-		int nbOfRowInsertedInDB = 0;
 		if (computer != null) {
 			if (!computer.getName().isEmpty()) {
 				try (Connection connect = ConnexionSQL.getInstance().getConn();
 						PreparedStatement Statement = connect
 								.prepareStatement(EnumSQLCommand.CREATE_STATEMENT.getMessage());) {
 					setPreparedStatementCreate(Statement, computer);
-					nbOfRowInsertedInDB = Statement.executeUpdate();
+					
+					return Statement.executeUpdate();
+					
 				} catch (SQLException sqlException) {
 					LOGGER.error(EnumErrorSQL.BDD_ACCESS_LOG.getMessage() + sqlException.getMessage());
 				} catch (NullPointerException npException) {
 					LOGGER.error(EnumErrorSQL.BDD_NULL_OBJECT_LOG.getMessage() + npException.getMessage());
 				}
 			}
+			throw new DatabaseDAOException("Create");
 		}
-		return nbOfRowInsertedInDB;
+		throw new DatabaseDAOException("ComputerNull");
 	}
 
 	public int delete(int idSuppression) {
-		int nbOfDeletedRowsinDB = 0;
+		
 		try (Connection connect = ConnexionSQL.getInstance().getConn();
 				PreparedStatement stmt = connect.prepareStatement(EnumSQLCommand.DELETE_STATEMENT.getMessage());) {
 			stmt.setInt(1, idSuppression);
-			nbOfDeletedRowsinDB = stmt.executeUpdate();
+			
+			return stmt.executeUpdate();
+			
 		} catch (SQLException sqlException) {
 			LOGGER.error(EnumErrorSQL.BDD_ACCESS_LOG.getMessage() + sqlException.getMessage());
 		}
-		return nbOfDeletedRowsinDB;
+		throw new DatabaseDAOException("Create");
 	}
 
 	public int update(Computer computer) {
-		int nbOfUpdatedRowsinDB = 0;
-		if (computer != null) {
+		
+		if (!("").equals(computer.getName())) {
 			try (Connection connect = ConnexionSQL.getInstance().getConn();
 					PreparedStatement statement = connect
 							.prepareStatement(EnumSQLCommand.UPDATE_STATEMENT.getMessage());) {
 				setPreparedStatementUpdate(statement, computer);
-				nbOfUpdatedRowsinDB = statement.executeUpdate();
+				
+				if(statement.executeUpdate()==1){
+					return 1;
+				}else {
+					throw new DatabaseDAOException("Update");
+				}
+				
 			}  catch (SQLException sqlException) {
 				LOGGER.error(EnumErrorSQL.BDD_ACCESS_LOG.getMessage() + sqlException.getMessage());
+				throw new DatabaseDAOException("Update");
 			} catch (NullPointerException npException) {
 				LOGGER.error(EnumErrorSQL.BDD_NULL_OBJECT_LOG.getMessage() + npException.getMessage());
+				throw new DatabaseDAOException("Update");
 			}
 		}
-		return nbOfUpdatedRowsinDB;
+		throw new DatabaseDAOException("Update");
 	}
 
 	public Optional<Computer> findByID(int idSearch) {
+		
 		Optional<Computer> OptionalComputer = Optional.empty();
 		try (Connection connect = ConnexionSQL.getInstance().getConn();
 				PreparedStatement stmt = connect.prepareStatement(EnumSQLCommand.GET_STATEMENT.getMessage());
@@ -91,13 +106,16 @@ public final class ComputerDAO {
 			if (result.first()) {
 				OptionalComputer = ComputerMapper.getInstance().getComputerFromResultSet(result);
 			}
+			
 		}  catch (SQLException sqlException) {
 			LOGGER.error(EnumErrorSQL.BDD_ACCESS_LOG.getMessage() + sqlException.getMessage());
 		}
+		
 		return OptionalComputer;
 	}
 
 	public List<Computer> findAll() {
+		
 		List<Computer> computerList = new ArrayList<>();
 		Computer computer = new Computer.Builder().build();
 		try (Connection connect = ConnexionSQL.getInstance().getConn();
@@ -107,6 +125,7 @@ public final class ComputerDAO {
 				computer = ComputerMapper.getInstance().getComputerFromResultSet(result).get();
 				computerList.add(computer);
 			}
+			
 		}  catch (SQLException sqlException) {
 			LOGGER.error(EnumErrorSQL.BDD_ACCESS_LOG.getMessage() + sqlException.getMessage());
 		}
@@ -114,6 +133,7 @@ public final class ComputerDAO {
 	}
 
 	public List<Computer> findAllPaginate(int ligneDebutOffSet, int taillePage) {
+		
 		List<Computer> computerList = new ArrayList<>();
 		Computer computer = new Computer.Builder().build();
 		try (Connection connect = ConnexionSQL.getInstance().getConn();
@@ -131,6 +151,7 @@ public final class ComputerDAO {
 	}
 
 	public List<Computer> findAllPaginateSearchLike(String search, int ligneDebutOffSet, int taillePage) {
+		
 		List<Computer> computerList = new ArrayList<>();
 		Computer computer = new Computer.Builder().build();
 		try (Connection connect = ConnexionSQL.getInstance().getConn();
@@ -142,13 +163,16 @@ public final class ComputerDAO {
 				computer = ComputerMapper.getInstance().getComputerFromResultSet(result).get();
 				computerList.add(computer);
 			}
+			
+			return  computerList;
 		} catch (SQLException sqlException) {
 			LOGGER.error(EnumErrorSQL.BDD_ACCESS_LOG.getMessage() + sqlException.getMessage());
+			throw new DatabaseDAOException("FindAllPaginate");
 		}
-		return computerList;
 	}
 
 	public List<Computer> findAllPaginateAlphabeticOrder(int ligneDebutOffSet, int taillePage) {
+		
 		List<Computer> computerList = new ArrayList<>();
 		Computer computer = new Computer.Builder().build();
 		try (Connection connect = ConnexionSQL.getInstance().getConn();
@@ -159,42 +183,45 @@ public final class ComputerDAO {
 				computer = ComputerMapper.getInstance().getComputerFromResultSet(result).get();
 				computerList.add(computer);
 			}
+			
+			return computerList;
 		} catch (SQLException sqlException) {
 			LOGGER.error(EnumErrorSQL.BDD_ACCESS_LOG.getMessage() + sqlException.getMessage());
+			throw new DatabaseDAOException("FindAllPaginate");
 		}
-		return computerList;
 	}
 
 	public int getNbRow() {
-		int nbRow = -1;
 		try (Connection connect = ConnexionSQL.getInstance().getConn();
 				PreparedStatement stmt = connect.prepareStatement(EnumSQLCommand.GET_NB_ROW_STATEMENT.getMessage());) {
 			try (ResultSet result = stmt.executeQuery()) {
 				if (result.first()) {
-					nbRow = result.getInt("Rows");
+					
+					return result.getInt("Rows");
 				}
 			}
 		} catch (SQLException sqlException) {
 			LOGGER.error(EnumErrorSQL.BDD_ACCESS_LOG.getMessage() + sqlException.getMessage());
 		}
-		return nbRow;
+		throw new DatabaseDAOException("NbRows");
+
 	}
 
 	public int getNbRowSearch(String search) {
-		int nbRow = -1;
 		try (Connection connect = ConnexionSQL.getInstance().getConn();
 				PreparedStatement stmt = connect
 						.prepareStatement(EnumSQLCommand.GET_NB_ROW_LIKE_STATEMENT.getMessage());) {
 			stmt.setString(1, "%" + search + "%");
 			try (ResultSet result = stmt.executeQuery()) {
 				if (result.first()) {
-					nbRow = result.getInt("Rows");
+					
+					return result.getInt("Rows");
 				}
 			}
 		}  catch (SQLException sqlException) {
 			LOGGER.error(EnumErrorSQL.BDD_ACCESS_LOG.getMessage() + sqlException.getMessage());
 		}
-		return nbRow;
+		throw new DatabaseDAOException("NbRowsSearch");
 	}
 
 	private ResultSet setResultSetForFindByID(int idSearch, PreparedStatement stmt) throws SQLException {

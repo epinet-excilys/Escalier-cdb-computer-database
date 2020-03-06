@@ -1,9 +1,9 @@
 package fr.excilys.exception;
 
+@SuppressWarnings("serial")
 public class DatabaseManipulationException extends RuntimeException{
 	
 	public DatabaseManipulationException() {
-		super();
 	}
 	
 	public DatabaseManipulationException(String errorMessage) {
