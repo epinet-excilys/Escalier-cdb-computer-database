@@ -182,7 +182,7 @@ public class ComputerDAOTest {
 		try {
 			assertTrue(ComputerDAO.getInstance().findByID(1).get().equals(computer));
 		} catch (NoSuchElementException e1) {
-			fail("Ajout n'a pas marcher à la BDD est impossible" + e1.getMessage());
+			fail("Ajout n'a pas marcher " + e1.getMessage());
 		}
 
 	}

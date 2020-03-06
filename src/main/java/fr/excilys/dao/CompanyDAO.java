@@ -12,6 +12,7 @@ import org.slf4j.LoggerFactory;
 
 import java.sql.PreparedStatement;
 
+import fr.excilys.exception.EnumErrorSQL;
 import fr.excilys.mapper.CompanyMapper;
 import fr.excilys.model.Company;
 
@@ -24,8 +25,6 @@ public final class CompanyDAO {
 
 	
 	public static Logger LOGGER = LoggerFactory.getLogger(ConnexionSQL.class);
-
-	private final static String BDD_ACCESS_LOG = "Impossible d'acceder à la BDD niveau DAO";
 
 	private CompanyDAO() {
 		super();
@@ -53,7 +52,7 @@ public final class CompanyDAO {
 				}
 			}
 		} catch (SQLException e1) {
-			LOGGER.error(BDD_ACCESS_LOG + e1.getMessage());
+			LOGGER.error(EnumErrorSQL.BDD_ACCESS_LOG.getMessage() + e1.getMessage());
 		}
 		return Optional.ofNullable(company);
 	}
@@ -71,7 +70,7 @@ public final class CompanyDAO {
 				}
 			}
 		} catch (SQLException e1) {
-			LOGGER.error(BDD_ACCESS_LOG + e1.getMessage());
+			LOGGER.error(EnumErrorSQL.BDD_ACCESS_LOG.getMessage() + e1.getMessage());
 		}
 		return listCompany;
 	}
@@ -90,7 +89,7 @@ public final class CompanyDAO {
 			}
 
 		} catch (SQLException e1) {
-			LOGGER.error(BDD_ACCESS_LOG + e1.getMessage());
+			LOGGER.error(EnumErrorSQL.BDD_ACCESS_LOG.getMessage() + e1.getMessage());
 		}
 
 		return nbRow;

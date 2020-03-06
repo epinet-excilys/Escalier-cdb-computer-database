@@ -33,7 +33,6 @@ public class Paginate {
 	private void getValues(HttpServletRequest request) {
 		if (request.getParameter("taillePage") != null) {
 			this.pageSize = Integer.parseInt(request.getParameter("taillePage"));
-			System.err.println("QQQQQQQQQQQQQQQQQQQQQQQQQQQQQQQQ   = "+ pageSize);
 		}
 		if (request.getParameter("pageIterator") != null) {
 			this.pageIterator = Integer.parseInt(request.getParameter("pageIterator"));
