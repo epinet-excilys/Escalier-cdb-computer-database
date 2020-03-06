@@ -25,13 +25,6 @@ public class ComputerDAOTest {
 	private final int WRONG_USE_RETURN_VALUE = 0;
 	private final int TAILLE_PAGE = 10;
 
-	@Before
-	public void setUp() {
-	}
-
-	@After
-	public void tearDown() {
-	}
 
 	@Test
 	public void testgetNBRows() {
@@ -213,13 +206,15 @@ public class ComputerDAOTest {
 
 	@Test
 	public void testFindAllPaginateAllComputersListAreEquals() {
+		
 		List<Computer> computersBDD = ComputerDAO.getInstance().findAllPaginate(0, TAILLE_PAGE);
 		List<Computer> computersAdd = getTheFirst10Computers();
 		List<Computer> listNull = new ArrayList<>();
-		if (computersBDD.equals(listNull)){
-		assertEquals(computersBDD,listNull);	
+		
+		if (computersBDD.equals(listNull)) {
+			assertEquals(computersBDD,listNull);	
 		} else {
-		assertEquals(computersBDD, computersAdd);
+			assertEquals(computersBDD, computersAdd);
 		}
 	}
 	
@@ -262,7 +257,7 @@ public class ComputerDAOTest {
 		Computer computer10 = new Computer.Builder().setIdBuild(10).setNameBuild("Apple IIc Plus")
 				.setIntroducedDateBuild(null).setDiscontinuedDateBuild(null).setIdCompagnyBuild(companyNull).build();
 		computers.add(computer10);
+		
 		return computers;
 	}
-
 }

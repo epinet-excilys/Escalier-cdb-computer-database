@@ -9,10 +9,8 @@ import java.time.LocalTime;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
-
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-
 import fr.excilys.exception.EnumErrorSQL;
 import fr.excilys.mapper.ComputerMapper;
 import fr.excilys.model.Computer;
@@ -20,36 +18,17 @@ import fr.excilys.model.Computer;
 public final class ComputerDAO {
 
 	private static volatile ComputerDAO instance = null;
-	private static final String CREATE_STATEMENT = "INSERT INTO computer(name, introduced, discontinued, company_id) "
-			+ "VALUES(?, ?, ?, ?);";
-	private static final String UPDATE_STATEMENT = "UPDATE computer set name=?, introduced=? , discontinued=?, company_id=? where id=?;";
-	private static final String DELETE_STATEMENT = "DELETE from computer where id=?;";
-	private static final String GET_STATEMENT = "SELECT computer.id, computer.name, computer.introduced, computer.discontinued, computer.company_id, company.name"
-			+ " FROM computer  LEFT JOIN company ON company_id = company.id WHERE computer.id = ?;";
-	private static final String GET_ALL_STATEMENT = "SELECT computer.id, computer.name, computer.introduced, computer.discontinued, computer.company_id, company.name "
-			+ "FROM computer LEFT JOIN company ON company_id = company.id ;";
-	private static final String GET_ALL_PAGINATE_STATEMENT = "SELECT computer.id, computer.name, computer.introduced, computer.discontinued, computer.company_id, company.name "
-			+ "FROM computer LEFT JOIN company ON company_id = company.id LIMIT ?, ?;";
-	private static final String GET_ALL_PAGINATE_ORDER_LIKE_NAME_STATEMENT = "SELECT computer.id, computer.name, computer.introduced , computer.discontinued , company_id, company.name "
-			+ "FROM computer LEFT JOIN company ON company_id = company.id WHERE computer.name LIKE ? LIMIT ?,?;";
-	private static final String GET_ALL_PAGINATE_ORDER_BY_NAME_STATEMENT = "SELECT computer.id, computer.name, computer.introduced , computer.discontinued , company_id, company.name "
-			+ "FROM computer LEFT JOIN company ON company_id = company.id ORDER BY computer.name LIMIT ?,?;";
-	private static final String GET_NB_ROW_STATEMENT = "SELECT COUNT(*) as \"Rows\" FROM computer;";
-	private static final String GET_NB_ROW_LIKE_STATEMENT = "SELECT COUNT(*) as \"Rows\" FROM computer WHERE computer.name LIKE ?;";
 
 	public static Logger LOGGER = LoggerFactory.getLogger(ConnexionSQL.class);
 
 	private ComputerDAO() {
 		super();
-
 	}
 
 	public final static ComputerDAO getInstance() {
 		if (ComputerDAO.instance == null) {
-			synchronized (ComputerDAO.class) {
-				if (ComputerDAO.instance == null) {
-					ComputerDAO.instance = new ComputerDAO();
-				}
+			if (ComputerDAO.instance == null) {
+				ComputerDAO.instance = new ComputerDAO();
 			}
 		}
 
@@ -61,13 +40,14 @@ public final class ComputerDAO {
 		if (computer != null) {
 			if (!computer.getName().isEmpty()) {
 				try (Connection connect = ConnexionSQL.getInstance().getConn();
-						PreparedStatement Statement = connect.prepareStatement(CREATE_STATEMENT);) {
+						PreparedStatement Statement = connect
+								.prepareStatement(EnumSQLCommand.CREATE_STATEMENT.getMessage());) {
 					setPreparedStatementCreate(Statement, computer);
 					nbOfRowInsertedInDB = Statement.executeUpdate();
-				} catch (SQLException e1) {
-					LOGGER.error(EnumErrorSQL.BDD_ACCESS_LOG.getMessage() + e1.getMessage());
-				} catch (NullPointerException e2) {
-					LOGGER.error(EnumErrorSQL.BDD_NULL_OBJECT_LOG.getMessage() + e2.getMessage());
+				} catch (SQLException sqlException) {
+					LOGGER.error(EnumErrorSQL.BDD_ACCESS_LOG.getMessage() + sqlException.getMessage());
+				} catch (NullPointerException npException) {
+					LOGGER.error(EnumErrorSQL.BDD_NULL_OBJECT_LOG.getMessage() + npException.getMessage());
 				}
 			}
 		}
@@ -77,11 +57,11 @@ public final class ComputerDAO {
 	public int delete(int idSuppression) {
 		int nbOfDeletedRowsinDB = 0;
 		try (Connection connect = ConnexionSQL.getInstance().getConn();
-				PreparedStatement stmt = connect.prepareStatement(DELETE_STATEMENT);) {
+				PreparedStatement stmt = connect.prepareStatement(EnumSQLCommand.DELETE_STATEMENT.getMessage());) {
 			stmt.setInt(1, idSuppression);
 			nbOfDeletedRowsinDB = stmt.executeUpdate();
-		} catch (SQLException e1) {
-			LOGGER.error(EnumErrorSQL.BDD_ACCESS_LOG.getMessage() + e1.getMessage());
+		} catch (SQLException sqlException) {
+			LOGGER.error(EnumErrorSQL.BDD_ACCESS_LOG.getMessage() + sqlException.getMessage());
 		}
 		return nbOfDeletedRowsinDB;
 	}
@@ -90,13 +70,14 @@ public final class ComputerDAO {
 		int nbOfUpdatedRowsinDB = 0;
 		if (computer != null) {
 			try (Connection connect = ConnexionSQL.getInstance().getConn();
-					PreparedStatement statement = connect.prepareStatement(UPDATE_STATEMENT);) {
+					PreparedStatement statement = connect
+							.prepareStatement(EnumSQLCommand.UPDATE_STATEMENT.getMessage());) {
 				setPreparedStatementUpdate(statement, computer);
 				nbOfUpdatedRowsinDB = statement.executeUpdate();
-			} catch (SQLException e1) {
-				LOGGER.error(EnumErrorSQL.BDD_ACCESS_LOG.getMessage() + e1.getMessage());
-			} catch (NullPointerException e2) {
-				LOGGER.error(EnumErrorSQL.BDD_NULL_OBJECT_LOG.getMessage() + e2.getMessage());
+			}  catch (SQLException sqlException) {
+				LOGGER.error(EnumErrorSQL.BDD_ACCESS_LOG.getMessage() + sqlException.getMessage());
+			} catch (NullPointerException npException) {
+				LOGGER.error(EnumErrorSQL.BDD_NULL_OBJECT_LOG.getMessage() + npException.getMessage());
 			}
 		}
 		return nbOfUpdatedRowsinDB;
@@ -105,13 +86,13 @@ public final class ComputerDAO {
 	public Optional<Computer> findByID(int idSearch) {
 		Optional<Computer> OptionalComputer = Optional.empty();
 		try (Connection connect = ConnexionSQL.getInstance().getConn();
-				PreparedStatement stmt = connect.prepareStatement(GET_STATEMENT);
-					ResultSet result = setResultSetForFindByID(idSearch, stmt);) {
+				PreparedStatement stmt = connect.prepareStatement(EnumSQLCommand.GET_STATEMENT.getMessage());
+				ResultSet result = setResultSetForFindByID(idSearch, stmt);) {
 			if (result.first()) {
 				OptionalComputer = ComputerMapper.getInstance().getComputerFromResultSet(result);
 			}
-		} catch (SQLException e1) {
-			LOGGER.error(EnumErrorSQL.BDD_ACCESS_LOG.getMessage() + e1.getMessage());
+		}  catch (SQLException sqlException) {
+			LOGGER.error(EnumErrorSQL.BDD_ACCESS_LOG.getMessage() + sqlException.getMessage());
 		}
 		return OptionalComputer;
 	}
@@ -120,14 +101,14 @@ public final class ComputerDAO {
 		List<Computer> computerList = new ArrayList<>();
 		Computer computer = new Computer.Builder().build();
 		try (Connection connect = ConnexionSQL.getInstance().getConn();
-				PreparedStatement stmt = connect.prepareStatement(GET_ALL_STATEMENT);
-					ResultSet result = stmt.executeQuery();) {
+				PreparedStatement stmt = connect.prepareStatement(EnumSQLCommand.GET_ALL_STATEMENT.getMessage());
+				ResultSet result = stmt.executeQuery();) {
 			while (result.next()) {
 				computer = ComputerMapper.getInstance().getComputerFromResultSet(result).get();
 				computerList.add(computer);
 			}
-		} catch (SQLException e1) {
-			LOGGER.error(EnumErrorSQL.BDD_ACCESS_LOG.getMessage() + e1.getMessage());
+		}  catch (SQLException sqlException) {
+			LOGGER.error(EnumErrorSQL.BDD_ACCESS_LOG.getMessage() + sqlException.getMessage());
 		}
 		return computerList;
 	}
@@ -136,14 +117,15 @@ public final class ComputerDAO {
 		List<Computer> computerList = new ArrayList<>();
 		Computer computer = new Computer.Builder().build();
 		try (Connection connect = ConnexionSQL.getInstance().getConn();
-				PreparedStatement stmt = connect.prepareStatement(GET_ALL_PAGINATE_STATEMENT);
+				PreparedStatement stmt = connect
+						.prepareStatement(EnumSQLCommand.GET_ALL_PAGINATE_STATEMENT.getMessage());
 				ResultSet result = setResultSetWithPreparedStatement(ligneDebutOffSet, taillePage, stmt);) {
 			while (result.next()) {
 				computer = ComputerMapper.getInstance().getComputerFromResultSet(result).get();
 				computerList.add(computer);
 			}
-		} catch (SQLException e1) {
-			LOGGER.error(EnumErrorSQL.BDD_ACCESS_LOG.getMessage() + e1.getMessage());
+		}  catch (SQLException sqlException) {
+			LOGGER.error(EnumErrorSQL.BDD_ACCESS_LOG.getMessage() + sqlException.getMessage());
 		}
 		return computerList;
 	}
@@ -152,15 +134,16 @@ public final class ComputerDAO {
 		List<Computer> computerList = new ArrayList<>();
 		Computer computer = new Computer.Builder().build();
 		try (Connection connect = ConnexionSQL.getInstance().getConn();
-				PreparedStatement stmt = connect.prepareStatement(GET_ALL_PAGINATE_ORDER_LIKE_NAME_STATEMENT);
+				PreparedStatement stmt = connect
+						.prepareStatement(EnumSQLCommand.GET_ALL_PAGINATE_ORDER_LIKE_NAME_STATEMENT.getMessage());
 				ResultSet result = setResultSetWithPreparedStatementSearch(search, ligneDebutOffSet, taillePage,
 						stmt);) {
 			while (result.next()) {
 				computer = ComputerMapper.getInstance().getComputerFromResultSet(result).get();
 				computerList.add(computer);
 			}
-		} catch (SQLException e1) {
-			LOGGER.error(EnumErrorSQL.BDD_ACCESS_LOG.getMessage() + e1.getMessage());
+		} catch (SQLException sqlException) {
+			LOGGER.error(EnumErrorSQL.BDD_ACCESS_LOG.getMessage() + sqlException.getMessage());
 		}
 		return computerList;
 	}
@@ -169,14 +152,15 @@ public final class ComputerDAO {
 		List<Computer> computerList = new ArrayList<>();
 		Computer computer = new Computer.Builder().build();
 		try (Connection connect = ConnexionSQL.getInstance().getConn();
-				PreparedStatement stmt = connect.prepareStatement(GET_ALL_PAGINATE_ORDER_BY_NAME_STATEMENT);
+				PreparedStatement stmt = connect
+						.prepareStatement(EnumSQLCommand.GET_ALL_PAGINATE_ORDER_BY_NAME_STATEMENT.getMessage());
 				ResultSet result = setResultSetWithPreparedStatement(ligneDebutOffSet, taillePage, stmt);) {
 			while (result.next()) {
 				computer = ComputerMapper.getInstance().getComputerFromResultSet(result).get();
 				computerList.add(computer);
 			}
-		} catch (SQLException e1) {
-			LOGGER.error(EnumErrorSQL.BDD_ACCESS_LOG.getMessage() + e1.getMessage());
+		} catch (SQLException sqlException) {
+			LOGGER.error(EnumErrorSQL.BDD_ACCESS_LOG.getMessage() + sqlException.getMessage());
 		}
 		return computerList;
 	}
@@ -184,14 +168,14 @@ public final class ComputerDAO {
 	public int getNbRow() {
 		int nbRow = -1;
 		try (Connection connect = ConnexionSQL.getInstance().getConn();
-				PreparedStatement stmt = connect.prepareStatement(GET_NB_ROW_STATEMENT);) {
+				PreparedStatement stmt = connect.prepareStatement(EnumSQLCommand.GET_NB_ROW_STATEMENT.getMessage());) {
 			try (ResultSet result = stmt.executeQuery()) {
 				if (result.first()) {
 					nbRow = result.getInt("Rows");
 				}
 			}
-		} catch (SQLException e1) {
-			LOGGER.error(EnumErrorSQL.BDD_ACCESS_LOG.getMessage() + e1.getMessage());
+		} catch (SQLException sqlException) {
+			LOGGER.error(EnumErrorSQL.BDD_ACCESS_LOG.getMessage() + sqlException.getMessage());
 		}
 		return nbRow;
 	}
@@ -199,15 +183,16 @@ public final class ComputerDAO {
 	public int getNbRowSearch(String search) {
 		int nbRow = -1;
 		try (Connection connect = ConnexionSQL.getInstance().getConn();
-				PreparedStatement stmt = connect.prepareStatement(GET_NB_ROW_LIKE_STATEMENT);) {
+				PreparedStatement stmt = connect
+						.prepareStatement(EnumSQLCommand.GET_NB_ROW_LIKE_STATEMENT.getMessage());) {
 			stmt.setString(1, "%" + search + "%");
 			try (ResultSet result = stmt.executeQuery()) {
 				if (result.first()) {
 					nbRow = result.getInt("Rows");
 				}
 			}
-		} catch (SQLException e1) {
-			LOGGER.error(EnumErrorSQL.BDD_ACCESS_LOG.getMessage() + e1.getMessage());
+		}  catch (SQLException sqlException) {
+			LOGGER.error(EnumErrorSQL.BDD_ACCESS_LOG.getMessage() + sqlException.getMessage());
 		}
 		return nbRow;
 	}

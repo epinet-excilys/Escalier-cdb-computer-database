@@ -45,7 +45,6 @@ public final class ComputerService {
 		return nbOfRowDeletedInDB;
 	}
 
-	//
 	public Optional<Computer> findByID(int ID) {
 		Optional<Computer> computer = Optional.empty();
 		computer = computerDAO.findByID(ID);

@@ -11,7 +11,6 @@ public final class CompanyMapper {
 	private static volatile CompanyMapper instance = null;
 
 	private CompanyMapper() {
-		super();
 	}
 
 	public final static CompanyMapper getInstance() {
@@ -32,18 +31,12 @@ public final class CompanyMapper {
 		
 		int idComp = resultSet.getInt("id");
 		String nameComp = resultSet.getString("name");
-		
-		Company company = new Company.Builder().setIdBuild(idComp).setNameBuild(nameComp).build();
-		
-		return company;
-		
-		
+	
+		return  new Company.Builder().setIdBuild(idComp).setNameBuild(nameComp).build();
 	}
 
 	public static CompanyDTO fromCompanyToCompanyDTO(Company company) {
 		
 		return new CompanyDTO.Builder().setIdBuild(company.getId()).setNameBuild(company.getName()).build();
 	}
-	
-
 }

@@ -21,8 +21,8 @@ public class ComputerDTO {
 		this.companyDTO = companyDTO;
 	}
 	public ComputerDTO(Builder builder) {
-		// TODO Auto-generated constructor stub
 	}
+	
 	public static class Builder {
 		private int idBuild;
 		private String nameBuild;

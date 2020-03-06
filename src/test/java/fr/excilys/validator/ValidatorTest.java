@@ -16,14 +16,6 @@ public class ValidatorTest {
 	private LocalDate localDateNull = null;
 	private LocalDate localDateOld = LocalDate.of(1777, 01, 01);
 
-	@Before
-	public void setUp() throws Exception {
-	}
-
-	@After
-	public void tearDown() throws Exception {
-	}
-
 	@Test
 	public void testisDateOKIntendedUseBothOk() {
 		assertTrue(Validator.isDateOk(localDate, localDate2));
@@ -77,6 +69,4 @@ public class ValidatorTest {
 		Computer computer = new Computer.Builder().setNameBuild("").build();
 		assertFalse(Validator.isNameOk(computer));
 	}
-	
-
 }

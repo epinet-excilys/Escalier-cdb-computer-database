@@ -19,40 +19,35 @@ import fr.excilys.model.Company;
 public final class CompanyDAO {
 
 	private static volatile CompanyDAO instance = null;
-	private final String GET_STATEMENT = "SELECT company.id, company.name FROM company where id=?";
-	private final String GET_ALL_STATEMENT = "SELECT company.id, company.name FROM company";
-	private final String GET_NB_ROW_STATEMENT = "SELECT COUNT(*) as \"Rows\" FROM company;";
 
-	
 	public static Logger LOGGER = LoggerFactory.getLogger(ConnexionSQL.class);
 
 	private CompanyDAO() {
-		super();
 	}
 
 	public final static CompanyDAO getInstance() {
 		if (CompanyDAO.instance == null) {
-			synchronized (CompanyDAO.class) {
-				if (CompanyDAO.instance == null) {
-					CompanyDAO.instance = new CompanyDAO();
-				}
+			if (CompanyDAO.instance == null) {
+				CompanyDAO.instance = new CompanyDAO();
 			}
 		}
+		
 		return CompanyDAO.instance;
+	
 	}
+	
 
 	public Optional<Company> findByID(int idSearch) {
 		Company company = new Company.Builder().build();
 		try (Connection connect = ConnexionSQL.getInstance().getConn();
-				PreparedStatement stmt = connect.prepareStatement(GET_STATEMENT);) {
+				PreparedStatement stmt = connect.prepareStatement(EnumSQLCommand.GET_STATEMENT_COMPANY.getMessage());
+				ResultSet result = stmt.executeQuery();) {
 			stmt.setInt(1, idSearch);
-			try (ResultSet result = stmt.executeQuery()) {
-				if (result.first()) {
-					company = CompanyMapper.getInstance().getCompanyFromResultSet(result);
-				}
+			if (result.first()) {
+				company = CompanyMapper.getInstance().getCompanyFromResultSet(result);
 			}
-		} catch (SQLException e1) {
-			LOGGER.error(EnumErrorSQL.BDD_ACCESS_LOG.getMessage() + e1.getMessage());
+		} catch (SQLException sqlException) {
+			LOGGER.error(EnumErrorSQL.BDD_ACCESS_LOG.getMessage() + sqlException.getMessage());
 		}
 		return Optional.ofNullable(company);
 	}
@@ -61,7 +56,8 @@ public final class CompanyDAO {
 		List<Company> listCompany = new ArrayList<>();
 		Company company = new Company.Builder().build();
 		try (Connection connect = ConnexionSQL.getInstance().getConn();
-				PreparedStatement stmt = connect.prepareStatement(GET_ALL_STATEMENT);) {
+				PreparedStatement stmt = connect
+						.prepareStatement(EnumSQLCommand.GET_ALL_STATEMENT_COMPANY.getMessage());) {
 			try (ResultSet result = stmt.executeQuery()) {
 				while (result.next()) {
 					company = CompanyMapper.getInstance().getCompanyFromResultSet(result);
@@ -69,8 +65,8 @@ public final class CompanyDAO {
 					listCompany.add(company);
 				}
 			}
-		} catch (SQLException e1) {
-			LOGGER.error(EnumErrorSQL.BDD_ACCESS_LOG.getMessage() + e1.getMessage());
+		} catch (SQLException sqlException) {
+			LOGGER.error(EnumErrorSQL.BDD_ACCESS_LOG.getMessage() + sqlException.getMessage());
 		}
 		return listCompany;
 	}
@@ -78,8 +74,9 @@ public final class CompanyDAO {
 	public int getNbRow() {
 		int nbRow = 0;
 		try (Connection connect = ConnexionSQL.getInstance().getConn();
-				PreparedStatement stmt = connect.prepareStatement(GET_NB_ROW_STATEMENT);) {
-			
+				PreparedStatement stmt = connect
+						.prepareStatement(EnumSQLCommand.GET_NB_ROW_STATEMENT_COMPANY.getMessage());) {
+
 			try (ResultSet result = stmt.executeQuery()) {
 
 				if (result.first()) {
@@ -88,8 +85,8 @@ public final class CompanyDAO {
 				}
 			}
 
-		} catch (SQLException e1) {
-			LOGGER.error(EnumErrorSQL.BDD_ACCESS_LOG.getMessage() + e1.getMessage());
+		} catch (SQLException sqlException) {
+			LOGGER.error(EnumErrorSQL.BDD_ACCESS_LOG.getMessage() + sqlException.getMessage());
 		}
 
 		return nbRow;
