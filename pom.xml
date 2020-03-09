@@ -27,6 +27,7 @@
 		<servlet-api-version>4.0.0-b06</servlet-api-version>
 		<jstl-version>1.2</jstl-version>
 		<HickariCP-version>2.6.1</HickariCP-version>
+		<Apache-commons-version>3.9</Apache-commons-version>
 	</properties>
 
 	<dependencies>
@@ -81,7 +82,11 @@
 			<artifactId>HikariCP</artifactId>
 			<version>${HickariCP-version}</version>
 		</dependency>
-
+		<dependency>
+			<groupId>org.apache.commons</groupId>
+			<artifactId>commons-lang3</artifactId>
+			<version>${Apache-commons-version}</version>
+		</dependency>
 	</dependencies>
 
 	<build>

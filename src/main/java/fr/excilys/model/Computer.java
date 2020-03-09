@@ -1,6 +1,8 @@
 package fr.excilys.model;
 
 import java.time.LocalDate;
+import org.apache.commons.lang3.builder.ReflectionToStringBuilder;
+import org.apache.commons.lang3.builder.ToStringStyle;
 
 public class Computer {
 
@@ -145,8 +147,7 @@ public class Computer {
 
 	@Override
 	public String toString() {
-		return "Computer [id=" + id + ", name=" + name + ", introducedDate=" + introducedDate + ", discontinuedDate="
-				+ discontinuedDate + ", company=" + company + "]";
+		return ReflectionToStringBuilder.toString(this,ToStringStyle.JSON_STYLE);
 	}
 
 	

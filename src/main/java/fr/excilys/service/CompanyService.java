@@ -6,7 +6,9 @@ import java.util.Optional;
 
 import fr.excilys.dao.CompanyDAO;
 import fr.excilys.dao.ComputerDAO;
+import fr.excilys.exception.DatabaseDAOException;
 import fr.excilys.model.Company;
+import fr.excilys.model.Computer;
 
 public final class CompanyService {
 
@@ -28,22 +30,22 @@ public final class CompanyService {
 		return CompanyService.instance;
 	}
 
-	public Optional<Company> findByID(int ID) {
-		Company company = new Company.Builder().build();
-		company = companyDAO.findByID(ID).get();
-		return Optional.ofNullable(company);
+	public Optional<Company> findByID(int ID) throws DatabaseDAOException{
+		Optional<Company> optionalCompany = Optional.empty();		
+		optionalCompany = companyDAO.findByID(ID);
+		
+		return optionalCompany;
 	}
 
-	public List<Company> getAllCompany() {
+	public List<Company> getAllCompany() throws DatabaseDAOException{
 		List<Company> listCompany = new ArrayList<>();
 		listCompany = companyDAO.findAll();
+		
 		return listCompany;
 	}
 
-	public int getNbRows() {
-		int nbRow = -1;
-		nbRow = companyDAO.getNbRow();
-		return nbRow;
+	public int getNbRows() throws DatabaseDAOException{
+		return  companyDAO.getNbRow();
 	}
 
 }

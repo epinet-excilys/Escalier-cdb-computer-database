@@ -1,5 +1,8 @@
 package fr.excilys.model;
 
+import org.apache.commons.lang3.builder.ReflectionToStringBuilder;
+import org.apache.commons.lang3.builder.ToStringStyle;
+
 public class Company {
 
 	private int id;
@@ -67,7 +70,7 @@ public class Company {
 
 	@Override
 	public String toString() {
-		return "Company [name=" + name + "]";
+		return ReflectionToStringBuilder.toString(this,ToStringStyle.JSON_STYLE);
 	}
 
 }

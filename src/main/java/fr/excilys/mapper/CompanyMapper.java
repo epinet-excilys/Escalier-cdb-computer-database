@@ -2,6 +2,7 @@ package fr.excilys.mapper;
 
 import java.sql.ResultSet;
 import java.sql.SQLException;
+import java.util.Optional;
 
 import fr.excilys.dto.CompanyDTO;
 import fr.excilys.model.Company;
@@ -27,12 +28,13 @@ public final class CompanyMapper {
 
 	}
 	
-	public Company getCompanyFromResultSet(ResultSet resultSet) throws SQLException {
+	public Optional<Company> getCompanyFromResultSet(ResultSet resultSet) throws SQLException {
 		
 		int idComp = resultSet.getInt("id");
 		String nameComp = resultSet.getString("name");
+		Company company =  new Company.Builder().setIdBuild(idComp).setNameBuild(nameComp).build();
 	
-		return  new Company.Builder().setIdBuild(idComp).setNameBuild(nameComp).build();
+		return  Optional.ofNullable(company);
 	}
 
 	public static CompanyDTO fromCompanyToCompanyDTO(Company company) {

@@ -27,75 +27,62 @@ public final class ComputerService {
 		return ComputerService.instance;
 	}
 
-	public void update(Computer computer) {
-		try {
+	public void update(Computer computer) throws DatabaseDAOException {
 		computerDAO.update(computer);
-		}catch(DatabaseDAOException databaseDAOException) {
-			//TODO GERER LE RENVOIE UTILISATEUR
-		}
 	}
 
-	public void add(Computer computer) {
-		try {
+	public void add(Computer computer) throws DatabaseDAOException{
 		computerDAO.create(computer);
-		}catch(DatabaseDAOException databaseDAOException) {
-			//TODO GERER LE RENVOIE UTILISATEUR
-		}
 	}
 
-	public void delete(int iD) {
-		try {
+	public void delete(int iD) throws DatabaseDAOException{
 		computerDAO.delete(iD);
-		}catch(DatabaseDAOException databaseDAOException) {
-			//TODO GERER LE RENVOIE UTILISATEUR
-		}
 	}
 
-	public Optional<Computer> findByID(int ID) {
-		Optional<Computer> computer = Optional.empty();
+	public Optional<Computer> findByID(int ID) throws DatabaseDAOException {
+		Optional<Computer> Optionalcomputer = Optional.empty();		
+		Optionalcomputer = computerDAO.findByID(ID);
 		
-		computer = computerDAO.findByID(ID);
-		//TODO GERER LE RENVOIE UTILISATEUR
-		return computer;
+		return Optionalcomputer;
 	}
 
-	public List<Computer> getAllComput() {
+	public List<Computer> getAllComput() throws DatabaseDAOException{
 		List<Computer> listComputer = new ArrayList<>();
 		listComputer = computerDAO.findAll();
-		//TODO GERER LE RENVOIE UTILISATEUR
+
 		return listComputer;
 
 	}
 
-	public List<Computer> getAllPaginateComput(int ligneDebutOffSet, int taillePage) {
+	public List<Computer> getAllPaginateComput(int ligneDebutOffSet, int taillePage) throws DatabaseDAOException{
 		List<Computer> listComputer = new ArrayList<>();
 		listComputer = computerDAO.findAllPaginate(ligneDebutOffSet, taillePage);
-		//TODO GERER LE RENVOIE UTILISATEUR
+
 		return listComputer;
 
 	}
 	
-	public List<Computer> findAllPaginateSearchLike(String search, int ligneDebutOffSet, int taillePage) {
+	public List<Computer> findAllPaginateSearchLike(String search, int ligneDebutOffSet, int taillePage) throws DatabaseDAOException{
 		List<Computer> listComputer = new ArrayList<>();
 		listComputer = computerDAO.findAllPaginateSearchLike(search,ligneDebutOffSet, taillePage);
-		//TODO GERER LE RENVOIE UTILISATEUR
+
 		return listComputer;
 	}
 	
-	public List<Computer> findAllPaginateAlphabeticOrder(int ligneDebutOffSet, int taillePage) {
+	public List<Computer> findAllPaginateAlphabeticOrder(int ligneDebutOffSet, int taillePage) throws DatabaseDAOException{
 		List<Computer> listComputer = new ArrayList<>();
 		listComputer = computerDAO.findAllPaginateAlphabeticOrder(ligneDebutOffSet, taillePage);
-		//TODO GERER LE RENVOIE UTILISATEUR
+
 		return listComputer;
 	}
 
-	public int getNbRows() {
-		//TODO
+	public int getNbRows() throws DatabaseDAOException{
+
 		return computerDAO.getNbRow();
 	}
 	
-	public int getNbRowsSearch(String search) {
-		//TODO
+	public int getNbRowsSearch(String search) throws DatabaseDAOException{
+
 		return computerDAO.getNbRowSearch(search);
 	}
 

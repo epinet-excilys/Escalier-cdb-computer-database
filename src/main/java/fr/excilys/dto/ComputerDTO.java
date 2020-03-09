@@ -2,6 +2,9 @@ package fr.excilys.dto;
 
 import java.time.LocalDate;
 
+import org.apache.commons.lang3.builder.ReflectionToStringBuilder;
+import org.apache.commons.lang3.builder.ToStringStyle;
+
 import fr.excilys.model.Company;
 import fr.excilys.model.Computer;
 import fr.excilys.model.Computer.Builder;
@@ -104,8 +107,7 @@ public class ComputerDTO {
 
 	@Override
 	public String toString() {
-		return "ComputerDTO [id=" + id + ", name=" + name + ", introducedDate=" + introducedDate + ", discontinuedDate="
-				+ discontinuedDate + ", company=" + companyDTO + "]";
+		return ReflectionToStringBuilder.toString(this,ToStringStyle.JSON_STYLE);
 	}
 
 }

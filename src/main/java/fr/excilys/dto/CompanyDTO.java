@@ -1,5 +1,8 @@
 package fr.excilys.dto;
 
+import org.apache.commons.lang3.builder.ReflectionToStringBuilder;
+import org.apache.commons.lang3.builder.ToStringStyle;
+
 public class CompanyDTO {
 	
 
@@ -59,7 +62,7 @@ public class CompanyDTO {
 
 	@Override
 	public String toString() {
-		return "CompanyDTO [id=" + id + ", name=" + name + "]";
+		return ReflectionToStringBuilder.toString(this,ToStringStyle.JSON_STYLE);
 	}
 
 	
