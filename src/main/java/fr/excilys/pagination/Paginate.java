@@ -7,6 +7,7 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
 import fr.excilys.dto.ComputerDTO;
+import fr.excilys.exception.DatabaseDAOException;
 import fr.excilys.mapper.ComputerMapper;
 import fr.excilys.model.Computer;
 import fr.excilys.service.ComputerService;
@@ -63,14 +64,14 @@ public class Paginate {
 				.add(ComputerMapper.getInstance().fromComputerToComputerDTO(computer)));
 	}
 
-	private void paginateOrderByName(HttpServletRequest request, HttpServletResponse response) {
+	private void paginateOrderByName(HttpServletRequest request, HttpServletResponse response) throws DatabaseDAOException{
 		NbRowComputer = ComputerService.getInstance().getNbRows();
 		computerList = ComputerService.getInstance().findAllPaginateAlphabeticOrder(pageIterator * pageSize, pageSize);
 		maxPage = Math.ceil(NbRowComputer / pageSize);
 		searchTerm = "";
 	}
 
-	private void paginateSearchByTerm(HttpServletRequest request, HttpServletResponse response) {
+	private void paginateSearchByTerm(HttpServletRequest request, HttpServletResponse response) throws DatabaseDAOException{
 		searchTerm = request.getParameter("search");
 		NbRowComputer = ComputerService.getInstance().getNbRowsSearch(searchTerm);
 		computerList = ComputerService.getInstance().findAllPaginateSearchLike(searchTerm, pageIterator * pageSize, pageSize);
@@ -78,7 +79,7 @@ public class Paginate {
 		orderBy = "";
 	}
 	
-	private void paginateUsual(HttpServletRequest request, HttpServletResponse response) {
+	private void paginateUsual(HttpServletRequest request, HttpServletResponse response) throws DatabaseDAOException{
 		NbRowComputer = ComputerService.getInstance().getNbRows();
 		computerList = ComputerService.getInstance().getAllPaginateComput(pageIterator * pageSize, pageSize);
 		maxPage = Math.ceil(NbRowComputer / pageSize);

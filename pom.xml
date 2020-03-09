@@ -28,6 +28,7 @@
 		<jstl-version>1.2</jstl-version>
 		<HickariCP-version>2.6.1</HickariCP-version>
 		<Apache-commons-version>3.9</Apache-commons-version>
+		<Spring-version>5.2.4.RELEASE</Spring-version>
 	</properties>
 
 	<dependencies>
@@ -87,6 +88,18 @@
 			<artifactId>commons-lang3</artifactId>
 			<version>${Apache-commons-version}</version>
 		</dependency>
+		<dependency>
+			<groupId>org.springframework</groupId>
+			<artifactId>spring-context</artifactId>
+			<version>${Spring-version}</version>
+		</dependency>
+		<!-- https://mvnrepository.com/artifact/org.springframework/spring-web -->
+		<dependency>
+			<groupId>org.springframework</groupId>
+			<artifactId>spring-webmvc</artifactId>
+			<version>${Spring-version}</version>
+		</dependency>
+
 	</dependencies>
 
 	<build>

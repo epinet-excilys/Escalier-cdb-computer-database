@@ -9,6 +9,7 @@ import java.util.Optional;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.stereotype.Repository;
 
 import java.sql.PreparedStatement;
 
@@ -17,6 +18,7 @@ import fr.excilys.exception.EnumErrorSQL;
 import fr.excilys.mapper.CompanyMapper;
 import fr.excilys.model.Company;
 
+@Repository
 public final class CompanyDAO {
 
 	private static volatile CompanyDAO instance = null;

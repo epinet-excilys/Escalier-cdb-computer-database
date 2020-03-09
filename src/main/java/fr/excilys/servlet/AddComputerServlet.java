@@ -11,6 +11,8 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
 import fr.excilys.dto.CompanyDTO;
+import fr.excilys.exception.DatabaseDAOException;
+import fr.excilys.exception.DatabaseManipulationException;
 import fr.excilys.mapper.CompanyMapper;
 import fr.excilys.mapper.ComputerMapper;
 import fr.excilys.model.Company;
@@ -22,8 +24,7 @@ import fr.excilys.validator.Validator;
 @WebServlet(name = "AddComputerServlet", urlPatterns = "/addComputer")
 public class AddComputerServlet extends HttpServlet {
 
-	private static final String ADD_COMPUTER = "/WEB-INF/views/addComputer.jsp";
-
+	private static final String ADD_COMPUTER = "addComputer.jsp";
 
 	protected void doGet(HttpServletRequest request, HttpServletResponse response)
 			throws ServletException, IOException {
@@ -42,26 +43,37 @@ public class AddComputerServlet extends HttpServlet {
 
 	protected void doPost(HttpServletRequest request, HttpServletResponse response)
 			throws ServletException, IOException {
-		ComputerService computerService = ComputerService.getInstance();
+
 		CompanyService companyService = CompanyService.getInstance();
 
-		String computerName = request.getParameter("computerName");		
+		String computerName = request.getParameter("computerName");
 		LocalDate introducedDate = ComputerMapper.getInstance()
 				.fromStringToLocalDate(request.getParameter("introduced"));
 		LocalDate discontinuedDate = ComputerMapper.getInstance()
-				.fromStringToLocalDate(request.getParameter("discontinued"));		
+				.fromStringToLocalDate(request.getParameter("discontinued"));
 		int companyId = Integer.parseInt(request.getParameter("companyId"));
 
-		Company company = (companyId != 0 ?(companyService.findByID((companyId))).get():(null));
+		Company company = (companyId != 0 ? (companyService.findByID((companyId))).get() : (null));
 
 		Computer computer = new Computer.Builder().setNameBuild(computerName).setIntroducedDateBuild(introducedDate)
 				.setDiscontinuedDateBuild(discontinuedDate).setIdCompagnyBuild(company).build();
-		
-		if(Validator.getInstance().Validation(computer)) {
-		}
+
+		ValidateComputer(computer);
+
 		doGet(request, response);
 	}
 
-	
+	private void ValidateComputer(Computer computer) {
+		ComputerService computerService = ComputerService.getInstance();
+		try {
+			if (Validator.getInstance().Validation(computer)) {
+				computerService.add(computer);
+			}
+		} catch (DatabaseDAOException databaseDAOException) {
+			// TODO EXCEPTION Catching
+		} catch (DatabaseManipulationException databaseManipulationException) {
+			// TODO EXCEPTION Catching
+		}
+	}
 
 }
