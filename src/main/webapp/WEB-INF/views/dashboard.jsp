@@ -126,7 +126,7 @@
 					</c:if></li>
 					
 					
-				<c:if test="${pageIterator < maxPage}">
+				<c:if test="${pageIterator < (maxPage+1)}">
 					<li><a
 										href="DashBoard?pageIterator=${pageIterator }
 											<c:if test="${ taillePage != null }">&taillePage=${ taillePage }</c:if>
@@ -138,7 +138,7 @@
 						
 						</a></li>
 				</c:if>
-				<li><c:if test="${pageIterator < (maxPage-1)}">
+				<li><c:if test="${pageIterator < (maxPage)}">
 						<a
 							href="DashBoard?pageIterator=${ pageIterator + 1 }
 										<c:if test="${ taillePage != null }">&taillePage=${ taillePage }</c:if>
