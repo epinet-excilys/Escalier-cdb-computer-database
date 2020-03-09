@@ -12,6 +12,7 @@ import org.slf4j.LoggerFactory;
 
 import java.sql.PreparedStatement;
 
+import fr.excilys.exception.DatabaseDAOException;
 import fr.excilys.exception.EnumErrorSQL;
 import fr.excilys.mapper.CompanyMapper;
 import fr.excilys.model.Company;
@@ -31,14 +32,14 @@ public final class CompanyDAO {
 				CompanyDAO.instance = new CompanyDAO();
 			}
 		}
-		
+
 		return CompanyDAO.instance;
-	
+
 	}
-	
 
 	public Optional<Company> findByID(int idSearch) {
 		Company company = new Company.Builder().build();
+
 		try (Connection connect = ConnexionSQL.getInstance().getConn();
 				PreparedStatement stmt = connect.prepareStatement(EnumSQLCommand.GET_STATEMENT_COMPANY.getMessage());
 				ResultSet result = stmt.executeQuery();) {
@@ -46,9 +47,12 @@ public final class CompanyDAO {
 			if (result.first()) {
 				company = CompanyMapper.getInstance().getCompanyFromResultSet(result);
 			}
+
 		} catch (SQLException sqlException) {
 			LOGGER.error(EnumErrorSQL.BDD_ACCESS_LOG.getMessage() + sqlException.getMessage());
+			throw new DatabaseDAOException("FindById in Company");
 		}
+
 		return Optional.ofNullable(company);
 	}
 
@@ -57,40 +61,36 @@ public final class CompanyDAO {
 		Company company = new Company.Builder().build();
 		try (Connection connect = ConnexionSQL.getInstance().getConn();
 				PreparedStatement stmt = connect
-						.prepareStatement(EnumSQLCommand.GET_ALL_STATEMENT_COMPANY.getMessage());) {
-			try (ResultSet result = stmt.executeQuery()) {
-				while (result.next()) {
-					company = CompanyMapper.getInstance().getCompanyFromResultSet(result);
-
-					listCompany.add(company);
-				}
+						.prepareStatement(EnumSQLCommand.GET_ALL_STATEMENT_COMPANY.getMessage());
+				ResultSet result = stmt.executeQuery();) {
+			while (result.next()) {
+				company = CompanyMapper.getInstance().getCompanyFromResultSet(result);
+				listCompany.add(company);
 			}
+			
+			return listCompany;
+			
 		} catch (SQLException sqlException) {
 			LOGGER.error(EnumErrorSQL.BDD_ACCESS_LOG.getMessage() + sqlException.getMessage());
+			throw new DatabaseDAOException("findAll in Company");
 		}
-		return listCompany;
 	}
 
 	public int getNbRow() {
 		int nbRow = 0;
 		try (Connection connect = ConnexionSQL.getInstance().getConn();
 				PreparedStatement stmt = connect
-						.prepareStatement(EnumSQLCommand.GET_NB_ROW_STATEMENT_COMPANY.getMessage());) {
+						.prepareStatement(EnumSQLCommand.GET_NB_ROW_STATEMENT_COMPANY.getMessage());
+				ResultSet result = stmt.executeQuery();) {
+			if (result.first()) {
+				nbRow = result.getInt("Rows");
 
-			try (ResultSet result = stmt.executeQuery()) {
-
-				if (result.first()) {
-					nbRow = result.getInt("Rows");
-
-				}
+				return nbRow;
 			}
-
 		} catch (SQLException sqlException) {
 			LOGGER.error(EnumErrorSQL.BDD_ACCESS_LOG.getMessage() + sqlException.getMessage());
 		}
-
-		return nbRow;
-
+		throw new DatabaseDAOException("NbRows in Company");
 	}
 
 }
