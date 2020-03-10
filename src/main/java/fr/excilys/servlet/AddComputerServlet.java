@@ -10,6 +10,8 @@ import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
+import org.springframework.stereotype.Controller;
+
 import fr.excilys.dto.CompanyDTO;
 import fr.excilys.exception.DatabaseDAOException;
 import fr.excilys.exception.DatabaseManipulationException;
@@ -22,9 +24,10 @@ import fr.excilys.service.ComputerService;
 import fr.excilys.validator.Validator;
 
 @WebServlet(name = "AddComputerServlet", urlPatterns = "/addComputer")
+@Controller
 public class AddComputerServlet extends HttpServlet {
 
-	private static final String ADD_COMPUTER = "addComputer.jsp";
+	private static final String ADD_COMPUTER = "/WEB-INF/views/addComputer.jsp";
 
 	protected void doGet(HttpServletRequest request, HttpServletResponse response)
 			throws ServletException, IOException {

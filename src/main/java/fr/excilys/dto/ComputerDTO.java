@@ -4,11 +4,13 @@ import java.time.LocalDate;
 
 import org.apache.commons.lang3.builder.ReflectionToStringBuilder;
 import org.apache.commons.lang3.builder.ToStringStyle;
+import org.springframework.stereotype.Service;
 
 import fr.excilys.model.Company;
 import fr.excilys.model.Computer;
 import fr.excilys.model.Computer.Builder;
 
+@Service
 public class ComputerDTO {
 
 	private int id;

@@ -23,9 +23,9 @@ import fr.excilys.pagination.Paginate;
 import fr.excilys.service.ComputerService;
 
 @WebServlet(name = "DashBoardServlet", urlPatterns = "/DashBoard")
-//@Controller
+@Controller
 public class DashBoardServlet extends HttpServlet {
-	private static final String DASHBOARD = "dashboard.jsp";
+	private static final String DASHBOARD = "/WEB-INF/views/dashboard.jsp";
 	
 	
 	public void init(ServletConfig config) throws ServletException {

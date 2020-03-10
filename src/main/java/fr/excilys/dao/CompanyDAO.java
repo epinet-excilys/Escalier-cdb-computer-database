@@ -44,9 +44,7 @@ public final class CompanyDAO {
 		Optional<Company> optionalCompany = Optional.empty();
 		try (Connection connect = ConnexionSQL.getInstance().getConn();
 				PreparedStatement stmt = connect.prepareStatement(EnumSQLCommand.GET_STATEMENT_COMPANY.getMessage());
-				ResultSet result = stmt.executeQuery();) {
-			
-			stmt.setInt(1, idSearch);
+				ResultSet result = setResultSetForFindByID(idSearch, stmt);) {
 			if (result.first()) {
 				optionalCompany = CompanyMapper.getInstance().getCompanyFromResultSet(result);
 			}
@@ -99,6 +97,14 @@ public final class CompanyDAO {
 			LOGGER.error(EnumErrorSQL.BDD_ACCESS_LOG.getMessage() + sqlException.getMessage());
 		}
 		throw new DatabaseDAOException("NbRows in Company");
+	}	
+	
+	private ResultSet setResultSetForFindByID(int idSearch, PreparedStatement stmt) throws SQLException {
+
+		stmt.setInt(1, idSearch);
+		ResultSet result = stmt.executeQuery();
+
+		return result;
 	}
 
 }

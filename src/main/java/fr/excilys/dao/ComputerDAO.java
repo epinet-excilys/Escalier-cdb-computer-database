@@ -11,12 +11,14 @@ import java.util.List;
 import java.util.Optional;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.stereotype.Repository;
 
 import fr.excilys.exception.DatabaseDAOException;
 import fr.excilys.exception.EnumErrorSQL;
 import fr.excilys.mapper.ComputerMapper;
 import fr.excilys.model.Computer;
 
+@Repository
 public final class ComputerDAO {
 
 	private static volatile ComputerDAO instance = null;

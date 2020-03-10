@@ -11,6 +11,8 @@ import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
+import org.springframework.stereotype.Controller;
+
 import fr.excilys.dto.CompanyDTO;
 import fr.excilys.dto.ComputerDTO;
 import fr.excilys.mapper.CompanyMapper;
@@ -23,9 +25,10 @@ import fr.excilys.validator.Validator;
 
 
 @WebServlet(name = "EditComputerServlet", urlPatterns = "/editComputer")
+@Controller
 public class EditComputerServlet extends HttpServlet {
 	private static final long serialVersionUID = 1L;
-	private static final String EDIT_COMPUTER = "editComputer.jsp";
+	private static final String EDIT_COMPUTER = "/WEB-INF/views/editComputer.jsp";
 
 	protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
 	
