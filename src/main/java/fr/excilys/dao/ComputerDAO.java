@@ -223,17 +223,25 @@ public final class ComputerDAO {
 		try (Connection connect = connectionToGetAsAutoWired.getConnectionAsAutoWired();
 				PreparedStatement stmt = connect
 						.prepareStatement(EnumSQLCommand.GET_NB_ROW_LIKE_STATEMENT.getMessage());
-				ResultSet result = stmt.executeQuery();) {
-			stmt.setString(1, "%" + search + "%");
+				ResultSet result = setResulSetWithPreparedStatementGetNbRowSearch(stmt, search);) {
+			
 			if (result.isBeforeFirst()) {
 				result.next();
-
+				
 				return result.getInt("Rows");
 			}
 		} catch (SQLException sqlException) {
 			LOGGER.error(EnumErrorSQL.BDD_ACCESS_LOG.getMessage() + sqlException.getMessage());
 		}
 		throw new DatabaseDAOException("NbRowsSearch");
+	}
+
+	private ResultSet setResulSetWithPreparedStatementGetNbRowSearch(PreparedStatement stmt, String search) throws SQLException {
+		
+		stmt.setString(1, "%" + search + "%");
+		ResultSet result = stmt.executeQuery();
+		
+		return result;
 	}
 
 	private ResultSet setResultSetForFindByID(int idSearch, PreparedStatement stmt) throws SQLException {
