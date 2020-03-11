@@ -9,26 +9,30 @@ import java.time.format.DateTimeParseException;
 import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;
+import org.junit.runner.RunWith;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.test.context.ContextConfiguration;
+import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
 
+import fr.excilys.config.AppConfiguration;
+
+@RunWith(SpringJUnit4ClassRunner.class)
+@ContextConfiguration(classes = {AppConfiguration.class})
 public class ComputerMapperTest {
 
-	ComputerMapper instance;
+	private ComputerMapper computerMapper;
 
-	@Before
-	public void setUp() throws Exception {
-		instance = ComputerMapper.getInstance();
-	}
-
-	@After
-	public void tearDown() throws Exception {
-		instance = null;
+	
+	@Autowired
+	public void setComputerMapper(ComputerMapper computerMapper) {
+		this.computerMapper = computerMapper;
 	}
 
 	@Test
 	public void testFromStringToLocalDateWithEmptyString() {
 
 		try {
-			assertEquals(null, instance.fromStringToLocalDate(""));
+			assertEquals(null, computerMapper.fromStringToLocalDate(""));
 		} catch (DateTimeParseException e) {
 			fail("le test ne devait pas echouer");
 		}
@@ -38,7 +42,7 @@ public class ComputerMapperTest {
 	public void testFromStringToLocalDateWithString() {
 
 		try {
-			instance.fromStringToLocalDate("gsoijngiqhggbihfb");
+			computerMapper.fromStringToLocalDate("gsoijngiqhggbihfb");
 			fail("le parsing devait echouer");
 		} catch (DateTimeParseException e) {
 			assertEquals(DateTimeParseException.class,e.getClass());
@@ -48,7 +52,7 @@ public class ComputerMapperTest {
 	@Test
 	public void testFromStringToLocalDateWithDateString() {
 		try {
-			assertEquals(LocalDate.of(1999, Month.DECEMBER, 1), instance.fromStringToLocalDate("1999-12-01"));
+			assertEquals(LocalDate.of(1999, Month.DECEMBER, 1), computerMapper.fromStringToLocalDate("1999-12-01"));
 		} catch (DateTimeParseException e) {
 			fail("le Parsing devait se passer correctement");
 		}
@@ -57,11 +61,13 @@ public class ComputerMapperTest {
 	@Test
 	public void testFromStringToLocalDateWithNull() {
 		try {
-			assertEquals(null, instance.fromStringToLocalDate(""));
+			assertEquals(null, computerMapper.fromStringToLocalDate(""));
 		} catch (NullPointerException e) {
 			fail("le teste ne devait pas echouer");
 		}
 	}
+
+
 	
 
 }

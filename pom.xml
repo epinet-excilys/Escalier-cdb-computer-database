@@ -22,7 +22,7 @@
 		<slf4j-version>1.7.5</slf4j-version>
 		<mysql-version>8.0.18</mysql-version>
 		<mockito-version>2.10.0</mockito-version>
-		<junit-version>4.11</junit-version>
+		<junit-version>4.12</junit-version>
 		<h2-version>1.4.195</h2-version>
 		<servlet-api-version>4.0.0-b06</servlet-api-version>
 		<jstl-version>1.2</jstl-version>
@@ -99,7 +99,12 @@
 			<artifactId>spring-web</artifactId>
 			<version>${Spring-version}</version>
 		</dependency>
-
+		<dependency>
+			<groupId>org.springframework</groupId>
+			<artifactId>spring-test</artifactId>
+			<version>${Spring-version}</version>
+			<scope>test</scope>
+		</dependency>
 	</dependencies>
 
 	<build>

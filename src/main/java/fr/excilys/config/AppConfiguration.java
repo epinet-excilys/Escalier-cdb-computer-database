@@ -7,7 +7,8 @@ import org.springframework.web.context.WebApplicationContext;
 import org.springframework.web.context.support.AnnotationConfigWebApplicationContext;
 
 @Configuration
-@ComponentScan(basePackages = { "fr.excilys.dao", "fr.excilys.service", "fr.excilys.servlet" })
+@ComponentScan(basePackages = { "fr.excilys.dao", "fr.excilys.service", "fr.excilys.servlet"
+		,"fr.excilys.pagination", "fr.excilys.mapper"})
 public class AppConfiguration extends AbstractContextLoaderInitializer {
 
 	@Override

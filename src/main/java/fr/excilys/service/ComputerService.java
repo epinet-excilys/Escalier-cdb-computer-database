@@ -4,27 +4,21 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Service;
+
 import fr.excilys.dao.ComputerDAO;
 import fr.excilys.exception.DatabaseDAOException;
 import fr.excilys.model.Computer;
 
+@Service
 public final class ComputerService {
 
-	private ComputerDAO computerDAO = ComputerDAO.getInstance();
-	private static volatile ComputerService instance = null;
+	private ComputerDAO computerDAO;
 
-	private ComputerService() {
-	}
-
-	public final static ComputerService getInstance() {
-		if (ComputerService.instance == null) {
-			synchronized (ComputerService.class) {
-				if (ComputerService.instance == null) {
-					ComputerService.instance = new ComputerService();
-				}
-			}
-		}
-		return ComputerService.instance;
+	@Autowired
+	public ComputerService(ComputerDAO computerDAO) {
+		this.computerDAO = computerDAO;
 	}
 
 	public void update(Computer computer) throws DatabaseDAOException {

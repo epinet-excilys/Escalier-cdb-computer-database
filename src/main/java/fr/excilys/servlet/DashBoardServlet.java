@@ -13,9 +13,13 @@ import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.context.support.SpringBeanAutowiringSupport;
 
+import fr.excilys.dao.ConnexionSQL;
 import fr.excilys.dto.ComputerDTO;
 import fr.excilys.exception.DatabaseDAOException;
 import fr.excilys.exception.DatabaseManipulationException;
@@ -26,11 +30,17 @@ import fr.excilys.service.ComputerService;
 @Controller
 public class DashBoardServlet extends HttpServlet {
 	private static final String DASHBOARD = "/WEB-INF/views/dashboard.jsp";
+	@Autowired
+	private ComputerService computerService;
+	@Autowired
+	private Paginate pagination;
+	
+	public static Logger LOGGER = LoggerFactory.getLogger(ConnexionSQL.class);
 	
 	
 	public void init(ServletConfig config) throws ServletException {
 		super.init(config);
-    	SpringBeanAutowiringSupport.processInjectionBasedOnCurrentContext(this);
+    	SpringBeanAutowiringSupport.processInjectionBasedOnServletContext(this,config.getServletContext());
 	}
 	
 	
@@ -38,7 +48,6 @@ public class DashBoardServlet extends HttpServlet {
 	protected void doGet(HttpServletRequest request, HttpServletResponse response)
 			throws ServletException, IOException {
 		List<ComputerDTO> computerDTOList = new ArrayList<>();
-		Paginate pagination = new Paginate();
 		try {
 			computerDTOList = pagination.paginate(request, response);
 		} catch (DatabaseDAOException databaseDAOException) {
@@ -64,7 +73,7 @@ public class DashBoardServlet extends HttpServlet {
 		listToDeleteAsString.stream().forEach(idToDelete -> listIdToDelete.add(Integer.parseInt(idToDelete)));
 		try {
 			for (int ID : listIdToDelete) {
-				ComputerService.getInstance().delete(ID);
+				computerService.delete(ID);
 			}
 		} catch (DatabaseDAOException databaseDAOException) {
 			// TODO EXCEPTION Catching
@@ -78,5 +87,6 @@ public class DashBoardServlet extends HttpServlet {
 	private <String> List<String> convertArrayToList(String array[]) {
 		return Arrays.stream(array).collect(Collectors.toList());
 	}
-
+	
+	
 }

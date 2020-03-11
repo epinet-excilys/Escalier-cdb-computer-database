@@ -4,30 +4,14 @@ import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.Optional;
 
+import org.springframework.stereotype.Component;
+
 import fr.excilys.dto.CompanyDTO;
 import fr.excilys.model.Company;
 
+@Component
 public final class CompanyMapper {
 
-	private static volatile CompanyMapper instance = null;
-
-	private CompanyMapper() {
-	}
-
-	public final static CompanyMapper getInstance() {
-
-		if (CompanyMapper.instance == null) {
-
-			synchronized (CompanyMapper.class) {
-				if (CompanyMapper.instance == null) {
-					CompanyMapper.instance = new CompanyMapper();
-				}
-			}
-		}
-		return CompanyMapper.instance;
-
-	}
-	
 	public Optional<Company> getCompanyFromResultSet(ResultSet resultSet) throws SQLException {
 		
 		int idComp = resultSet.getInt("id");

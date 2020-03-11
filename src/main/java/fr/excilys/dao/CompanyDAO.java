@@ -9,6 +9,7 @@ import java.util.Optional;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Repository;
 
 import java.sql.PreparedStatement;
@@ -21,32 +22,26 @@ import fr.excilys.model.Company;
 @Repository
 public final class CompanyDAO {
 
-	private static volatile CompanyDAO instance = null;
-
 	public static Logger LOGGER = LoggerFactory.getLogger(ConnexionSQL.class);
+	private ConnexionSQL connectionToGetAsAutoWired;
+	private CompanyMapper companyMapper;
 
-	private CompanyDAO() {
+	@Autowired
+	public CompanyDAO(ConnexionSQL connectionSQL, CompanyMapper companyMapper) {
+		this.connectionToGetAsAutoWired = connectionSQL;
+		this.companyMapper = companyMapper;
 	}
 
-	public final static CompanyDAO getInstance() {
-		if (CompanyDAO.instance == null) {
-			if (CompanyDAO.instance == null) {
-				CompanyDAO.instance = new CompanyDAO();
-			}
-		}
 
-		return CompanyDAO.instance;
-
-	}
 
 	public Optional<Company> findByID(int idSearch) {
 		
 		Optional<Company> optionalCompany = Optional.empty();
-		try (Connection connect = ConnexionSQL.getInstance().getConn();
+		try (Connection connect = connectionToGetAsAutoWired.getConn();
 				PreparedStatement stmt = connect.prepareStatement(EnumSQLCommand.GET_STATEMENT_COMPANY.getMessage());
 				ResultSet result = setResultSetForFindByID(idSearch, stmt);) {
 			if (result.first()) {
-				optionalCompany = CompanyMapper.getInstance().getCompanyFromResultSet(result);
+				optionalCompany = companyMapper.getCompanyFromResultSet(result);
 			}
 
 			return optionalCompany;
@@ -61,14 +56,14 @@ public final class CompanyDAO {
 		
 		List<Company> listCompany = new ArrayList<>();
 		Company company = new Company.Builder().build();
-		try (Connection connect = ConnexionSQL.getInstance().getConn();
+		try (Connection connect = connectionToGetAsAutoWired.getConn();
 				PreparedStatement stmt = connect
 						.prepareStatement(EnumSQLCommand.GET_ALL_STATEMENT_COMPANY.getMessage());
 				ResultSet result = stmt.executeQuery();) {
 
 			if (result.isBeforeFirst()) {
 				while (result.next()) {
-					company = CompanyMapper.getInstance().getCompanyFromResultSet(result).get();
+					company = companyMapper.getCompanyFromResultSet(result).get();
 					listCompany.add(company);
 				}
 			}
@@ -83,15 +78,13 @@ public final class CompanyDAO {
 
 	public int getNbRow() {
 
-		try (Connection connect = ConnexionSQL.getInstance().getConn();
+		try (Connection connect = connectionToGetAsAutoWired.getConn();
 				PreparedStatement stmt = connect
 						.prepareStatement(EnumSQLCommand.GET_NB_ROW_STATEMENT_COMPANY.getMessage());
 				ResultSet result = stmt.executeQuery();) {
-			int nbRow = 0;
 			if (result.first()) {
-				nbRow = result.getInt("Rows");
+				return result.getInt("Rows");
 
-				return nbRow;
 			}
 		} catch (SQLException sqlException) {
 			LOGGER.error(EnumErrorSQL.BDD_ACCESS_LOG.getMessage() + sqlException.getMessage());

@@ -7,6 +7,9 @@ import java.time.format.DateTimeFormatter;
 import java.util.Optional;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Component;
+
 import fr.excilys.dao.CompanyDAO;
 import fr.excilys.dao.ConnexionSQL;
 import fr.excilys.dto.CompanyDTO;
@@ -15,23 +18,15 @@ import fr.excilys.exception.EnumErrorSQL;
 import fr.excilys.model.Company;
 import fr.excilys.model.Computer;
 
+@Component
 public final class ComputerMapper {
 
-	private static volatile ComputerMapper instance = null;
 	public static Logger LOGGER = LoggerFactory.getLogger(ConnexionSQL.class);
-
-	private ComputerMapper() {
-	}
-
-	public final static ComputerMapper getInstance() {
-
-		if (ComputerMapper.instance == null) {
-			if (ComputerMapper.instance == null) {
-				ComputerMapper.instance = new ComputerMapper();
-			}
-		}
-		return ComputerMapper.instance;
-
+	private CompanyDAO companyDAO;
+	
+	@Autowired
+	public ComputerMapper(CompanyDAO companyDAO) {
+		this.companyDAO = companyDAO;
 	}
 
 	public Optional<Computer> getComputerFromResultSet(ResultSet resultSet) {
@@ -66,7 +61,7 @@ public final class ComputerMapper {
 
 		int idComp = Integer.parseInt(resultTab[4]);
 		Company company = new Company.Builder().build();
-		company = CompanyDAO.getInstance().findByID(idComp).get();
+		company = companyDAO.findByID(idComp).get();
 
 		Computer computer = new Computer.Builder().setIdBuild(id).setNameBuild(name).setIntroducedDateBuild(introDate)
 				.setDiscontinuedDateBuild(discoDate).setIdCompagnyBuild(company).build();

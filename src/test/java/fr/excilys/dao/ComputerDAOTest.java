@@ -11,20 +11,35 @@ import java.util.NoSuchElementException;
 import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;
+import org.junit.runner.RunWith;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.test.context.ContextConfiguration;
+import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
 
+import fr.excilys.config.AppConfiguration;
 import fr.excilys.exception.DatabaseManipulationException;
 import fr.excilys.mapper.ComputerMapper;
 import fr.excilys.model.Company;
 import fr.excilys.model.Computer;
 
+@RunWith(SpringJUnit4ClassRunner.class)
+@ContextConfiguration(classes = {AppConfiguration.class})
 public class ComputerDAOTest {
 
 	private final int INTENDED_USE_RETURN_VALUE = 1;
 	private final int TAILLE_PAGE = 10;
-
+	private ComputerDAO computerDAO;
+	private ComputerMapper computerMapper;
+	
+	@Autowired
+	public void setComputerDAO(ComputerDAO computerDAO, ComputerMapper computerMapper) {
+		this.computerDAO = computerDAO;
+		this.computerMapper = computerMapper; 
+	}
+	
 	@Test
 	public void testgetNBRows() {
-		assertTrue(ComputerDAO.getInstance().getNbRow() == 50);
+		assertTrue(computerDAO.getNbRow() == 50);
 	}
 
 	@Test
@@ -35,7 +50,7 @@ public class ComputerDAOTest {
 				.setDiscontinuedDateBuild(LocalDate.now().minusYears(1)).setIdCompagnyBuild(company).build();
 
 		try {
-			assertTrue(ComputerDAO.getInstance().create(computer) == INTENDED_USE_RETURN_VALUE);
+			assertTrue(computerDAO.create(computer) == INTENDED_USE_RETURN_VALUE);
 		} catch (NoSuchElementException e1) {
 			fail("Ajout n'a pas marcher à la BDD est impossible" + e1.getMessage());
 		}
@@ -50,7 +65,7 @@ public class ComputerDAOTest {
 				.setDiscontinuedDateBuild(LocalDate.now().minusYears(1)).build();
 
 		try {
-			assertTrue(ComputerDAO.getInstance().create(computer) == INTENDED_USE_RETURN_VALUE);
+			assertTrue(computerDAO.create(computer) == INTENDED_USE_RETURN_VALUE);
 		} catch (NoSuchElementException e1) {
 			fail("Ajout n'a pas marcher à la BDD est impossible" + e1.getMessage());
 		}
@@ -60,7 +75,7 @@ public class ComputerDAOTest {
 	@Test(expected = DatabaseManipulationException.class)
 	public void testAddComputerNull() {
 		Computer computer = null;
-		ComputerDAO.getInstance().create(computer);
+		computerDAO.create(computer);
 	}
 
 	@Test
@@ -69,7 +84,7 @@ public class ComputerDAOTest {
 		Computer computer = new Computer.Builder().setIdBuild(1).setNameBuild("MacBook Pro 15.4 inch")
 				.setIntroducedDateBuild(LocalDate.now().minusYears(5))
 				.setDiscontinuedDateBuild(LocalDate.now().minusYears(1)).setIdCompagnyBuild(company).build();
-		assertTrue(ComputerDAO.getInstance().update(computer) == INTENDED_USE_RETURN_VALUE);
+		assertTrue(computerDAO.update(computer) == INTENDED_USE_RETURN_VALUE);
 	}
 	
 	@Test
@@ -78,13 +93,13 @@ public class ComputerDAOTest {
 				.setIntroducedDateBuild(LocalDate.now().minusYears(5))
 				.setDiscontinuedDateBuild(LocalDate.now().minusYears(1)).build();
 
-		assertTrue(ComputerDAO.getInstance().update(computer) == INTENDED_USE_RETURN_VALUE);
+		assertTrue(computerDAO.update(computer) == INTENDED_USE_RETURN_VALUE);
 	}
 
 	@Test(expected = DatabaseManipulationException.class)
 	public void testModifComputerNull() {
 		Computer computer = new Computer.Builder().build();
-		ComputerDAO.getInstance().update(computer);
+		computerDAO.update(computer);
 	}
 
 	@Test(expected = DatabaseManipulationException.class)
@@ -93,7 +108,7 @@ public class ComputerDAOTest {
 		Computer computer = new Computer.Builder().setIdBuild(70).setNameBuild("MacBook Pro 15.4 inch")
 				.setIntroducedDateBuild(LocalDate.now().minusYears(5))
 				.setDiscontinuedDateBuild(LocalDate.now().minusYears(1)).setIdCompagnyBuild(company).build();
-		ComputerDAO.getInstance().update(computer);
+		computerDAO.update(computer);
 
 	}
 
@@ -104,7 +119,7 @@ public class ComputerDAOTest {
 				.setIntroducedDateBuild(LocalDate.now().minusYears(5))
 				.setDiscontinuedDateBuild(LocalDate.now().minusYears(1)).setIdCompagnyBuild(company).build();
 
-		assertTrue(ComputerDAO.getInstance().update(computer) == INTENDED_USE_RETURN_VALUE);
+		assertTrue(computerDAO.update(computer) == INTENDED_USE_RETURN_VALUE);
 	}
 
 	@Test(expected = DatabaseManipulationException.class)
@@ -114,14 +129,14 @@ public class ComputerDAOTest {
 				.setIntroducedDateBuild(LocalDate.now().minusYears(5))
 				.setDiscontinuedDateBuild(LocalDate.now().minusYears(1)).setIdCompagnyBuild(company).build();
 
-		ComputerDAO.getInstance().update(computer);
+		computerDAO.update(computer);
 	}
 
 	@Test(expected = DatabaseManipulationException.class)
 	public void testDeleteComputerNullId() {
 		Computer computer = new Computer.Builder().build();
 
-		ComputerDAO.getInstance().update(computer);
+		computerDAO.update(computer);
 	}
 
 	@Test
@@ -130,18 +145,18 @@ public class ComputerDAOTest {
 		Computer computer = new Computer.Builder().setIdBuild(1).setNameBuild("MacBook Pro 15.4 inch")
 				.setIntroducedDateBuild(null).setDiscontinuedDateBuild(null).setIdCompagnyBuild(company).build();
 
-		assertTrue(ComputerDAO.getInstance().findByID(1).get().equals(computer));
+		assertTrue(computerDAO.findByID(1).get().equals(computer));
 	}
 
 	@Test
 	public void testFindIdEqualZero() {
-		assertFalse(ComputerDAO.getInstance().findByID(0).isPresent());
+		assertFalse(computerDAO.findByID(0).isPresent());
 	}
 
 	@Test
 	public void testFindAllPaginateCorrectSize() {
 		List<Computer> computers = new ArrayList<>();
-		computers = ComputerDAO.getInstance().findAllPaginate(0, TAILLE_PAGE);
+		computers = computerDAO.findAllPaginate(0, TAILLE_PAGE);
 
 		assertTrue(computers.size() == TAILLE_PAGE);
 	}
@@ -149,14 +164,14 @@ public class ComputerDAOTest {
 	@Test
 	public void testFindAllPaginateWrongEntry() {
 		List<Computer> computers = new ArrayList<>();
-		computers = ComputerDAO.getInstance().findAllPaginate(-5, TAILLE_PAGE);
+		computers = computerDAO.findAllPaginate(-5, TAILLE_PAGE);
 
 		assertTrue(computers.size() == TAILLE_PAGE);
 	}
 
 	@Test
 	public void testFindAllPaginateAllComputersListAreEquals() {
-		List<Computer> computersBDD = ComputerDAO.getInstance().findAllPaginate(0, TAILLE_PAGE);
+		List<Computer> computersBDD = computerDAO.findAllPaginate(0, TAILLE_PAGE);
 		List<Computer> computersAdd = getTheFirst10Computers();
 
 		assertEquals(computersBDD, computersAdd);
@@ -180,11 +195,11 @@ public class ComputerDAOTest {
 				.setDiscontinuedDateBuild(null).setIdCompagnyBuild(company2).build();
 		computerList.add(computer4);
 		Computer computer5 = new Computer.Builder().setIdBuild(5).setNameBuild("CM-5")
-				.setIntroducedDateBuild(ComputerMapper.getInstance().fromStringToLocalDate("1991-01-01"))
+				.setIntroducedDateBuild(computerMapper.fromStringToLocalDate("1991-01-01"))
 				.setDiscontinuedDateBuild(null).setIdCompagnyBuild(company2).build();
 		computerList.add(computer5);
 		Computer computer6 = new Computer.Builder().setIdBuild(6).setNameBuild("MacBook Pro")
-				.setIntroducedDateBuild(ComputerMapper.getInstance().fromStringToLocalDate("2006-01-10"))
+				.setIntroducedDateBuild(computerMapper.fromStringToLocalDate("2006-01-10"))
 				.setDiscontinuedDateBuild(null).setIdCompagnyBuild(company1).build();
 		computerList.add(computer6);
 		Computer computer7 = new Computer.Builder().setIdBuild(7).setNameBuild("Apple IIe").setIntroducedDateBuild(null)

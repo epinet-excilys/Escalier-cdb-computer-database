@@ -11,6 +11,7 @@ import java.util.List;
 import java.util.Optional;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Repository;
 
 import fr.excilys.exception.DatabaseDAOException;
@@ -21,27 +22,20 @@ import fr.excilys.model.Computer;
 @Repository
 public final class ComputerDAO {
 
-	private static volatile ComputerDAO instance = null;
-
 	public static Logger LOGGER = LoggerFactory.getLogger(ConnexionSQL.class);
-
-	private ComputerDAO() {
-	}
-
-	public final static ComputerDAO getInstance() {
-		if (ComputerDAO.instance == null) {
-			if (ComputerDAO.instance == null) {
-				ComputerDAO.instance = new ComputerDAO();
-			}
-		}
-
-		return ComputerDAO.instance;
+	private ConnexionSQL connectionToGetAsAutoWired;
+	private ComputerMapper computerMapper;
+	
+	@Autowired
+	public ComputerDAO(ConnexionSQL connectionSQL,ComputerMapper computerMapper) {
+		this.connectionToGetAsAutoWired = connectionSQL;
+		this.computerMapper = computerMapper;
 	}
 
 	public int create(Computer computer) {
 		if (computer != null) {
 			if (!computer.getName().isEmpty()) {
-				try (Connection connect = ConnexionSQL.getInstance().getConn();
+				try (Connection connect = connectionToGetAsAutoWired.getConnectionAsAutoWired();
 						PreparedStatement Statement = connect
 								.prepareStatement(EnumSQLCommand.CREATE_STATEMENT.getMessage());) {
 					setPreparedStatementCreate(Statement, computer);
@@ -61,7 +55,7 @@ public final class ComputerDAO {
 
 	public int delete(int idSuppression) {
 
-		try (Connection connect = ConnexionSQL.getInstance().getConn();
+		try (Connection connect = connectionToGetAsAutoWired.getConnectionAsAutoWired();
 				PreparedStatement stmt = connect.prepareStatement(EnumSQLCommand.DELETE_STATEMENT.getMessage());) {
 			stmt.setInt(1, idSuppression);
 
@@ -70,13 +64,13 @@ public final class ComputerDAO {
 		} catch (SQLException sqlException) {
 			LOGGER.error(EnumErrorSQL.BDD_ACCESS_LOG.getMessage() + sqlException.getMessage());
 		}
-		throw new DatabaseDAOException("Create");
+		throw new DatabaseDAOException("Delete");
 	}
 
 	public int update(Computer computer) {
 
 		if (!("").equals(computer.getName())) {
-			try (Connection connect = ConnexionSQL.getInstance().getConn();
+			try (Connection connect = connectionToGetAsAutoWired.getConnectionAsAutoWired();
 					PreparedStatement statement = connect
 							.prepareStatement(EnumSQLCommand.UPDATE_STATEMENT.getMessage());) {
 				setPreparedStatementUpdate(statement, computer);
@@ -101,12 +95,12 @@ public final class ComputerDAO {
 	public Optional<Computer> findByID(int idSearch) {
 
 		Optional<Computer> OptionalComputer = Optional.empty();
-		try (Connection connect = ConnexionSQL.getInstance().getConn();
+		try (Connection connect = connectionToGetAsAutoWired.getConnectionAsAutoWired();
 				PreparedStatement stmt = connect.prepareStatement(EnumSQLCommand.GET_STATEMENT.getMessage());
 				ResultSet result = setResultSetForFindByID(idSearch, stmt);) {
 			if (result.isBeforeFirst()) {
 				result.next();
-				OptionalComputer = ComputerMapper.getInstance().getComputerFromResultSet(result);
+				OptionalComputer = computerMapper.getComputerFromResultSet(result);
 			}
 
 		} catch (SQLException sqlException) {
@@ -121,12 +115,12 @@ public final class ComputerDAO {
 
 		List<Computer> computerList = new ArrayList<>();
 		Computer computer = new Computer.Builder().build();
-		try (Connection connect = ConnexionSQL.getInstance().getConn();
+		try (Connection connect = connectionToGetAsAutoWired.getConnectionAsAutoWired();
 				PreparedStatement stmt = connect.prepareStatement(EnumSQLCommand.GET_ALL_STATEMENT.getMessage());
 				ResultSet result = stmt.executeQuery();) {
 			if (result.isBeforeFirst()) {
 				while (result.next()) {
-					computer = ComputerMapper.getInstance().getComputerFromResultSet(result).get();
+					computer = computerMapper.getComputerFromResultSet(result).get();
 					computerList.add(computer);
 				}
 			}
@@ -142,13 +136,13 @@ public final class ComputerDAO {
 
 		List<Computer> computerList = new ArrayList<>();
 		Computer computer = new Computer.Builder().build();
-		try (Connection connect = ConnexionSQL.getInstance().getConn();
+		try (Connection connect = connectionToGetAsAutoWired.getConnectionAsAutoWired();
 				PreparedStatement stmt = connect
 						.prepareStatement(EnumSQLCommand.GET_ALL_PAGINATE_STATEMENT.getMessage());
 				ResultSet result = setResultSetWithPreparedStatement(ligneDebutOffSet, taillePage, stmt);) {
 			if (result.isBeforeFirst()) {
 				while (result.next()) {
-					computer = ComputerMapper.getInstance().getComputerFromResultSet(result).get();
+					computer = computerMapper.getComputerFromResultSet(result).get();
 					computerList.add(computer);
 				}
 			}
@@ -165,14 +159,14 @@ public final class ComputerDAO {
 
 		List<Computer> computerList = new ArrayList<>();
 		Computer computer = new Computer.Builder().build();
-		try (Connection connect = ConnexionSQL.getInstance().getConn();
+		try (Connection connect = connectionToGetAsAutoWired.getConnectionAsAutoWired();
 				PreparedStatement stmt = connect
 						.prepareStatement(EnumSQLCommand.GET_ALL_PAGINATE_ORDER_LIKE_NAME_STATEMENT.getMessage());
 				ResultSet result = setResultSetWithPreparedStatementSearch(search, ligneDebutOffSet, taillePage,
 						stmt);) {
 			if (result.isBeforeFirst()) {
 				while (result.next()) {
-					computer = ComputerMapper.getInstance().getComputerFromResultSet(result).get();
+					computer = computerMapper.getComputerFromResultSet(result).get();
 					computerList.add(computer);
 				}
 			}
@@ -188,13 +182,13 @@ public final class ComputerDAO {
 
 		List<Computer> computerList = new ArrayList<>();
 		Computer computer = new Computer.Builder().build();
-		try (Connection connect = ConnexionSQL.getInstance().getConn();
+		try (Connection connect = connectionToGetAsAutoWired.getConnectionAsAutoWired();
 				PreparedStatement stmt = connect
 						.prepareStatement(EnumSQLCommand.GET_ALL_PAGINATE_ORDER_BY_NAME_STATEMENT.getMessage());
 				ResultSet result = setResultSetWithPreparedStatement(ligneDebutOffSet, taillePage, stmt);) {
 			if (result.isBeforeFirst()) {
 				while (result.next()) {
-					computer = ComputerMapper.getInstance().getComputerFromResultSet(result).get();
+					computer = computerMapper.getComputerFromResultSet(result).get();
 					computerList.add(computer);
 				}
 			}
@@ -208,7 +202,7 @@ public final class ComputerDAO {
 
 	public int getNbRow() {
 
-		try (Connection connect = ConnexionSQL.getInstance().getConn();
+		try (Connection connect = connectionToGetAsAutoWired.getConnectionAsAutoWired();
 				PreparedStatement stmt = connect.prepareStatement(EnumSQLCommand.GET_NB_ROW_STATEMENT.getMessage());
 				ResultSet result = stmt.executeQuery();) {
 
@@ -226,7 +220,7 @@ public final class ComputerDAO {
 
 	public int getNbRowSearch(String search) {
 
-		try (Connection connect = ConnexionSQL.getInstance().getConn();
+		try (Connection connect = connectionToGetAsAutoWired.getConnectionAsAutoWired();
 				PreparedStatement stmt = connect
 						.prepareStatement(EnumSQLCommand.GET_NB_ROW_LIKE_STATEMENT.getMessage());
 				ResultSet result = stmt.executeQuery();) {

@@ -1,4 +1,3 @@
-
 <%@page language="java" contentType="text/html; charset=UTF-8"
 	pageEncoding="UTF-8"%>
 
@@ -183,7 +182,7 @@
 	</footer>
 	<script src="resources/js/jquery.min.js"></script>
 	<script src="resources/js/bootstrap.min.js"></script>
-	<script src="resoucres/js/dashboard.js"></script>
+	<script src="resources/js/dashboard.js"></script>
 
 </body>
 </html>

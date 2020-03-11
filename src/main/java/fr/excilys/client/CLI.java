@@ -17,11 +17,16 @@ public class CLI {
 	private String[] tabRep = { "", "", "", "", "" };
 	private boolean flagContinue;
 	private final int TAILLE_PAGE = 20;
-	
-	
-	public CLI() {
-		scanner = new Scanner(System.in);
+	private ComputerService computerService;
+	private CompanyService companyService;
+	private ComputerMapper computerMapper;
 
+
+	public CLI(ComputerService computerService, CompanyService companyService, ComputerMapper computerMapper) {
+		scanner = new Scanner(System.in);
+		this.computerService = computerService;
+		this.companyService = companyService;
+		this.computerMapper = computerMapper;
 	}
 
 	public void demonstration() {
@@ -83,7 +88,7 @@ public class CLI {
 
 		afficher("Vous allez saisir les valeurs champs par champs");
 
-		int i = (ComputerService.getInstance().getNbRows() + 1);
+		int i = (computerService.getNbRows() + 1);
 
 		String passage_1 = "" + i + "";
 
@@ -101,14 +106,14 @@ public class CLI {
 		afficher("Saisir l'id de la companie ");
 		tabRep[4] = String.valueOf(scannerIdCompan("ajoutez"));
 
-		computer = ComputerMapper.getInstance().fromStringToComput(tabRep);
+		computer = computerMapper.fromStringToComput(tabRep);
 		
 		tabRep = new String[5];
 
 		afficher(computer);
 
 
-			ComputerDAO.getInstance().create(computer);
+			computerService.add(computer);
 
 	}
 
@@ -116,7 +121,7 @@ public class CLI {
 		int commandeId = scannerIdComput("afficher");
 
 		if (commandeId != -1) {
-			Optional<Computer> comp = ComputerService.getInstance().findByID(commandeId);
+			Optional<Computer> comp = computerService.findByID(commandeId);
 			if (comp.isPresent()) {
 
 				tabRep[0] = String.valueOf(comp.get().getId());
@@ -138,13 +143,13 @@ public class CLI {
 				tabRep[4] = String.valueOf(scannerIdCompan("ajoutez"));
 
 				Computer computer = new Computer.Builder().build();
-				computer = ComputerMapper.getInstance().fromStringToComput(tabRep);
+				computer = computerMapper.fromStringToComput(tabRep);
 				
 				tabRep = new String[5];
 
 				afficher(computer);
 				
-				ComputerDAO.getInstance().update(computer);
+				computerService.update(computer);
 			
 			} else {
 				afficher("Pas de Correspondance en Base");
@@ -160,10 +165,10 @@ public class CLI {
 
 		if (commandeId != -1) {
 
-			Computer comp = ComputerService.getInstance().findByID(commandeId).get();
+			Computer comp = computerService.findByID(commandeId).get();
 			afficher(comp);
 
-			ComputerService.getInstance().delete(comp.getId());
+			computerService.delete(comp.getId());
 		} else {
 			afficher("Pas de Correspondance en Base");
 		}
@@ -175,7 +180,7 @@ public class CLI {
 		int commandeId = scannerIdComput("afficher");
 
 		if (commandeId != -1) {
-			Optional<Computer> comp = ComputerService.getInstance().findByID(commandeId);
+			Optional<Computer> comp = computerService.findByID(commandeId);
 			if (comp.isPresent()) {
 				afficher(comp);
 			} else {
@@ -187,7 +192,7 @@ public class CLI {
 	}
 
 	public void affiAllComput() {
-		List<Computer> list = ComputerService.getInstance().getAllComput();
+		List<Computer> list = computerService.getAllComput();
 
 		for (Computer c : list) {
 			afficher(c);
@@ -196,11 +201,11 @@ public class CLI {
 	}
 
 	public void affiAllPaginateComput() {
-		int nbTotalRows = ComputerService.getInstance().getNbRows();
+		int nbTotalRows = computerService.getNbRows();
 		int currentRow = 0;
 
 		do {
-			List<Computer> list = ComputerService.getInstance().getAllPaginateComput(currentRow, TAILLE_PAGE);
+			List<Computer> list = computerService.getAllPaginateComput(currentRow, TAILLE_PAGE);
 			for (Computer c : list) {
 				afficher(c);
 			}
@@ -213,19 +218,13 @@ public class CLI {
 
 	}
 
-	// Methode
-	// Compan-----------------------------------------------------------------------------------
-
 	public void affiAllCompan() {
-		List<Company> list = CompanyService.getInstance().getAllCompany();
+		List<Company> list = companyService.getAllCompany();
 
 		for (Company c : list) {
 			afficher(c);
 		}
 	}
-
-	// Methode
-	// Console-----------------------------------------------------------
 
 	public void afficher(Object s) {
 		System.out.println(s);
@@ -263,7 +262,7 @@ public class CLI {
 	}
 
 	public int scannerIdComput(String personnalisation) {
-		int valMaxId = ComputerService.getInstance().getNbRows();
+		int valMaxId = computerService.getNbRows();
 		int repEnInt = -1;
 		String rep = "";
 		if (valMaxId != -1) {
@@ -288,7 +287,7 @@ public class CLI {
 	}
 
 	public int scannerIdCompan(String personnalisation) {
-		int valMaxId = CompanyService.getInstance().getNbRows();
+		int valMaxId = companyService.getNbRows();
 		int repEnInt = -1;
 		String rep = "";
 		if (valMaxId != -1) {
