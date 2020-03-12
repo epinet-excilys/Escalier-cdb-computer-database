@@ -26,7 +26,6 @@ public final class ComputerDAO {
 	private ConnexionSQL connectionToGetAsAutoWired;
 	private ComputerMapper computerMapper;
 	
-	@Autowired
 	public ComputerDAO(ConnexionSQL connectionSQL,ComputerMapper computerMapper) {
 		this.connectionToGetAsAutoWired = connectionSQL;
 		this.computerMapper = computerMapper;
@@ -178,13 +177,13 @@ public final class ComputerDAO {
 		}
 	}
 
-	public List<Computer> findAllPaginateAlphabeticOrder(int ligneDebutOffSet, int taillePage) {
+	public List<Computer> findAllPaginateOrder(int ligneDebutOffSet, int taillePage, String order) {
 
 		List<Computer> computerList = new ArrayList<>();
 		Computer computer = new Computer.Builder().build();
 		try (Connection connect = connectionToGetAsAutoWired.getConnectionAsAutoWired();
 				PreparedStatement stmt = connect
-						.prepareStatement(EnumSQLCommand.GET_ALL_PAGINATE_ORDER_BY_NAME_STATEMENT.getMessage());
+						.prepareStatement(getOrderByStatement(order));
 				ResultSet result = setResultSetWithPreparedStatement(ligneDebutOffSet, taillePage, stmt);) {
 			if (result.isBeforeFirst()) {
 				while (result.next()) {
@@ -198,6 +197,36 @@ public final class ComputerDAO {
 			LOGGER.error(EnumErrorSQL.BDD_ACCESS_LOG.getMessage() + sqlException.getMessage());
 			throw new DatabaseDAOException("FindAllPaginateAplhaOrder");
 		}
+	}
+
+	public List<Integer> findAllByCompanyId(int iDCompany){
+		
+		List<Integer> iDComputerListWithSameCompanyID = new ArrayList<>();
+		
+		try (Connection connect = connectionToGetAsAutoWired.getConnectionAsAutoWired();
+				PreparedStatement stmt = connect
+						.prepareStatement(EnumSQLCommand.GET_ALL_PAGINATE_STATEMENT.getMessage());
+				ResultSet result = setResultSetWithPreparedStatementFindByCompany(iDCompany, stmt);) {
+			if (result.isBeforeFirst()) {
+				while (result.next()) {
+					iDComputerListWithSameCompanyID.add(result.getInt("id"));
+				}
+			}
+			return iDComputerListWithSameCompanyID;
+
+		} catch (SQLException sqlException) {
+			LOGGER.error(EnumErrorSQL.BDD_ACCESS_LOG.getMessage() + sqlException.getMessage());
+			throw new DatabaseDAOException("FindAllPaginate");
+		}
+
+	}
+	
+	private ResultSet setResultSetWithPreparedStatementFindByCompany(int iDCompany, PreparedStatement stmt) throws SQLException {
+		
+		stmt.setInt(1, iDCompany);
+		ResultSet result = stmt.executeQuery();
+
+		return result;
 	}
 
 	public int getNbRow() {
@@ -236,6 +265,43 @@ public final class ComputerDAO {
 		throw new DatabaseDAOException("NbRowsSearch");
 	}
 
+	public int deleteByGroup(List<Integer> listIDToDelete) {
+		
+		try (Connection connect = connectionToGetAsAutoWired.getConnectionAsAutoWired();) {
+			
+			String interogationForInsertionToDelete = getInterogationForInsertionToDelete(listIDToDelete);
+			PreparedStatement stmt = setPreparedStatementForGroupDelete(listIDToDelete, connect,
+					interogationForInsertionToDelete);
+
+			return stmt.executeUpdate();
+
+		} catch (SQLException sqlException) {
+			LOGGER.error(EnumErrorSQL.BDD_ACCESS_LOG.getMessage() + sqlException.getMessage());
+			throw new DatabaseDAOException("DeleteByGroup");
+		}
+	}
+	
+	private PreparedStatement setPreparedStatementForGroupDelete(List<Integer> listIDToDelete, Connection connect,
+			String interogationForInsertionToDelete) throws SQLException {
+		PreparedStatement stmt = 
+				connect.prepareStatement(EnumSQLCommand.DELETE_STATEMENT_GROUP.getMessage()+interogationForInsertionToDelete);
+		
+		for(int i=0;i<listIDToDelete.size(); i++) {
+			stmt.setInt((i+1), listIDToDelete.get(i));
+		}
+		
+		return stmt;
+	}
+
+	private String getInterogationForInsertionToDelete(List<Integer> listIDToDelete) {
+		String interogationForInsertionToDelete = "";
+		for(int i=0; i<listIDToDelete.size()-1 ; i++) {
+			interogationForInsertionToDelete +="?,";
+		}
+		interogationForInsertionToDelete +="?);";
+		return interogationForInsertionToDelete;
+	}
+	
 	private ResultSet setResulSetWithPreparedStatementGetNbRowSearch(PreparedStatement stmt, String search) throws SQLException {
 		
 		stmt.setString(1, "%" + search + "%");
@@ -308,4 +374,9 @@ public final class ComputerDAO {
 						? Timestamp.valueOf(computer.getDiscontinuedDate().atTime(LocalTime.MIDNIGHT))
 						: null);
 	}
+
+	private String getOrderByStatement(String order) {
+		return EnumSQLCommand.GET_ALL_PAGINATE_ORDER_BY_STATEMENT.getMessage() + order + " LIMIT ?,?;";
+	}
+	
 }

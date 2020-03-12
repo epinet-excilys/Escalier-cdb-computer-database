@@ -34,16 +34,13 @@ public class DashBoardServlet extends HttpServlet {
 	private ComputerService computerService;
 	@Autowired
 	private Paginate pagination;
-	
+
 	public static Logger LOGGER = LoggerFactory.getLogger(ConnexionSQL.class);
-	
-	
+
 	public void init(ServletConfig config) throws ServletException {
 		super.init(config);
-    	SpringBeanAutowiringSupport.processInjectionBasedOnServletContext(this,config.getServletContext());
+		SpringBeanAutowiringSupport.processInjectionBasedOnServletContext(this, config.getServletContext());
 	}
-	
-	
 
 	protected void doGet(HttpServletRequest request, HttpServletResponse response)
 			throws ServletException, IOException {
@@ -62,19 +59,9 @@ public class DashBoardServlet extends HttpServlet {
 
 	protected void doPost(HttpServletRequest request, HttpServletResponse response)
 			throws ServletException, IOException {
-		int pageSize = 20;
-		if (request.getParameter("taillePage") != null) {
-			pageSize = Integer.parseInt(request.getParameter("taillePage"));
-		}
-		String selectionToDelete = request.getParameter("selection");
-		String[] splitChoiceToDelete = selectionToDelete.split(",", pageSize);
-		List<String> listToDeleteAsString = convertArrayToList(splitChoiceToDelete);
-		List<Integer> listIdToDelete = new ArrayList<>();
-		listToDeleteAsString.stream().forEach(idToDelete -> listIdToDelete.add(Integer.parseInt(idToDelete)));
+
 		try {
-			for (int ID : listIdToDelete) {
-				computerService.delete(ID);
-			}
+			computerService.deleteByGroup(request);
 		} catch (DatabaseDAOException databaseDAOException) {
 			// TODO EXCEPTION Catching
 		} catch (DatabaseManipulationException databaseManipulationException) {
@@ -84,9 +71,4 @@ public class DashBoardServlet extends HttpServlet {
 		doGet(request, response);
 	}
 
-	private <String> List<String> convertArrayToList(String array[]) {
-		return Arrays.stream(array).collect(Collectors.toList());
-	}
-	
-	
 }

@@ -1,8 +1,12 @@
 package fr.excilys.service;
 
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 import java.util.Optional;
+import java.util.stream.Collectors;
+
+import javax.servlet.http.HttpServletRequest;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -31,6 +35,11 @@ public final class ComputerService {
 
 	public void delete(int iD) throws DatabaseDAOException{
 		computerDAO.delete(iD);
+	}
+	
+	public void deleteByGroup(HttpServletRequest request) throws DatabaseDAOException{
+		
+		computerDAO.deleteByGroup(getListIDToDelete(request));
 	}
 
 	public Optional<Computer> findByID(int ID) throws DatabaseDAOException {
@@ -63,10 +72,12 @@ public final class ComputerService {
 		return listComputer;
 	}
 	
-	public List<Computer> findAllPaginateAlphabeticOrder(int ligneDebutOffSet, int taillePage) throws DatabaseDAOException{
+	public List<Computer> findAllPaginateOrder(int ligneDebutOffSet, int taillePage, String order) throws DatabaseDAOException{
+		
+		String orderBy = getCorrectOrder(order.toUpperCase());
 		List<Computer> listComputer = new ArrayList<>();
-		listComputer = computerDAO.findAllPaginateAlphabeticOrder(ligneDebutOffSet, taillePage);
-
+		listComputer = computerDAO.findAllPaginateOrder(ligneDebutOffSet, taillePage,orderBy);
+		
 		return listComputer;
 	}
 
@@ -78,6 +89,43 @@ public final class ComputerService {
 	public int getNbRowsSearch(String search) throws DatabaseDAOException{
 
 		return computerDAO.getNbRowSearch(search);
+	}
+	
+	private List<Integer> getListIDToDelete(HttpServletRequest request) {
+		int pageSize = 20;
+		
+		if (request.getParameter("taillePage") != null) {
+			pageSize = Integer.parseInt(request.getParameter("taillePage"));
+		}
+		
+		String selectionToDelete = request.getParameter("selection");
+		String[] splitChoiceToDelete = selectionToDelete.split(",", pageSize);
+		List<String> listToDeleteAsString = convertArrayToList(splitChoiceToDelete);
+		List<Integer> listIdToDelete = new ArrayList<>();
+		listToDeleteAsString.stream().forEach(idToDelete -> listIdToDelete.add(Integer.parseInt(idToDelete)));
+
+		return listIdToDelete;	
+	}
+	
+	private <String> List<String> convertArrayToList(String array[]) {
+		return Arrays.stream(array).collect(Collectors.toList());
+	}
+	
+	private String getCorrectOrder (String order){
+		
+			switch (order) {
+			case "COMPUTER":
+				return (EnumOrderBy.COMPUTER_DAO.getMessage());
+			case "INTRODUCED":
+				return (EnumOrderBy.INTRODUCED_DATE_DAO.getMessage());
+			case "DISCONTINUED":
+				return (EnumOrderBy.DISCONTINUED_DATE_DAO.getMessage());
+			case "COMPANY":
+				return (EnumOrderBy.COMPANY_DAO.getMessage());
+			default:
+				return (EnumOrderBy.COMPUTER_DAO.getMessage());
+			}
+			
 	}
 
 }

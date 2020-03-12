@@ -73,21 +73,18 @@
 									class="fa fa-trash-o fa-lg"></i>
 							</a>
 						</span></th>
-						<th><c:choose>
-								<c:when test="${ (orderName != null) and (orderName != '') }">
-									<a href="DashBoard?orderName=orderByName" id="order"
-										name="orderName" value="ordeerByName" class="alert-link">Computer
-										name</a> &#x25b2;
-							</c:when>
-								<c:otherwise>
-									<a href="DashBoard?orderName=''" id="order" name="orderName"
-										value="" class="alert-link">Computer name</a> &#x25b2;
-								</c:otherwise>
-							</c:choose></th>
-						<th>Introduced date</th>
-						<th>Discontinued date</th>
-						<th>Company</th>
-
+						 <th>
+                          <a href="DashBoard?order=Computer">Computer name</a>
+                        </th>
+                        <th>
+                            <a href="DashBoard?order=Introduced">Introduced date</a>
+                        </th>
+                        <th>
+                          <a href="DashBoard?order=Discontinued">  Discontinued date</a>
+                        </th>
+                        <th>
+                            <a href="DashBoard?order=Company">Company</a>
+                        </th>
 					</tr>
 				</thead>
 
@@ -142,7 +139,7 @@
 							href="DashBoard?pageIterator=${ pageIterator + 1 }
 										<c:if test="${ taillePage != null }">&taillePage=${ taillePage }</c:if>
 										<c:if test="${ (search != null) and (search != '') }">&search=${ search }</c:if>
-										<c:if test="${ orderName != null and (orderName != '') }">&orderName=${ orderName }</c:if>"
+										<c:if test="${ order != null and (order != '') }">&order=${ order }</c:if>"
 							aria-label="Next"> <span aria-hidden="true">&raquo;</span>
 						</a>
 					</c:if></li>
@@ -152,28 +149,28 @@
 				<a
 					href="DashBoard?pageIterator=0&taillePage=10
 					<c:if test="${ (search != null) and (search != '') }">&search=${ search }</c:if>
-										<c:if test="${ orderName != null and (orderName != '') }">&orderName=${ orderName }</c:if>">
+										<c:if test="${ order != null and (order != '') }">&order=${ order }</c:if>">
 					<button type="button" class="btn btn-default"
 						onclick="<c:set var="pageIterator" value="0" />">10</button>
 				</a>
 				<a
 					href="DashBoard?pageIterator=0&taillePage=20
 					<c:if test="${ (search != null) and (search != '') }">&search=${ search }</c:if>
-										<c:if test="${ orderName != null and (orderName != '') }">&orderName=${ orderName }</c:if>">
+										<c:if test="${ order != null and (order != '') }">&order=${ order }</c:if>">
 					<button type="button" class="btn btn-default"
 						onclick="<c:set var="pageIterator" value="0" />">20</button>
 				</a>
 				<a
 					href="DashBoard?pageIterator=0&taillePage=50
 					<c:if test="${ (search != null) and (search != '') }">&search=${ search }</c:if>
-										<c:if test="${ orderName != null and (orderName != '') }">&orderName=${ orderName }</c:if>">
+										<c:if test="${ order != null and (order != '') }">&order=${ order }</c:if>">
 					<button type="button" class="btn btn-default"
 						onclick="<c:set var="pageIterator" value="0" />">50</button>
 				</a>
 				<a
 					href="DashBoard?pageIterator=0&taillePage=100
 					<c:if test="${ (search != null) and (search != '') }">&search=${ search }</c:if>
-										<c:if test="${ orderName != null and (orderName != '') }">&orderName=${ orderName }</c:if>">
+										<c:if test="${ order != null and (order != '') }">&order=${ order }</c:if>">
 					<button type="button" class="btn btn-default"
 						onclick="<c:set var="pageIterator" value="0" />">100</button>
 				</a>

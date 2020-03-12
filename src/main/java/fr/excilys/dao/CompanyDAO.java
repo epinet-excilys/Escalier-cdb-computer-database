@@ -26,12 +26,33 @@ public final class CompanyDAO {
 	private ConnexionSQL connectionToGetAsAutoWired;
 	private CompanyMapper companyMapper;
 
-	@Autowired
 	public CompanyDAO(ConnexionSQL connectionSQL, CompanyMapper companyMapper) {
 		this.connectionToGetAsAutoWired = connectionSQL;
 		this.companyMapper = companyMapper;
 	}
 
+	public void deleteCompany(int iDCompany) {
+		
+		try (Connection connect = connectionToGetAsAutoWired.getConn();
+				PreparedStatement statementComputers = connect.prepareStatement(EnumSQLCommand.DELETE_STATEMENT_COMPUTER_WHERE_COMPANY.getMessage());
+				PreparedStatement statementCompany = connect.prepareStatement(EnumSQLCommand.DELETE_STATEMENT_COMPANY.getMessage());){
+			
+			connect.setAutoCommit(false);
+			
+			statementComputers.setInt(1, iDCompany);
+			statementCompany.setInt(1, iDCompany);
+			statementComputers.executeUpdate();
+			statementCompany.executeUpdate();
+			
+			connect.commit();
+			connect.setAutoCommit(true);
+			
+		} catch (SQLException sqlException) {
+			LOGGER.error(EnumErrorSQL.BDD_ACCESS_LOG.getMessage() + sqlException.getMessage());
+			throw new DatabaseDAOException("Delete Company");
+		}
+		
+	}
 
 
 	public Optional<Company> findByID(int idSearch) {
@@ -39,7 +60,7 @@ public final class CompanyDAO {
 		Optional<Company> optionalCompany = Optional.empty();
 		try (Connection connect = connectionToGetAsAutoWired.getConn();
 				PreparedStatement stmt = connect.prepareStatement(EnumSQLCommand.GET_STATEMENT_COMPANY.getMessage());
-				ResultSet result = setResultSetForFindByID(idSearch, stmt);) {
+				ResultSet result = setResultSetForID(idSearch, stmt);) {
 			if (result.first()) {
 				optionalCompany = companyMapper.getCompanyFromResultSet(result);
 			}
@@ -92,9 +113,9 @@ public final class CompanyDAO {
 		throw new DatabaseDAOException("NbRows in Company");
 	}	
 	
-	private ResultSet setResultSetForFindByID(int idSearch, PreparedStatement stmt) throws SQLException {
+	private ResultSet setResultSetForID(int id, PreparedStatement stmt) throws SQLException {
 
-		stmt.setInt(1, idSearch);
+		stmt.setInt(1, id);
 		ResultSet result = stmt.executeQuery();
 
 		return result;

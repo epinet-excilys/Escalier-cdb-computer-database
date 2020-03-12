@@ -67,7 +67,7 @@ public class AddComputerServlet extends HttpServlet {
 				.map(CompanyMapper::fromCompanyToCompanyDTO).collect(toList());
 
 		request.setAttribute("companyDTOList", companyDTOList);
-
+		
 		this.getServletContext().getRequestDispatcher(ADD_COMPUTER).forward(request, response);
 	}
 

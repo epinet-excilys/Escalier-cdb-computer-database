@@ -50,23 +50,32 @@ public class Paginate {
 
 	private void getValues(HttpServletRequest request) {
 		
-		if (request.getParameter("taillePage") != null) {
-			this.pageSize = Integer.parseInt(request.getParameter("taillePage"));
-		} else {
-			this.pageSize = 20;
+		setPageSize(request);
+		setPageIterator(request);
+		if ((request.getParameter("search") != null) && !request.getParameter("search").isBlank()) {
+			this.searchTerm = request.getParameter("search");
 		}
+		
+		if ((request.getParameter("order") != null)  && !(request.getParameter("order").isBlank()))  {
+			this.orderBy = request.getParameter("order");
+		}
+	}
+
+
+	private void setPageIterator(HttpServletRequest request) {
 		if (request.getParameter("pageIterator") != null) {
 			this.pageIterator = Integer.parseInt(request.getParameter("pageIterator"));
 		} else {
 			this.pageIterator = 0;
 		}
+	}
 
-		if ((request.getParameter("search") != null) && !request.getParameter("search").isBlank()) {
-			this.searchTerm = request.getParameter("search");
-		}
-		
-		if ((request.getParameter("orderName") != null)  && !(request.getParameter("orderName").isBlank()))  {
-			this.orderBy = request.getParameter("orderName");
+
+	private void setPageSize(HttpServletRequest request) {
+		if (request.getParameter("taillePage") != null) {
+			this.pageSize = Integer.parseInt(request.getParameter("taillePage"));
+		} else {
+			this.pageSize = 20;
 		}
 	}
 
@@ -76,7 +85,7 @@ public class Paginate {
 		request.setAttribute("maxPage", maxPage);
 		request.setAttribute("NbRowComputer", NbRowComputer);
 		request.setAttribute("pageIterator", pageIterator);
-		request.setAttribute("orderName",orderBy);
+		request.setAttribute("order",orderBy);
 		request.setAttribute("search", searchTerm);
 		request.setAttribute("taillePage", pageSize);
 	}
@@ -88,13 +97,13 @@ public class Paginate {
 				.add(computerMapper.fromComputerToComputerDTO(computer)));
 	}
 
-	private void paginateOrderByName(HttpServletRequest request, HttpServletResponse response) throws DatabaseDAOException{
+	private void paginateOrder(HttpServletRequest request, HttpServletResponse response) throws DatabaseDAOException{
 		
 		NbRowComputer = computerService.getNbRows();
 		computerList.clear();
-		computerList = computerService.findAllPaginateAlphabeticOrder(pageIterator * pageSize, pageSize);
+		computerList = computerService.findAllPaginateOrder(pageIterator * pageSize, pageSize, orderBy);
 		maxPage = Math.ceil(NbRowComputer / pageSize);
-		searchTerm = "";
+		searchTerm = null;
 	}
 
 	private void paginateSearchByTerm(HttpServletRequest request, HttpServletResponse response) throws DatabaseDAOException{
@@ -104,7 +113,7 @@ public class Paginate {
 		computerList.clear();
 		computerList =computerService.findAllPaginateSearchLike(searchTerm, pageIterator * pageSize, pageSize);
 		maxPage = Math.ceil(NbRowComputer / pageSize);
-		orderBy = "";
+		orderBy = null;
 	}
 	
 	private void paginateUsual(HttpServletRequest request, HttpServletResponse response) throws DatabaseDAOException{
@@ -113,8 +122,8 @@ public class Paginate {
 		computerList.clear();
 		computerList = computerService.getAllPaginateComput(pageIterator * pageSize, pageSize);
 		maxPage = Math.ceil(NbRowComputer / pageSize);
-		orderBy = "";
-		searchTerm = "";
+		orderBy = null;
+		searchTerm = null;
 	}
 
 	private void whichPaginateToCall(HttpServletRequest request, HttpServletResponse response) {
@@ -122,10 +131,11 @@ public class Paginate {
 		if(searchTerm != null && !searchTerm.equals("") ) {
 			paginateSearchByTerm(request,response);
 		}else if (orderBy != null &&  !orderBy.equals("")) {
-			paginateOrderByName(request,response);
+			paginateOrder(request,response);
 		}else {
 			paginateUsual(request,response);
 		}
 	}
+	
 	
 }

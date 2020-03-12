@@ -19,7 +19,6 @@ public final class CompanyService {
 
 	private CompanyDAO companyDAO;
 	
-	@Autowired
 	public CompanyService(CompanyDAO companyDAO) {
 		this.companyDAO = companyDAO;
 	}
@@ -40,6 +39,10 @@ public final class CompanyService {
 
 	public int getNbRows() throws DatabaseDAOException{
 		return  companyDAO.getNbRow();
+	}
+	
+	public void deleteCompany(int iDCompany) throws DatabaseDAOException{
+		companyDAO.deleteCompany(iDCompany);
 	}
 
 }
