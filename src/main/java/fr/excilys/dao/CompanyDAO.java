@@ -33,7 +33,7 @@ public final class CompanyDAO {
 
 	public void deleteCompany(int iDCompany) {
 		
-		try (Connection connect = connectionToGetAsAutoWired.getConn();
+		try (Connection connect = connectionToGetAsAutoWired.getConnectionAsAutoWired();
 				PreparedStatement statementComputers = connect.prepareStatement(EnumSQLCommand.DELETE_STATEMENT_COMPUTER_WHERE_COMPANY.getMessage());
 				PreparedStatement statementCompany = connect.prepareStatement(EnumSQLCommand.DELETE_STATEMENT_COMPANY.getMessage());){
 			
@@ -58,7 +58,7 @@ public final class CompanyDAO {
 	public Optional<Company> findByID(int idSearch) {
 		
 		Optional<Company> optionalCompany = Optional.empty();
-		try (Connection connect = connectionToGetAsAutoWired.getConn();
+		try (Connection connect = connectionToGetAsAutoWired.getConnectionAsAutoWired();
 				PreparedStatement stmt = connect.prepareStatement(EnumSQLCommand.GET_STATEMENT_COMPANY.getMessage());
 				ResultSet result = setResultSetForID(idSearch, stmt);) {
 			if (result.first()) {
@@ -77,7 +77,7 @@ public final class CompanyDAO {
 		
 		List<Company> listCompany = new ArrayList<>();
 		Company company = new Company.Builder().build();
-		try (Connection connect = connectionToGetAsAutoWired.getConn();
+		try (Connection connect = connectionToGetAsAutoWired.getConnectionAsAutoWired();
 				PreparedStatement stmt = connect
 						.prepareStatement(EnumSQLCommand.GET_ALL_STATEMENT_COMPANY.getMessage());
 				ResultSet result = stmt.executeQuery();) {
@@ -99,7 +99,7 @@ public final class CompanyDAO {
 
 	public int getNbRow() {
 
-		try (Connection connect = connectionToGetAsAutoWired.getConn();
+		try (Connection connect = connectionToGetAsAutoWired.getConnectionAsAutoWired();
 				PreparedStatement stmt = connect
 						.prepareStatement(EnumSQLCommand.GET_NB_ROW_STATEMENT_COMPANY.getMessage());
 				ResultSet result = stmt.executeQuery();) {
