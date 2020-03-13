@@ -25,7 +25,7 @@ public final class CompanyService {
 
 	public Optional<Company> findByID(int ID) throws DatabaseDAOException{
 		Optional<Company> optionalCompany = Optional.empty();		
-		optionalCompany = companyDAO.findByID(ID);
+		optionalCompany = Optional.of(companyDAO.findByID(ID).get(0));
 		
 		return optionalCompany;
 	}

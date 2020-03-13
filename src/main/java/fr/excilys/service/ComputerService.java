@@ -44,7 +44,7 @@ public final class ComputerService {
 
 	public Optional<Computer> findByID(int ID) throws DatabaseDAOException {
 		Optional<Computer> Optionalcomputer = Optional.empty();		
-		Optionalcomputer = computerDAO.findByID(ID);
+		Optionalcomputer = Optional.of(computerDAO.findByID(ID).get(0));
 		
 		return Optionalcomputer;
 	}
@@ -92,19 +92,16 @@ public final class ComputerService {
 	}
 	
 	private List<Integer> getListIDToDelete(HttpServletRequest request) {
-		int pageSize = 20;
 		
+		int pageSize = 20;		
 		if (request.getParameter("taillePage") != null) {
 			pageSize = Integer.parseInt(request.getParameter("taillePage"));
 		}
-		
 		String selectionToDelete = request.getParameter("selection");
 		String[] splitChoiceToDelete = selectionToDelete.split(",", pageSize);
-		List<String> listToDeleteAsString = convertArrayToList(splitChoiceToDelete);
-		List<Integer> listIdToDelete = new ArrayList<>();
-		listToDeleteAsString.stream().forEach(idToDelete -> listIdToDelete.add(Integer.parseInt(idToDelete)));
-
-		return listIdToDelete;	
+		List<String> listOfIdString = convertArrayToList(splitChoiceToDelete);
+		
+		return listOfIdString.stream().map(stringID -> Integer.parseInt(stringID)).collect(Collectors.toList());
 	}
 	
 	private <String> List<String> convertArrayToList(String array[]) {

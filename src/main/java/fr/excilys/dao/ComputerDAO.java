@@ -1,17 +1,19 @@
 package fr.excilys.dao;
 
-import java.sql.Connection;
-import java.sql.PreparedStatement;
-import java.sql.ResultSet;
-import java.sql.SQLException;
 import java.sql.Timestamp;
 import java.time.LocalTime;
-import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
-import java.util.Optional;
+import java.util.Map;
+
+import javax.sql.DataSource;
+
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.dao.DataAccessException;
+import org.springframework.jdbc.InvalidResultSetAccessException;
+import org.springframework.jdbc.core.namedparam.MapSqlParameterSource;
+import org.springframework.jdbc.core.namedparam.NamedParameterJdbcTemplate;
 import org.springframework.stereotype.Repository;
 
 import fr.excilys.exception.DatabaseDAOException;
@@ -22,27 +24,35 @@ import fr.excilys.model.Computer;
 @Repository
 public final class ComputerDAO {
 
-	public static Logger LOGGER = LoggerFactory.getLogger(ConnexionSQL.class);
-	private ConnexionSQL connectionToGetAsAutoWired;
+	public static Logger LOGGER = LoggerFactory.getLogger(ComputerDAO.class);
+
 	private ComputerMapper computerMapper;
-	
-	public ComputerDAO(ConnexionSQL connectionSQL,ComputerMapper computerMapper) {
-		this.connectionToGetAsAutoWired = connectionSQL;
+	private NamedParameterJdbcTemplate namedParameterJdbcTemplate;
+
+	public ComputerDAO(DataSource datasource, ComputerMapper computerMapper) {
+		this.namedParameterJdbcTemplate = new NamedParameterJdbcTemplate(datasource);
 		this.computerMapper = computerMapper;
 	}
 
 	public int create(Computer computer) {
 		if (computer != null) {
 			if (!computer.getName().isEmpty()) {
-				try (Connection connect = connectionToGetAsAutoWired.getConnectionAsAutoWired();
-						PreparedStatement Statement = connect
-								.prepareStatement(EnumSQLCommand.CREATE_STATEMENT.getMessage());) {
-					setPreparedStatementCreate(Statement, computer);
+				try {
 
-					return Statement.executeUpdate();
+					MapSqlParameterSource parameterMap = new MapSqlParameterSource()
+							.addValue("name", computer.getName())
+							.addValue("introduced", getValueOfIntroducedDate(computer))
+							.addValue("discontinued", getValueOfDiscontinuedDate(computer))
+							.addValue("company.id", getValueOfCompany(computer));
 
-				} catch (SQLException sqlException) {
-					LOGGER.error(EnumErrorSQL.BDD_ACCESS_LOG.getMessage() + sqlException.getMessage());
+					return namedParameterJdbcTemplate.update(EnumSQLCommand.CREATE_STATEMENT.getMessage(),
+							parameterMap);
+
+				} catch (InvalidResultSetAccessException invalidResultSetAccessException) {
+					LOGGER.error(EnumErrorSQL.BDD_WRONG_SQL_SYNTAX.getMessage()
+							+ invalidResultSetAccessException.getMessage());
+				} catch (DataAccessException DataAccessException) {
+					LOGGER.error(EnumErrorSQL.BDD_ACCESS_LOG.getMessage() + DataAccessException.getMessage());
 				} catch (NullPointerException npException) {
 					LOGGER.error(EnumErrorSQL.BDD_NULL_OBJECT_LOG.getMessage() + npException.getMessage());
 				}
@@ -54,14 +64,15 @@ public final class ComputerDAO {
 
 	public int delete(int idSuppression) {
 
-		try (Connection connect = connectionToGetAsAutoWired.getConnectionAsAutoWired();
-				PreparedStatement stmt = connect.prepareStatement(EnumSQLCommand.DELETE_STATEMENT.getMessage());) {
-			stmt.setInt(1, idSuppression);
+		try {
+			MapSqlParameterSource parameterMap = new MapSqlParameterSource().addValue("id", idSuppression);
 
-			return stmt.executeUpdate();
+			return namedParameterJdbcTemplate.update(EnumSQLCommand.DELETE_STATEMENT.getMessage(), parameterMap);
 
-		} catch (SQLException sqlException) {
-			LOGGER.error(EnumErrorSQL.BDD_ACCESS_LOG.getMessage() + sqlException.getMessage());
+		} catch (InvalidResultSetAccessException invalidResultSetAccessException) {
+			LOGGER.error(EnumErrorSQL.BDD_WRONG_SQL_SYNTAX.getMessage() + invalidResultSetAccessException.getMessage());
+		} catch (DataAccessException DataAccessException) {
+			LOGGER.error(EnumErrorSQL.BDD_ACCESS_LOG.getMessage() + DataAccessException.getMessage());
 		}
 		throw new DatabaseDAOException("Delete");
 	}
@@ -69,179 +80,133 @@ public final class ComputerDAO {
 	public int update(Computer computer) {
 
 		if (!("").equals(computer.getName())) {
-			try (Connection connect = connectionToGetAsAutoWired.getConnectionAsAutoWired();
-					PreparedStatement statement = connect
-							.prepareStatement(EnumSQLCommand.UPDATE_STATEMENT.getMessage());) {
-				setPreparedStatementUpdate(statement, computer);
+			try {
 
-				if (statement.executeUpdate() == 1) {
-					return 1;
-				} else {
-					throw new DatabaseDAOException("Update");
-				}
+				MapSqlParameterSource parameterMap = new MapSqlParameterSource().addValue("id", computer.getId())
+						.addValue("name", computer.getName()).addValue("introduced", getValueOfIntroducedDate(computer))
+						.addValue("discontinued", getValueOfDiscontinuedDate(computer))
+						.addValue("company.id", getValueOfCompany(computer));
 
-			} catch (SQLException sqlException) {
-				LOGGER.error(EnumErrorSQL.BDD_ACCESS_LOG.getMessage() + sqlException.getMessage());
-				throw new DatabaseDAOException("Update");
-			} catch (NullPointerException npException) {
-				LOGGER.error(EnumErrorSQL.BDD_NULL_OBJECT_LOG.getMessage() + npException.getMessage());
-				throw new DatabaseDAOException("Update");
+				return namedParameterJdbcTemplate.update(EnumSQLCommand.UPDATE_STATEMENT.getMessage(), parameterMap);
+
+			} catch (InvalidResultSetAccessException invalidResultSetAccessException) {
+				LOGGER.error(
+						EnumErrorSQL.BDD_WRONG_SQL_SYNTAX.getMessage() + invalidResultSetAccessException.getMessage());
+			} catch (DataAccessException DataAccessException) {
+				LOGGER.error(EnumErrorSQL.BDD_ACCESS_LOG.getMessage() + DataAccessException.getMessage());
 			}
 		}
 		throw new DatabaseDAOException("Update");
 	}
 
-	public Optional<Computer> findByID(int idSearch) {
+	public int deleteByGroup(List<Integer> listIDToDelete) {
 
-		Optional<Computer> OptionalComputer = Optional.empty();
-		try (Connection connect = connectionToGetAsAutoWired.getConnectionAsAutoWired();
-				PreparedStatement stmt = connect.prepareStatement(EnumSQLCommand.GET_STATEMENT.getMessage());
-				ResultSet result = setResultSetForFindByID(idSearch, stmt);) {
-			if (result.isBeforeFirst()) {
-				result.next();
-				OptionalComputer = computerMapper.getComputerFromResultSet(result);
-			}
+		try {
 
-		} catch (SQLException sqlException) {
-			LOGGER.error(EnumErrorSQL.BDD_ACCESS_LOG.getMessage() + sqlException.getMessage());
-			throw new DatabaseDAOException("FindById");
+			Map<String, List<Integer>> namedParameters = Collections.singletonMap("idList", listIDToDelete);
+
+			return namedParameterJdbcTemplate.update(EnumSQLCommand.DELETE_STATEMENT_GROUP.getMessage(),
+					namedParameters);
+
+		} catch (InvalidResultSetAccessException invalidResultSetAccessException) {
+			LOGGER.error(EnumErrorSQL.BDD_WRONG_SQL_SYNTAX.getMessage() + invalidResultSetAccessException.getMessage());
+		} catch (DataAccessException DataAccessException) {
+			LOGGER.error(EnumErrorSQL.BDD_ACCESS_LOG.getMessage() + DataAccessException.getMessage());
 		}
+		throw new DatabaseDAOException("DeleteByGroup");
+	}
 
-		return OptionalComputer;
+	public List<Computer> findByID(int idSearch) {
+
+		try {
+			MapSqlParameterSource parameterMap = new MapSqlParameterSource().addValue("id", idSearch);
+
+			return namedParameterJdbcTemplate.query(EnumSQLCommand.GET_STATEMENT.getMessage(), parameterMap,
+					computerMapper);
+
+		} catch (InvalidResultSetAccessException invalidResultSetAccessException) {
+			LOGGER.error(EnumErrorSQL.BDD_WRONG_SQL_SYNTAX.getMessage() + invalidResultSetAccessException.getMessage());
+		} catch (DataAccessException DataAccessException) {
+			LOGGER.error(EnumErrorSQL.BDD_ACCESS_LOG.getMessage() + DataAccessException.getMessage());
+		}
+		throw new DatabaseDAOException("FindById");
 	}
 
 	public List<Computer> findAll() {
 
-		List<Computer> computerList = new ArrayList<>();
-		Computer computer = new Computer.Builder().build();
-		try (Connection connect = connectionToGetAsAutoWired.getConnectionAsAutoWired();
-				PreparedStatement stmt = connect.prepareStatement(EnumSQLCommand.GET_ALL_STATEMENT.getMessage());
-				ResultSet result = stmt.executeQuery();) {
-			if (result.isBeforeFirst()) {
-				while (result.next()) {
-					computer = computerMapper.getComputerFromResultSet(result).get();
-					computerList.add(computer);
-				}
-			}
+		try {
 
-			return computerList;
-		} catch (SQLException sqlException) {
-			LOGGER.error(EnumErrorSQL.BDD_ACCESS_LOG.getMessage() + sqlException.getMessage());
-			throw new DatabaseDAOException("findAll");
+			return namedParameterJdbcTemplate.query(EnumSQLCommand.GET_ALL_STATEMENT.getMessage(), computerMapper);
+
+		} catch (InvalidResultSetAccessException invalidResultSetAccessException) {
+			LOGGER.error(EnumErrorSQL.BDD_WRONG_SQL_SYNTAX.getMessage() + invalidResultSetAccessException.getMessage());
+		} catch (DataAccessException DataAccessException) {
+			LOGGER.error(EnumErrorSQL.BDD_ACCESS_LOG.getMessage() + DataAccessException.getMessage());
 		}
+		throw new DatabaseDAOException("findAll");
 	}
 
 	public List<Computer> findAllPaginate(int ligneDebutOffSet, int taillePage) {
 
-		List<Computer> computerList = new ArrayList<>();
-		Computer computer = new Computer.Builder().build();
-		try (Connection connect = connectionToGetAsAutoWired.getConnectionAsAutoWired();
-				PreparedStatement stmt = connect
-						.prepareStatement(EnumSQLCommand.GET_ALL_PAGINATE_STATEMENT.getMessage());
-				ResultSet result = setResultSetWithPreparedStatement(ligneDebutOffSet, taillePage, stmt);) {
-			if (result.isBeforeFirst()) {
-				while (result.next()) {
-					computer = computerMapper.getComputerFromResultSet(result).get();
-					computerList.add(computer);
-				}
-			}
-			return computerList;
+		try {
+			MapSqlParameterSource parameterMap = new MapSqlParameterSource().addValue("offset", ligneDebutOffSet)
+					.addValue("pageSize", ligneDebutOffSet);
 
-		} catch (SQLException sqlException) {
-			LOGGER.error(EnumErrorSQL.BDD_ACCESS_LOG.getMessage() + sqlException.getMessage());
-			throw new DatabaseDAOException("FindAllPaginate");
+			return namedParameterJdbcTemplate.query(EnumSQLCommand.GET_ALL_PAGINATE_STATEMENT.getMessage(),
+					parameterMap, computerMapper);
+
+		} catch (InvalidResultSetAccessException invalidResultSetAccessException) {
+			LOGGER.error(EnumErrorSQL.BDD_WRONG_SQL_SYNTAX.getMessage() + invalidResultSetAccessException.getMessage());
+		} catch (DataAccessException DataAccessException) {
+			LOGGER.error(EnumErrorSQL.BDD_ACCESS_LOG.getMessage() + DataAccessException.getMessage());
 		}
-
+		throw new DatabaseDAOException("FindAllPaginate");
 	}
 
 	public List<Computer> findAllPaginateSearchLike(String search, int ligneDebutOffSet, int taillePage) {
+		try {
+			MapSqlParameterSource parameterMap = new MapSqlParameterSource().addValue("offset", ligneDebutOffSet)
+					.addValue("pageSize", ligneDebutOffSet).addValue("search", '%' + search + '%');
 
-		List<Computer> computerList = new ArrayList<>();
-		Computer computer = new Computer.Builder().build();
-		try (Connection connect = connectionToGetAsAutoWired.getConnectionAsAutoWired();
-				PreparedStatement stmt = connect
-						.prepareStatement(EnumSQLCommand.GET_ALL_PAGINATE_ORDER_LIKE_NAME_STATEMENT.getMessage());
-				ResultSet result = setResultSetWithPreparedStatementSearch(search, ligneDebutOffSet, taillePage,
-						stmt);) {
-			if (result.isBeforeFirst()) {
-				while (result.next()) {
-					computer = computerMapper.getComputerFromResultSet(result).get();
-					computerList.add(computer);
-				}
-			}
+			return namedParameterJdbcTemplate.query(
+					EnumSQLCommand.GET_ALL_PAGINATE_ORDER_LIKE_NAME_STATEMENT.getMessage(), parameterMap,
+					computerMapper);
 
-			return computerList;
-		} catch (SQLException sqlException) {
-			LOGGER.error(EnumErrorSQL.BDD_ACCESS_LOG.getMessage() + sqlException.getMessage());
-			throw new DatabaseDAOException("FindAllPaginateSearch");
+		} catch (InvalidResultSetAccessException invalidResultSetAccessException) {
+			LOGGER.error(EnumErrorSQL.BDD_WRONG_SQL_SYNTAX.getMessage() + invalidResultSetAccessException.getMessage());
+		} catch (DataAccessException DataAccessException) {
+			LOGGER.error(EnumErrorSQL.BDD_ACCESS_LOG.getMessage() + DataAccessException.getMessage());
 		}
+		throw new DatabaseDAOException("FindAllPaginateSearch");
 	}
 
 	public List<Computer> findAllPaginateOrder(int ligneDebutOffSet, int taillePage, String order) {
 
-		List<Computer> computerList = new ArrayList<>();
-		Computer computer = new Computer.Builder().build();
-		try (Connection connect = connectionToGetAsAutoWired.getConnectionAsAutoWired();
-				PreparedStatement stmt = connect
-						.prepareStatement(getOrderByStatement(order));
-				ResultSet result = setResultSetWithPreparedStatement(ligneDebutOffSet, taillePage, stmt);) {
-			if (result.isBeforeFirst()) {
-				while (result.next()) {
-					computer = computerMapper.getComputerFromResultSet(result).get();
-					computerList.add(computer);
-				}
-			}
+		try {
+			MapSqlParameterSource parameterMap = new MapSqlParameterSource().addValue("offset", ligneDebutOffSet)
+					.addValue("pageSize", ligneDebutOffSet);
 
-			return computerList;
-		} catch (SQLException sqlException) {
-			LOGGER.error(EnumErrorSQL.BDD_ACCESS_LOG.getMessage() + sqlException.getMessage());
-			throw new DatabaseDAOException("FindAllPaginateAplhaOrder");
+			return namedParameterJdbcTemplate.query(getOrderByStatement(order), parameterMap, computerMapper);
+
+		} catch (InvalidResultSetAccessException invalidResultSetAccessException) {
+			LOGGER.error(EnumErrorSQL.BDD_WRONG_SQL_SYNTAX.getMessage() + invalidResultSetAccessException.getMessage());
+		} catch (DataAccessException DataAccessException) {
+			LOGGER.error(EnumErrorSQL.BDD_ACCESS_LOG.getMessage() + DataAccessException.getMessage());
 		}
-	}
-
-	public List<Integer> findAllByCompanyId(int iDCompany){
-		
-		List<Integer> iDComputerListWithSameCompanyID = new ArrayList<>();
-		
-		try (Connection connect = connectionToGetAsAutoWired.getConnectionAsAutoWired();
-				PreparedStatement stmt = connect
-						.prepareStatement(EnumSQLCommand.GET_ALL_PAGINATE_STATEMENT.getMessage());
-				ResultSet result = setResultSetWithPreparedStatementFindByCompany(iDCompany, stmt);) {
-			if (result.isBeforeFirst()) {
-				while (result.next()) {
-					iDComputerListWithSameCompanyID.add(result.getInt("id"));
-				}
-			}
-			return iDComputerListWithSameCompanyID;
-
-		} catch (SQLException sqlException) {
-			LOGGER.error(EnumErrorSQL.BDD_ACCESS_LOG.getMessage() + sqlException.getMessage());
-			throw new DatabaseDAOException("FindAllPaginate");
-		}
-
-	}
-	
-	private ResultSet setResultSetWithPreparedStatementFindByCompany(int iDCompany, PreparedStatement stmt) throws SQLException {
-		
-		stmt.setInt(1, iDCompany);
-		ResultSet result = stmt.executeQuery();
-
-		return result;
+		throw new DatabaseDAOException("FindAllPaginateOrder");
 	}
 
 	public int getNbRow() {
 
-		try (Connection connect = connectionToGetAsAutoWired.getConnectionAsAutoWired();
-				PreparedStatement stmt = connect.prepareStatement(EnumSQLCommand.GET_NB_ROW_STATEMENT.getMessage());
-				ResultSet result = stmt.executeQuery();) {
+		try {
+			MapSqlParameterSource parameterMap = new MapSqlParameterSource();
+			return namedParameterJdbcTemplate.queryForObject(EnumSQLCommand.GET_NB_ROW_STATEMENT.getMessage(),
+					parameterMap, Integer.class);
 
-			if (result.isBeforeFirst()) {
-				result.next();
-
-				return result.getInt("Rows");
-			}
-		} catch (SQLException sqlException) {
-			LOGGER.error(EnumErrorSQL.BDD_ACCESS_LOG.getMessage() + sqlException.getMessage());
+		} catch (InvalidResultSetAccessException invalidResultSetAccessException) {
+			LOGGER.error(EnumErrorSQL.BDD_WRONG_SQL_SYNTAX.getMessage() + invalidResultSetAccessException.getMessage());
+		} catch (DataAccessException DataAccessException) {
+			LOGGER.error(EnumErrorSQL.BDD_ACCESS_LOG.getMessage() + DataAccessException.getMessage());
 		}
 		throw new DatabaseDAOException("NbRows");
 
@@ -249,134 +214,41 @@ public final class ComputerDAO {
 
 	public int getNbRowSearch(String search) {
 
-		try (Connection connect = connectionToGetAsAutoWired.getConnectionAsAutoWired();
-				PreparedStatement stmt = connect
-						.prepareStatement(EnumSQLCommand.GET_NB_ROW_LIKE_STATEMENT.getMessage());
-				ResultSet result = setResulSetWithPreparedStatementGetNbRowSearch(stmt, search);) {
-			
-			if (result.isBeforeFirst()) {
-				result.next();
-				
-				return result.getInt("Rows");
-			}
-		} catch (SQLException sqlException) {
-			LOGGER.error(EnumErrorSQL.BDD_ACCESS_LOG.getMessage() + sqlException.getMessage());
+		try {
+			MapSqlParameterSource parameterMap = new MapSqlParameterSource().addValue("search",'%' + search + '%');
+			return namedParameterJdbcTemplate.queryForObject(EnumSQLCommand.GET_NB_ROW_LIKE_STATEMENT.getMessage(),
+					parameterMap, Integer.class);
+
+		} catch (InvalidResultSetAccessException invalidResultSetAccessException) {
+			LOGGER.error(EnumErrorSQL.BDD_WRONG_SQL_SYNTAX.getMessage() + invalidResultSetAccessException.getMessage());
+		} catch (DataAccessException DataAccessException) {
+			LOGGER.error(EnumErrorSQL.BDD_ACCESS_LOG.getMessage() + DataAccessException.getMessage());
 		}
 		throw new DatabaseDAOException("NbRowsSearch");
 	}
 
-	public int deleteByGroup(List<Integer> listIDToDelete) {
-		
-		try (Connection connect = connectionToGetAsAutoWired.getConnectionAsAutoWired();) {
-			
-			String interogationForInsertionToDelete = getInterogationForInsertionToDelete(listIDToDelete);
-			PreparedStatement stmt = setPreparedStatementForGroupDelete(listIDToDelete, connect,
-					interogationForInsertionToDelete);
-
-			return stmt.executeUpdate();
-
-		} catch (SQLException sqlException) {
-			LOGGER.error(EnumErrorSQL.BDD_ACCESS_LOG.getMessage() + sqlException.getMessage());
-			throw new DatabaseDAOException("DeleteByGroup");
-		}
-	}
-	
-	private PreparedStatement setPreparedStatementForGroupDelete(List<Integer> listIDToDelete, Connection connect,
-			String interogationForInsertionToDelete) throws SQLException {
-		PreparedStatement stmt = 
-				connect.prepareStatement(EnumSQLCommand.DELETE_STATEMENT_GROUP.getMessage()+interogationForInsertionToDelete);
-		
-		for(int i=0;i<listIDToDelete.size(); i++) {
-			stmt.setInt((i+1), listIDToDelete.get(i));
-		}
-		
-		return stmt;
-	}
-
-	private String getInterogationForInsertionToDelete(List<Integer> listIDToDelete) {
-		String interogationForInsertionToDelete = "";
-		for(int i=0; i<listIDToDelete.size()-1 ; i++) {
-			interogationForInsertionToDelete +="?,";
-		}
-		interogationForInsertionToDelete +="?);";
-		return interogationForInsertionToDelete;
-	}
-	
-	private ResultSet setResulSetWithPreparedStatementGetNbRowSearch(PreparedStatement stmt, String search) throws SQLException {
-		
-		stmt.setString(1, "%" + search + "%");
-		ResultSet result = stmt.executeQuery();
-		
-		return result;
-	}
-
-	private ResultSet setResultSetForFindByID(int idSearch, PreparedStatement stmt) throws SQLException {
-
-		stmt.setInt(1, idSearch);
-		ResultSet result = stmt.executeQuery();
-
-		return result;
-	}
-
-	private ResultSet setResultSetWithPreparedStatementSearch(String search, int ligneDebutOffSet, int taillePage,
-			PreparedStatement stmt) throws SQLException {
-
-		stmt.setString(1, "%" + search + "%");
-		stmt.setInt(2, ligneDebutOffSet);
-		stmt.setInt(3, taillePage);
-		ResultSet result = stmt.executeQuery();
-
-		return result;
-	}
-
-	private ResultSet setResultSetWithPreparedStatement(int ligneDebutOffSet, int taillePage, PreparedStatement stmt)
-			throws SQLException {
-
-		stmt.setInt(1, ligneDebutOffSet);
-		stmt.setInt(2, taillePage);
-		ResultSet result = stmt.executeQuery();
-
-		return result;
-	}
-
-	private void setPreparedStatementCreate(PreparedStatement preparedStatement, Computer computer)
-			throws SQLException {
-		preparedStatement.setString(1, computer.getName());
-		setBothLocalDateInPreparedStatement(preparedStatement, computer);
-		setCompanyInPreparedStatement(preparedStatement, computer);
-	}
-
-	private void setPreparedStatementUpdate(PreparedStatement preparedStatement, Computer computer)
-			throws SQLException {
-		preparedStatement.setInt(5, computer.getId());
-		preparedStatement.setString(1, computer.getName());
-		setBothLocalDateInPreparedStatement(preparedStatement, computer);
-		setCompanyInPreparedStatement(preparedStatement, computer);
-	}
-
-	private void setCompanyInPreparedStatement(PreparedStatement preparedStatement, Computer computer)
-			throws SQLException {
-		if (computer.getCompany() != null) {
-			preparedStatement.setInt(4, computer.getCompany().getId());
-		} else {
-			preparedStatement.setNull(4, java.sql.Types.BIGINT);
-		}
-	}
-
-	private void setBothLocalDateInPreparedStatement(PreparedStatement preparedStatement, Computer computer)
-			throws SQLException {
-		preparedStatement.setTimestamp(2,
-				computer.getIntroducedDate() != null
-						? Timestamp.valueOf(computer.getIntroducedDate().atTime(LocalTime.MIDNIGHT))
-						: null);
-		preparedStatement.setTimestamp(3,
-				computer.getDiscontinuedDate() != null
-						? Timestamp.valueOf(computer.getDiscontinuedDate().atTime(LocalTime.MIDNIGHT))
-						: null);
-	}
-
 	private String getOrderByStatement(String order) {
-		return EnumSQLCommand.GET_ALL_PAGINATE_ORDER_BY_STATEMENT.getMessage() + order + " LIMIT ?,?;";
+		return EnumSQLCommand.GET_ALL_PAGINATE_ORDER_BY_STATEMENT.getMessage() + order + " LIMIT :offset, :pageSize;";
 	}
-	
+
+	private Integer getValueOfCompany(Computer computer) {
+		if (computer.getCompany() != null) {
+			return computer.getCompany().getId();
+		} else {
+			return null;
+		}
+	}
+
+	private Timestamp getValueOfIntroducedDate(Computer computer) {
+		return computer.getIntroducedDate() != null
+				? Timestamp.valueOf(computer.getIntroducedDate().atTime(LocalTime.MIDNIGHT))
+				: null;
+	}
+
+	private Timestamp getValueOfDiscontinuedDate(Computer computer) {
+		return computer.getDiscontinuedDate() != null
+				? Timestamp.valueOf(computer.getDiscontinuedDate().atTime(LocalTime.MIDNIGHT))
+				: null;
+	}
+
 }

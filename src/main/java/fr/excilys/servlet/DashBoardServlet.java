@@ -19,7 +19,6 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.context.support.SpringBeanAutowiringSupport;
 
-import fr.excilys.dao.ConnexionSQL;
 import fr.excilys.dto.ComputerDTO;
 import fr.excilys.exception.DatabaseDAOException;
 import fr.excilys.exception.DatabaseManipulationException;
@@ -35,7 +34,7 @@ public class DashBoardServlet extends HttpServlet {
 	@Autowired
 	private Paginate pagination;
 
-	public static Logger LOGGER = LoggerFactory.getLogger(ConnexionSQL.class);
+	public static Logger LOGGER = LoggerFactory.getLogger(DashBoardServlet.class);
 
 	public void init(ServletConfig config) throws ServletException {
 		super.init(config);

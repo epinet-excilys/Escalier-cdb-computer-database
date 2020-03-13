@@ -5,13 +5,14 @@ import java.sql.SQLException;
 import java.time.LocalDate;
 import java.time.format.DateTimeFormatter;
 import java.util.Optional;
+
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.jdbc.core.RowMapper;
 import org.springframework.stereotype.Component;
 
 import fr.excilys.dao.CompanyDAO;
-import fr.excilys.dao.ConnexionSQL;
 import fr.excilys.dto.CompanyDTO;
 import fr.excilys.dto.ComputerDTO;
 import fr.excilys.exception.EnumErrorSQL;
@@ -19,9 +20,9 @@ import fr.excilys.model.Company;
 import fr.excilys.model.Computer;
 
 @Component
-public final class ComputerMapper {
+public final class ComputerMapper implements RowMapper<Computer> {
 
-	public static Logger LOGGER = LoggerFactory.getLogger(ConnexionSQL.class);
+	public static Logger LOGGER = LoggerFactory.getLogger(ComputerMapper.class);
 	private CompanyDAO companyDAO;
 	
 	@Autowired
@@ -61,7 +62,7 @@ public final class ComputerMapper {
 
 		int idComp = Integer.parseInt(resultTab[4]);
 		Company company = new Company.Builder().build();
-		company = companyDAO.findByID(idComp).get();
+		company = companyDAO.findByID(idComp).get(0);
 
 		Computer computer = new Computer.Builder().setIdBuild(id).setNameBuild(name).setIntroducedDateBuild(introDate)
 				.setDiscontinuedDateBuild(discoDate).setIdCompagnyBuild(company).build();
@@ -101,5 +102,22 @@ public final class ComputerMapper {
 		return (resultSet.getTimestamp(whichOneToGet) != null
 				? resultSet.getTimestamp(whichOneToGet).toLocalDateTime().toLocalDate()
 				: null);
+	}
+	
+	@Override
+	public Computer mapRow(ResultSet resultSet, int rowNum) throws SQLException {
+		
+		int id = resultSet.getInt("id");
+		String name = resultSet.getString("name");
+		LocalDate introDate = getLocalDateFromResultSet(resultSet, "introduced");
+		LocalDate discoDate = getLocalDateFromResultSet(resultSet, "discontinued");
+
+		int idComp = (resultSet.getInt("company_id"));
+		String nameComp = (resultSet.getString("company.name"));
+
+		Company company = new Company.Builder().setIdBuild(idComp).setNameBuild(nameComp).build();
+		Computer computer = new Computer.Builder().setIdBuild(id).setNameBuild(name).setIntroducedDateBuild(introDate)
+				.setDiscontinuedDateBuild(discoDate).setIdCompagnyBuild(company).build();
+		return computer;
 	}
 }

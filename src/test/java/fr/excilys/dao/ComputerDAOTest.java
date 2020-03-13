@@ -145,12 +145,13 @@ public class ComputerDAOTest {
 		Computer computer = new Computer.Builder().setIdBuild(1).setNameBuild("MacBook Pro 15.4 inch")
 				.setIntroducedDateBuild(null).setDiscontinuedDateBuild(null).setIdCompagnyBuild(company).build();
 
-		assertTrue(computerDAO.findByID(1).get().equals(computer));
+		assertTrue(computerDAO.findByID(1).get(0).equals(computer));
 	}
 
 	@Test
 	public void testFindIdEqualZero() {
-		assertFalse(computerDAO.findByID(0).isPresent());
+		List<Computer> emptyList = null;
+		assertEquals(computerDAO.findByID(0),emptyList);
 	}
 
 	@Test
