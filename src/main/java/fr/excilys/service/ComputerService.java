@@ -104,6 +104,7 @@ public final class ComputerService {
 		return listOfIdString.stream().map(stringID -> Integer.parseInt(stringID)).collect(Collectors.toList());
 	}
 	
+	@SuppressWarnings("hiding")
 	private <String> List<String> convertArrayToList(String array[]) {
 		return Arrays.stream(array).collect(Collectors.toList());
 	}
