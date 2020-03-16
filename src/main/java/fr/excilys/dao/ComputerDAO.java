@@ -64,15 +64,18 @@ public final class ComputerDAO {
 
 	public int delete(int idSuppression) {
 
-		try {
-			MapSqlParameterSource parameterMap = new MapSqlParameterSource().addValue("id", idSuppression);
+		if ((Integer) idSuppression != null) {
+			try {
+				MapSqlParameterSource parameterMap = new MapSqlParameterSource().addValue("id", idSuppression);
 
-			return namedParameterJdbcTemplate.update(EnumSQLCommand.DELETE_STATEMENT.getMessage(), parameterMap);
+				return namedParameterJdbcTemplate.update(EnumSQLCommand.DELETE_STATEMENT.getMessage(), parameterMap);
 
-		} catch (InvalidResultSetAccessException invalidResultSetAccessException) {
-			LOGGER.error(EnumErrorSQL.BDD_WRONG_SQL_SYNTAX.getMessage() + invalidResultSetAccessException.getMessage());
-		} catch (DataAccessException DataAccessException) {
-			LOGGER.error(EnumErrorSQL.BDD_ACCESS_LOG.getMessage() + DataAccessException.getMessage());
+			} catch (InvalidResultSetAccessException invalidResultSetAccessException) {
+				LOGGER.error(
+						EnumErrorSQL.BDD_WRONG_SQL_SYNTAX.getMessage() + invalidResultSetAccessException.getMessage());
+			} catch (DataAccessException DataAccessException) {
+				LOGGER.error(EnumErrorSQL.BDD_ACCESS_LOG.getMessage() + DataAccessException.getMessage());
+			}
 		}
 		throw new DatabaseDAOException("Delete");
 	}
@@ -150,7 +153,7 @@ public final class ComputerDAO {
 
 		try {
 			MapSqlParameterSource parameterMap = new MapSqlParameterSource().addValue("offset", ligneDebutOffSet)
-					.addValue("pageSize", ligneDebutOffSet);
+					.addValue("pageSize", taillePage);
 
 			return namedParameterJdbcTemplate.query(EnumSQLCommand.GET_ALL_PAGINATE_STATEMENT.getMessage(),
 					parameterMap, computerMapper);
@@ -166,7 +169,7 @@ public final class ComputerDAO {
 	public List<Computer> findAllPaginateSearchLike(String search, int ligneDebutOffSet, int taillePage) {
 		try {
 			MapSqlParameterSource parameterMap = new MapSqlParameterSource().addValue("offset", ligneDebutOffSet)
-					.addValue("pageSize", ligneDebutOffSet).addValue("search", '%' + search + '%');
+					.addValue("pageSize", taillePage).addValue("search", '%' + search + '%');
 
 			return namedParameterJdbcTemplate.query(
 					EnumSQLCommand.GET_ALL_PAGINATE_ORDER_LIKE_NAME_STATEMENT.getMessage(), parameterMap,
@@ -184,7 +187,7 @@ public final class ComputerDAO {
 
 		try {
 			MapSqlParameterSource parameterMap = new MapSqlParameterSource().addValue("offset", ligneDebutOffSet)
-					.addValue("pageSize", ligneDebutOffSet);
+					.addValue("pageSize", taillePage);
 
 			return namedParameterJdbcTemplate.query(getOrderByStatement(order), parameterMap, computerMapper);
 
@@ -215,7 +218,7 @@ public final class ComputerDAO {
 	public int getNbRowSearch(String search) {
 
 		try {
-			MapSqlParameterSource parameterMap = new MapSqlParameterSource().addValue("search",'%' + search + '%');
+			MapSqlParameterSource parameterMap = new MapSqlParameterSource().addValue("search", '%' + search + '%');
 			return namedParameterJdbcTemplate.queryForObject(EnumSQLCommand.GET_NB_ROW_LIKE_STATEMENT.getMessage(),
 					parameterMap, Integer.class);
 

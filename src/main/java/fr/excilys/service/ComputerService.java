@@ -60,7 +60,6 @@ public final class ComputerService {
 	public List<Computer> getAllPaginateComput(int ligneDebutOffSet, int taillePage) throws DatabaseDAOException{
 		List<Computer> listComputer = new ArrayList<>();
 		listComputer = computerDAO.findAllPaginate(ligneDebutOffSet, taillePage);
-
 		return listComputer;
 
 	}

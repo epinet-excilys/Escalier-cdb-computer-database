@@ -13,10 +13,12 @@ import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.jdbc.InvalidResultSetAccessException;
 import org.springframework.test.context.ContextConfiguration;
 import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
 
 import fr.excilys.config.AppConfiguration;
+import fr.excilys.exception.DatabaseDAOException;
 import fr.excilys.exception.DatabaseManipulationException;
 import fr.excilys.mapper.ComputerMapper;
 import fr.excilys.model.Company;
@@ -72,7 +74,7 @@ public class ComputerDAOTest {
 
 	}
 
-	@Test(expected = DatabaseManipulationException.class)
+	@Test(expected = DatabaseDAOException.class)
 	public void testAddComputerNull() {
 		Computer computer = null;
 		computerDAO.create(computer);
@@ -96,19 +98,19 @@ public class ComputerDAOTest {
 		assertTrue(computerDAO.update(computer) == INTENDED_USE_RETURN_VALUE);
 	}
 
-	@Test(expected = DatabaseManipulationException.class)
+	@Test
 	public void testModifComputerNull() {
 		Computer computer = new Computer.Builder().build();
-		computerDAO.update(computer);
+		assertEquals(computerDAO.update(computer),0);
 	}
 
-	@Test(expected = DatabaseManipulationException.class)
+	@Test
 	public void testModifComputerGreaterId() {
 		Company company = new Company.Builder().setIdBuild(1).setNameBuild("Apple Inc.").build();
 		Computer computer = new Computer.Builder().setIdBuild(70).setNameBuild("MacBook Pro 15.4 inch")
 				.setIntroducedDateBuild(LocalDate.now().minusYears(5))
 				.setDiscontinuedDateBuild(LocalDate.now().minusYears(1)).setIdCompagnyBuild(company).build();
-		computerDAO.update(computer);
+		assertEquals(computerDAO.update(computer),0);
 
 	}
 
@@ -122,21 +124,21 @@ public class ComputerDAOTest {
 		assertTrue(computerDAO.update(computer) == INTENDED_USE_RETURN_VALUE);
 	}
 
-	@Test(expected = DatabaseManipulationException.class)
+	@Test
 	public void testDeleteComputerGreaterId() {
 		Company company = new Company.Builder().setIdBuild(1).setNameBuild("Apple Inc.").build();
 		Computer computer = new Computer.Builder().setIdBuild(70).setNameBuild("MacBook Pro 15.4 inch")
 				.setIntroducedDateBuild(LocalDate.now().minusYears(5))
 				.setDiscontinuedDateBuild(LocalDate.now().minusYears(1)).setIdCompagnyBuild(company).build();
 
-		computerDAO.update(computer);
+		assertEquals(computerDAO.update(computer),0);
 	}
 
-	@Test(expected = DatabaseManipulationException.class)
+	@Test
 	public void testDeleteComputerNullId() {
 		Computer computer = new Computer.Builder().build();
 
-		computerDAO.update(computer);
+		assertEquals(computerDAO.delete(computer.getId()),0);
 	}
 
 	@Test
@@ -150,8 +152,7 @@ public class ComputerDAOTest {
 
 	@Test
 	public void testFindIdEqualZero() {
-		List<Computer> emptyList = null;
-		assertEquals(computerDAO.findByID(0),emptyList);
+		assertTrue(computerDAO.findByID(0).isEmpty());
 	}
 
 	@Test

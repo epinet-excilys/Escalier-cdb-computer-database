@@ -19,6 +19,7 @@ import org.springframework.web.context.support.AnnotationConfigWebApplicationCon
 import com.zaxxer.hikari.HikariConfig;
 import com.zaxxer.hikari.HikariDataSource;
 
+//@EnableWebMvc
 @Configuration
 @ComponentScan(basePackages = { "fr.excilys.dao", "fr.excilys.service", "fr.excilys.servlet"
 		,"fr.excilys.pagination", "fr.excilys.mapper"})
