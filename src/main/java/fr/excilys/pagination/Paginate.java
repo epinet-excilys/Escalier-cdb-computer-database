@@ -120,7 +120,6 @@ public class Paginate {
 		
 		NbRowComputer = computerService.getNbRows();
 		computerList.clear();
-		System.out.println("Values pageiterator : " + pageIterator + "Values pageSize : " + pageSize );
 		computerList = computerService.getAllPaginateComput(pageIterator * pageSize, pageSize);
 		maxPage = Math.ceil(NbRowComputer / pageSize);
 		orderBy = null;

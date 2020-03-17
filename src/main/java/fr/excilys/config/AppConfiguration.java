@@ -47,13 +47,4 @@ public class AppConfiguration extends AbstractContextLoaderInitializer {
 		
 		return driverManagerDataSource;
 	}
-	
-//	@Bean
-//	NamedParameterJdbcTemplate namedParameterJdbcTemplate(DataSource dataSource) {
-//		NamedParameterJdbcTemplate namedParameterJdbcTemplate=new NamedParameterJdbcTemplate(dataSource);
-//		
-//		return namedParameterJdbcTemplate;
-//	}
-	
-
 }
