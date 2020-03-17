@@ -2,10 +2,7 @@ package fr.excilys.servlet;
 
 import java.io.IOException;
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.List;
-import java.util.stream.Collectors;
-
 import javax.servlet.ServletConfig;
 import javax.servlet.ServletException;
 import javax.servlet.annotation.WebServlet;
@@ -27,18 +24,17 @@ import fr.excilys.service.ComputerService;
 
 @WebServlet(name = "DashBoardServlet", urlPatterns = "/DashBoard")
 @Controller
-public class DashBoardServlet extends HttpServlet {
+public class DashBoardServlet {
+	
 	private static final String DASHBOARD = "/WEB-INF/views/dashboard.jsp";
-	@Autowired
 	private ComputerService computerService;
-	@Autowired
 	private Paginate pagination;
 
 	public static Logger LOGGER = LoggerFactory.getLogger(DashBoardServlet.class);
-
-	public void init(ServletConfig config) throws ServletException {
-		super.init(config);
-		SpringBeanAutowiringSupport.processInjectionBasedOnServletContext(this, config.getServletContext());
+	
+	public DashBoardServlet(ComputerService computerService,Paginate pagination) {
+		this.computerService = computerService;
+		this.pagination = pagination;
 	}
 
 	protected void doGet(HttpServletRequest request, HttpServletResponse response)

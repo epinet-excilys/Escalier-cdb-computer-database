@@ -26,6 +26,7 @@ public final class ComputerMapper implements RowMapper<Computer> {
 
 	public static Logger LOGGER = LoggerFactory.getLogger(ComputerMapper.class);
 	private CompanyDAO companyDAO;
+	private CompanyDAO companyService;
 	
 	@Autowired
 	public ComputerMapper(CompanyDAO companyDAO) {
@@ -97,6 +98,22 @@ public final class ComputerMapper implements RowMapper<Computer> {
 		computerDTO.setId(computer.getId());
 
 		return computerDTO;
+	}
+	
+	public Computer fromComputerDTOToComputer(ComputerDTO computerDTO) {
+		
+		String computerName = computerDTO.getName();
+		LocalDate introducedDate = fromStringToLocalDate(computerDTO.getIntroducedDate());
+		LocalDate discontinuedDate = fromStringToLocalDate(computerDTO.getDiscontinuedDate());
+		int companyId = computerDTO.getCompanyDTO().getId();
+
+		
+		Company company = (companyId != 0 ? (companyDAO.findByID((companyId))).get(0) : (null));
+
+		
+		return new Computer.Builder().setNameBuild(computerName).setIntroducedDateBuild(introducedDate)
+				.setDiscontinuedDateBuild(discontinuedDate).setIdCompagnyBuild(company).build();
+		
 	}
 
 	private LocalDate getLocalDateFromResultSet(ResultSet resultSet, String whichOneToGet) throws SQLException {
