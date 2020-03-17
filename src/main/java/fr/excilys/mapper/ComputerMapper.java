@@ -2,8 +2,10 @@ package fr.excilys.mapper;
 
 import java.sql.ResultSet;
 import java.sql.SQLException;
+import java.time.DateTimeException;
 import java.time.LocalDate;
 import java.time.format.DateTimeFormatter;
+import java.time.format.DateTimeParseException;
 import java.util.Optional;
 
 import org.slf4j.Logger;
@@ -70,7 +72,7 @@ public final class ComputerMapper implements RowMapper<Computer> {
 		return computer;
 	}
 
-	public LocalDate fromStringToLocalDate(String dateInString) {
+	public LocalDate fromStringToLocalDate(String dateInString) throws DateTimeException{
 
 		if ((dateInString != null) && !dateInString.isEmpty()) {
 			DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd");

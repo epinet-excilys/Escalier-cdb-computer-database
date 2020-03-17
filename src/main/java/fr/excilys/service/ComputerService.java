@@ -20,7 +20,6 @@ public final class ComputerService {
 
 	private ComputerDAO computerDAO;
 
-	@Autowired
 	public ComputerService(ComputerDAO computerDAO) {
 		this.computerDAO = computerDAO;
 	}

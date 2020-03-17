@@ -15,7 +15,11 @@ import javax.servlet.http.HttpServletResponse;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
+import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.context.support.SpringBeanAutowiringSupport;
+import org.springframework.web.servlet.ModelAndView;
 
 import fr.excilys.dto.CompanyDTO;
 import fr.excilys.exception.DatabaseDAOException;
@@ -28,57 +32,84 @@ import fr.excilys.service.CompanyService;
 import fr.excilys.service.ComputerService;
 import fr.excilys.validator.Validator;
 
-@WebServlet(name = "AddComputerServlet", urlPatterns = "/addComputer")
 @Controller
 public class AddComputerServlet extends HttpServlet {
 
-	private static final String ADD_COMPUTER = "/WEB-INF/views/addComputer.jsp";
+	private static final String ADD_COMPUTER = "addComputer";
 	private ComputerService computerService;
 	private CompanyService companyService;
 	private ComputerMapper computerMapper;
-
-	@Autowired
-	public void setCompanyService(CompanyService companyService) {
-		this.companyService = companyService;
-	}
+	private Validator validator;
 	
-	@Autowired
-	public void setComputerService(ComputerService computerService) {
+
+	public AddComputerServlet(ComputerService computerService, CompanyService companyService,
+			ComputerMapper computerMapper,  Validator validator) {
+
 		this.computerService = computerService;
-	}
-	
-	@Autowired
-	public void setComputerMapper(ComputerMapper computerMapper) {
+		this.companyService = companyService;
 		this.computerMapper = computerMapper;
-	}
-	
-	public void init(ServletConfig config) throws ServletException {
-		super.init(config);
-    	SpringBeanAutowiringSupport.processInjectionBasedOnServletContext(this,config.getServletContext());
+		this.validator = validator;
+
 	}
 
-	protected void doGet(HttpServletRequest request, HttpServletResponse response)
-			throws ServletException, IOException {
+	@GetMapping(value = "/" + ADD_COMPUTER)
+	public ModelAndView companyDTOListView(
+			@RequestParam(required = false, value = "errorMessage") String errorMessage) {
+
+		ModelAndView modelAndView = new ModelAndView();
+		if (errorMessage.isEmpty() && !errorMessage.isBlank()) {
+			modelAndView.addObject("errorMessage", errorMessage);
+		}
 
 		List<Company> companyList = companyService.getAllCompany();
 
-		List<CompanyDTO> companyDTOList = 
-		companyList.stream()
-				.map(CompanyMapper::fromCompanyToCompanyDTO).collect(toList());
+		List<CompanyDTO> companyDTOList = companyList.stream().map(CompanyMapper::fromCompanyToCompanyDTO)
+				.collect(toList());
 
-		request.setAttribute("companyDTOList", companyDTOList);
-		
-		this.getServletContext().getRequestDispatcher(ADD_COMPUTER).forward(request, response);
+		modelAndView.addObject("companyDTOList", companyDTOList);
+		modelAndView.setViewName(ADD_COMPUTER);
+
+		return modelAndView;
+
+	}
+
+	@PostMapping(value = "/" + ADD_COMPUTER)
+	public ModelAndView addComputerView(@RequestParam(value = "computerName") String computerName,
+			@RequestParam(required = false, value = "introduced") String introduced,
+			@RequestParam(required = false, value = "discontinued") String discontinued,
+			@RequestParam(required = false, value = "companyId") String companyId,
+			@RequestParam(required = false, value = "errorMessage") String errorMessage) {
+		ModelAndView modelAndView = new ModelAndView();
+		String message = "";
+
+		try {
+			validator.validateFields(computerName, introduced, discontinued, companyId);
+			CompanyDTO companyDTO = new CompanyDTO();
+			if (!companyId.isBlank()) {
+				companyDTO.setId(Integer.parseInt(companyId));
+			}
+			ComputerDTO computerDTO = new ComputerDTO(computerName, introduced, discontinued, companyDTO);
+			Computer computer = ComputerMapper.fromComputerDTOToComputer(computerDTO);
+			pcService.create(computer);
+
+			message = ShowMessages.SUCCESS_MSG_UPDATE.getMsg();
+			modelAndView.addObject("successMsg", message);
+			modelAndView.setViewName("redirect:/dashboard");
+		} catch (ValidationException vld) {
+			modelAndView.addObject("errorMsg", vld.getMessage());
+			modelAndView.setViewName("redirect:/addComputer");
+		}
+
+		return modelAndView;
+
 	}
 
 	protected void doPost(HttpServletRequest request, HttpServletResponse response)
 			throws ServletException, IOException {
 
 		String computerName = request.getParameter("computerName");
-		LocalDate introducedDate = computerMapper
-				.fromStringToLocalDate(request.getParameter("introduced"));
-		LocalDate discontinuedDate = computerMapper
-				.fromStringToLocalDate(request.getParameter("discontinued"));
+		LocalDate introducedDate = computerMapper.fromStringToLocalDate(request.getParameter("introduced"));
+		LocalDate discontinuedDate = computerMapper.fromStringToLocalDate(request.getParameter("discontinued"));
 		int companyId = Integer.parseInt(request.getParameter("companyId"));
 
 		Company company = (companyId != 0 ? (companyService.findByID((companyId))).get() : (null));
@@ -91,8 +122,6 @@ public class AddComputerServlet extends HttpServlet {
 		doGet(request, response);
 	}
 
-
-	
 	private void ValidateComputer(Computer computer) {
 		try {
 			if (Validator.getInstance().Validation(computer)) {
