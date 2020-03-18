@@ -36,9 +36,9 @@ public final class ComputerService {
 		computerDAO.delete(iD);
 	}
 	
-	public void deleteByGroup(HttpServletRequest request) throws DatabaseDAOException{
+	public void deleteByGroup(String idSelectionAsList) {
 		
-		computerDAO.deleteByGroup(getListIDToDelete(request));
+		computerDAO.deleteByGroup(getListIDToDelete(idSelectionAsList));
 	}
 
 	public Optional<Computer> findByID(int ID) throws DatabaseDAOException {
@@ -89,14 +89,9 @@ public final class ComputerService {
 		return computerDAO.getNbRowSearch(search);
 	}
 	
-	private List<Integer> getListIDToDelete(HttpServletRequest request) {
+	private List<Integer> getListIDToDelete(String idSelectionAsList) {
 		
-		int pageSize = 20;		
-		if (request.getParameter("taillePage") != null) {
-			pageSize = Integer.parseInt(request.getParameter("taillePage"));
-		}
-		String selectionToDelete = request.getParameter("selection");
-		String[] splitChoiceToDelete = selectionToDelete.split(",", pageSize);
+		String[] splitChoiceToDelete = idSelectionAsList.split(",",-1);
 		List<String> listOfIdString = convertArrayToList(splitChoiceToDelete);
 		
 		return listOfIdString.stream().map(stringID -> Integer.parseInt(stringID)).collect(Collectors.toList());

@@ -2,12 +2,14 @@ package fr.excilys.pagination;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Map;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
+import org.springframework.web.servlet.ModelAndView;
 
 import fr.excilys.dto.ComputerDTO;
 import fr.excilys.exception.DatabaseDAOException;
@@ -28,66 +30,63 @@ public class Paginate {
 	private ComputerService computerService;
 	private ComputerMapper computerMapper;
 	
-	@Autowired
 	public Paginate(ComputerService computerService, ComputerMapper computerMapper) {
 	 this.computerService=computerService;	
 	 this.computerMapper=computerMapper;
 	}
 	
 
-	public List<ComputerDTO> paginate(HttpServletRequest request, HttpServletResponse response) {
+	public void paginate(Map<String,String> valuesToTransfert,ModelAndView modelAndView) {
 		
-		getValues(request);
-		whichPaginateToCall(request, response);
+		getValues(valuesToTransfert);
+		whichPaginateToCall();
 		mapComputerToComputerDTO();
-		setValues(request);
-		
-		return computerDTOListToReturn;
+		setValues(modelAndView);
 
 	}
 	
 
 
-	private void getValues(HttpServletRequest request) {
+	public void getValues(Map<String,String> valuesToTransfert) {
 		
-		setPageSize(request);
-		setPageIterator(request);
-		if ((request.getParameter("search") != null) && !request.getParameter("search").isBlank()) {
-			this.searchTerm = request.getParameter("search");
+		setPageSize(valuesToTransfert);
+		setPageIterator(valuesToTransfert);
+		if ((valuesToTransfert.get("search") != null) && !valuesToTransfert.get("search").isBlank()) {
+			this.searchTerm = valuesToTransfert.get("search");
 		}
 		
-		if ((request.getParameter("order") != null)  && !(request.getParameter("order").isBlank()))  {
-			this.orderBy = request.getParameter("order");
+		if ((valuesToTransfert.get("order") != null)  && !(valuesToTransfert.get("order").isBlank()))  {
+			this.orderBy = valuesToTransfert.get("order");
 		}
 	}
 
 
-	private void setPageIterator(HttpServletRequest request) {
-		if (request.getParameter("pageIterator") != null) {
-			this.pageIterator = Integer.parseInt(request.getParameter("pageIterator"));
+	private void setPageIterator(Map<String,String> valuesToTransfert) {
+		if (valuesToTransfert.get("pageIterator") != null) {
+			this.pageIterator = Integer.parseInt(valuesToTransfert.get("pageIterator"));
 		} else {
 			this.pageIterator = 0;
 		}
 	}
 
 
-	private void setPageSize(HttpServletRequest request) {
-		if (request.getParameter("taillePage") != null) {
-			this.pageSize = Integer.parseInt(request.getParameter("taillePage"));
+	private void setPageSize(Map<String,String> valuesToTransfert) {
+		if (valuesToTransfert.get("taillePage") != null) {
+			this.pageSize = Integer.parseInt(valuesToTransfert.get("taillePage") );
 		} else {
 			this.pageSize = 20;
 		}
 	}
 
-	private void setValues(HttpServletRequest request) {
+	private void setValues(ModelAndView modelAndView) {
 		
-		request.setAttribute("NbRowComputer", NbRowComputer);
-		request.setAttribute("maxPage", maxPage);
-		request.setAttribute("NbRowComputer", NbRowComputer);
-		request.setAttribute("pageIterator", pageIterator);
-		request.setAttribute("order",orderBy);
-		request.setAttribute("search", searchTerm);
-		request.setAttribute("taillePage", pageSize);
+		modelAndView.addObject("NbRowComputer", NbRowComputer);
+		modelAndView.addObject("maxPage", maxPage);
+		modelAndView.addObject("pageIterator", pageIterator);
+		modelAndView.addObject("order",orderBy);
+		modelAndView.addObject("search", searchTerm);
+		modelAndView.addObject("taillePage", pageSize);
+		modelAndView.addObject("computerList", computerDTOListToReturn);
 	}
 	
 	private void mapComputerToComputerDTO() {
@@ -97,7 +96,7 @@ public class Paginate {
 				.add(computerMapper.fromComputerToComputerDTO(computer)));
 	}
 
-	private void paginateOrder(HttpServletRequest request, HttpServletResponse response) throws DatabaseDAOException{
+	private void paginateOrder() throws DatabaseDAOException{
 		
 		NbRowComputer = computerService.getNbRows();
 		computerList.clear();
@@ -106,9 +105,8 @@ public class Paginate {
 		searchTerm = null;
 	}
 
-	private void paginateSearchByTerm(HttpServletRequest request, HttpServletResponse response) throws DatabaseDAOException{
+	private void paginateSearchByTerm() throws DatabaseDAOException{
 		
-		searchTerm = request.getParameter("search");
 		NbRowComputer = computerService.getNbRowsSearch(searchTerm);
 		computerList.clear();
 		computerList =computerService.findAllPaginateSearchLike(searchTerm, pageIterator * pageSize, pageSize);
@@ -116,7 +114,7 @@ public class Paginate {
 		orderBy = null;
 	}
 	
-	private void paginateUsual(HttpServletRequest request, HttpServletResponse response) throws DatabaseDAOException{
+	private void paginateUsual() throws DatabaseDAOException{
 		
 		NbRowComputer = computerService.getNbRows();
 		computerList.clear();
@@ -126,14 +124,14 @@ public class Paginate {
 		searchTerm = null;
 	}
 
-	private void whichPaginateToCall(HttpServletRequest request, HttpServletResponse response) {
+	private void whichPaginateToCall() {
 		
 		if(searchTerm != null && !searchTerm.equals("") ) {
-			paginateSearchByTerm(request,response);
+			paginateSearchByTerm();
 		}else if (orderBy != null &&  !orderBy.equals("")) {
-			paginateOrder(request,response);
+			paginateOrder();
 		}else {
-			paginateUsual(request,response);
+			paginateUsual();
 		}
 	}
 	

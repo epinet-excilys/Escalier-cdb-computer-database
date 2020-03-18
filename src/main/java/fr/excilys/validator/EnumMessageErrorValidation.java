@@ -10,7 +10,8 @@ public enum EnumMessageErrorValidation {
 	ERROR_DATE("Dates aren't coherent with one another, please verify your entry."), 
 	ERROR_DATE_FORMAT("The Date isn't in a Valid Format, please verify your entry"),
 	ERROR_DATE_VALUE("The Date shouldn't be null at this point, contact your administrator"),
-	ERROR_COMPANY("The company id isn't valid, please verify your entry."), ;
+	ERROR_COMPANY("The company id isn't valid, please verify your entry."),
+	ERROR_PAGINATION("The pagination has encouter a difficulty, please retry");
 
 	private String message;
 

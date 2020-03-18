@@ -26,9 +26,7 @@ public final class ComputerMapper implements RowMapper<Computer> {
 
 	public static Logger LOGGER = LoggerFactory.getLogger(ComputerMapper.class);
 	private CompanyDAO companyDAO;
-	private CompanyDAO companyService;
 	
-	@Autowired
 	public ComputerMapper(CompanyDAO companyDAO) {
 		this.companyDAO = companyDAO;
 	}

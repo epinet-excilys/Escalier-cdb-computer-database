@@ -13,22 +13,21 @@ import fr.excilys.model.Computer;
 @Component
 public class Validator {
 	
-	private ComputerMapper computerMapper;
-	
-	
-
 	private static final LocalDate LOCAL_DATE_MAX_BDD = LocalDate.of(1971, 01, 01);
+	private ComputerMapper computerMapper;
+
+	public Validator(ComputerMapper computerMapper) {
+		this.computerMapper = computerMapper;
+	}
 
 	public void validateFields(String computerName, String introduced, String discontinued, String companyId) throws ValidatorException{
+		
 		if(!isNameOk(computerName)) {
 			throw new ValidatorException(EnumMessageErrorValidation.ERROR_NAME.getMessage());
 		}
 		LocalDate introducedDate = isStringCorrectDateFormat(introduced);
 		LocalDate discontinuedDate = isStringCorrectDateFormat(discontinued);
 		isDateOk(introducedDate,discontinuedDate);
-		
-		
-		
 		
 	}
 	
@@ -37,7 +36,6 @@ public class Validator {
 		isDateOk(computer.getIntroducedDate(), computer.getDiscontinuedDate());
 		return isNameOk(computer.getName());
 				
-
 	}
 	
 

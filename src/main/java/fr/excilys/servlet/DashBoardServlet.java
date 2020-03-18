@@ -3,6 +3,8 @@ package fr.excilys.servlet;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Map;
+
 import javax.servlet.ServletConfig;
 import javax.servlet.ServletException;
 import javax.servlet.annotation.WebServlet;
@@ -14,56 +16,94 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
+import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.context.support.SpringBeanAutowiringSupport;
+import org.springframework.web.servlet.ModelAndView;
 
+import fr.excilys.dto.CompanyDTO;
 import fr.excilys.dto.ComputerDTO;
 import fr.excilys.exception.DatabaseDAOException;
 import fr.excilys.exception.DatabaseManipulationException;
+import fr.excilys.exception.ValidatorException;
+import fr.excilys.model.Computer;
 import fr.excilys.pagination.Paginate;
 import fr.excilys.service.ComputerService;
+import fr.excilys.validator.EnumMessageErrorValidation;
 
-@WebServlet(name = "DashBoardServlet", urlPatterns = "/DashBoard")
 @Controller
+@RequestMapping(value = "/dashboard")
 public class DashBoardServlet {
-	
-	private static final String DASHBOARD = "/WEB-INF/views/dashboard.jsp";
+
+	private static final String DASHBOARD = "dashboard";
+	private static final String DELETE_COMPUTER = "deleteComputer";
 	private ComputerService computerService;
-	private Paginate pagination;
+	private Paginate page;
+	private Map<String, String> valuesToTransfert;
 
 	public static Logger LOGGER = LoggerFactory.getLogger(DashBoardServlet.class);
-	
-	public DashBoardServlet(ComputerService computerService,Paginate pagination) {
+
+	public DashBoardServlet(ComputerService computerService, Paginate pagination) {
 		this.computerService = computerService;
-		this.pagination = pagination;
+		this.page = pagination;
 	}
 
-	protected void doGet(HttpServletRequest request, HttpServletResponse response)
-			throws ServletException, IOException {
-		List<ComputerDTO> computerDTOList = new ArrayList<>();
+	@GetMapping
+	public ModelAndView dashboard(@RequestParam(required = false, value = "pageIterator") String pageIterator,
+			@RequestParam(required = false, value = "NbRowComputer") String NbRowComputer,
+			@RequestParam(required = false, value = "maxPage") String maxPage,
+			@RequestParam(required = false, value = "taillePage") String pageSize,
+			@RequestParam(required = false, value = "order") String orderBy,
+			@RequestParam(required = false, value = "search") String search,
+			@RequestParam(required = false, value = "errorMessage") String errorMessage,
+			@RequestParam(required = false, value = "successMessage") String successMessage) {
+
+		ModelAndView modelAndView = new ModelAndView();
+
+		setMessage(errorMessage, "errorMessage", modelAndView);
+		setMessage(successMessage, "successMessage", modelAndView);
+
 		try {
-			computerDTOList = pagination.paginate(request, response);
-		} catch (DatabaseDAOException databaseDAOException) {
-			// TODO EXCEPTION Catching
+			page.paginate(valuesToTransfert, modelAndView);
 		} catch (DatabaseManipulationException databaseManipulationException) {
-			// TODO EXCEPTION Catching
+			setMessage(EnumMessageErrorValidation.ERROR_PAGINATION.getMessage(), "errorMessage", modelAndView);
 		}
 
-		request.setAttribute("computerList", computerDTOList);
-		request.getRequestDispatcher(DASHBOARD).forward(request, response);
+		setValuesToTransfert(pageIterator, NbRowComputer, maxPage, pageSize, orderBy, search);
+
+		return modelAndView;
+
 	}
 
-	protected void doPost(HttpServletRequest request, HttpServletResponse response)
-			throws ServletException, IOException {
-
-		try {
-			computerService.deleteByGroup(request);
-		} catch (DatabaseDAOException databaseDAOException) {
-			// TODO EXCEPTION Catching
-		} catch (DatabaseManipulationException databaseManipulationException) {
-			// TODO EXCEPTION Catching
+	@PostMapping(value = "/"+DASHBOARD+ "/" + DELETE_COMPUTER)
+	public ModelAndView deleteComputer(@RequestParam(value = "idSelectionAsList") String idSelectionAsList) {
+		
+		ModelAndView modelAndView = new ModelAndView("redirect:/"+DASHBOARD);
+		if(!idSelectionAsList.isEmpty() && !idSelectionAsList.isBlank()) {
+			computerService.deleteByGroup(idSelectionAsList);
+			setMessage(EnumMessageErrorValidation.SUCCESS_DELETE.getMessage(), "successMessage", modelAndView);
 		}
-
-		doGet(request, response);
+		
+		return modelAndView;
+	}
+	
+	private void setValuesToTransfert(String pageIterator, String NbRowComputer, String maxPage, String pageSize,
+			String orderBy, String search) {
+		valuesToTransfert.clear();
+		valuesToTransfert.put("pagIterator", pageIterator);
+		valuesToTransfert.put("NbRowComputer", NbRowComputer);
+		valuesToTransfert.put("maxPage", maxPage);
+		valuesToTransfert.put("order", orderBy);
+		valuesToTransfert.put("search", search);
+		valuesToTransfert.put("taillePage", pageSize);
+	}
+	
+	private void setMessage(String errorMessage, String messageTitle, ModelAndView modelAndView) {
+		if ((!errorMessage.isEmpty()) && (!errorMessage.isBlank())) {
+			modelAndView.addObject(messageTitle, errorMessage);
+		}
 	}
 
 }

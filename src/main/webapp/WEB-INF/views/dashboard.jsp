@@ -24,7 +24,7 @@
 <body>
 	<header class="navbar navbar-inverse navbar-fixed-top">
 		<div class="container">
-			<a class="navbar-brand" href="DashBoard"> Application - Computer
+			<a class="navbar-brand" href="dashboard"> Application - Computer
 				Database </a>
 		</div>
 	</header>
@@ -55,7 +55,7 @@
 			</div>
 		</div>
 
-		<form id="deleteForm" action="#" method="POST">
+		<form id="deleteForm" action="/dashboard/deleteComputer" method="POST">
 			<input type="hidden" name="selection" value="">
 		</form>
 
@@ -63,8 +63,6 @@
 			<table class="table table-striped table-bordered">
 				<thead>
 					<tr>
-						<!-- Variable declarations for passing labels as parameters -->
-						<!-- Table header for Computer Name -->
 
 						<th class="editMode" style="width: 60px; height: 22px;"><input
 							type="checkbox" id="selectall" /> <span
@@ -74,16 +72,16 @@
 							</a>
 						</span></th>
 						 <th>
-                          <a href="DashBoard?order=Computer">Computer name</a>
+                          <a href="dashboard?order=Computer">Computer name</a>
                         </th>
                         <th>
-                            <a href="DashBoard?order=Introduced">Introduced date</a>
+                            <a href="dashboard?order=Introduced">Introduced date</a>
                         </th>
                         <th>
-                          <a href="DashBoard?order=Discontinued">  Discontinued date</a>
+                          <a href="dashboard?order=Discontinued">  Discontinued date</a>
                         </th>
                         <th>
-                            <a href="DashBoard?order=Company">Company</a>
+                            <a href="dashboard?order=Company">Company</a>
                         </th>
 					</tr>
 				</thead>
@@ -113,7 +111,7 @@
 			
 				<li><c:if test="${pageIterator>0}">
 						<a
-							href="DashBoard?pageIterator=${ pageIterator - 1 }
+							href="dashboard?pageIterator=${ pageIterator - 1 }
 										<c:if test="${ taillePage != null }">&taillePage=${ taillePage }</c:if>
 										<c:if test="${ (search != null) and (search != '') }">&search=${ search }</c:if>
 										<c:if test="${ orderName != null and (orderName != '') }">&orderName=${ orderName }</c:if>"
@@ -124,7 +122,7 @@
 					
 				<c:if test="${pageIterator < (maxPage+1)}">
 					<li><a
-										href="DashBoard?pageIterator=${pageIterator }
+										href="dashboard?pageIterator=${pageIterator }
 											<c:if test="${ taillePage != null }">&taillePage=${ taillePage }</c:if>
 											<c:if test="${ (search != null) and (search != '') }">&search=${ search }
 											</c:if>
@@ -136,7 +134,7 @@
 				</c:if>
 				<li><c:if test="${pageIterator < (maxPage)}">
 						<a
-							href="DashBoard?pageIterator=${ pageIterator + 1 }
+							href="dashboard?pageIterator=${ pageIterator + 1 }
 										<c:if test="${ taillePage != null }">&taillePage=${ taillePage }</c:if>
 										<c:if test="${ (search != null) and (search != '') }">&search=${ search }</c:if>
 										<c:if test="${ order != null and (order != '') }">&order=${ order }</c:if>"
@@ -147,28 +145,28 @@
 
 			<div class="btn-group btn-group-sm pull-right" role="group">
 				<a
-					href="DashBoard?pageIterator=0&taillePage=10
+				href="dashboard?pageIterator=0&taillePage=10
 					<c:if test="${ (search != null) and (search != '') }">&search=${ search }</c:if>
 										<c:if test="${ order != null and (order != '') }">&order=${ order }</c:if>">
 					<button type="button" class="btn btn-default"
 						onclick="<c:set var="pageIterator" value="0" />">10</button>
 				</a>
 				<a
-					href="DashBoard?pageIterator=0&taillePage=20
+					href="dashboard?pageIterator=0&taillePage=20
 					<c:if test="${ (search != null) and (search != '') }">&search=${ search }</c:if>
 										<c:if test="${ order != null and (order != '') }">&order=${ order }</c:if>">
 					<button type="button" class="btn btn-default"
 						onclick="<c:set var="pageIterator" value="0" />">20</button>
 				</a>
 				<a
-					href="DashBoard?pageIterator=0&taillePage=50
+					href="dashboard?pageIterator=0&taillePage=50
 					<c:if test="${ (search != null) and (search != '') }">&search=${ search }</c:if>
 										<c:if test="${ order != null and (order != '') }">&order=${ order }</c:if>">
 					<button type="button" class="btn btn-default"
 						onclick="<c:set var="pageIterator" value="0" />">50</button>
 				</a>
 				<a
-					href="DashBoard?pageIterator=0&taillePage=100
+					href="dashboard?pageIterator=0&taillePage=100
 					<c:if test="${ (search != null) and (search != '') }">&search=${ search }</c:if>
 										<c:if test="${ order != null and (order != '') }">&order=${ order }</c:if>">
 					<button type="button" class="btn btn-default"
