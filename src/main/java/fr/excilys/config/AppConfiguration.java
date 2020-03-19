@@ -16,9 +16,9 @@ import org.springframework.web.WebApplicationInitializer;
 import org.springframework.web.context.support.AnnotationConfigWebApplicationContext;
 import org.springframework.web.servlet.DispatcherServlet;
 
-//@EnableWebMvc
+
 @Configuration
-@ComponentScan(basePackages = { "fr.excilys.dao", "fr.excilys.service", "fr.excilys.servlet"
+@ComponentScan(basePackages = { "fr.excilys.dao", "fr.excilys.service", "fr.excilys.controller"
 		,"fr.excilys.pagination", "fr.excilys.mapper", "fr.excilys.validator"})
 @PropertySource(value = "classpath:application.properties")
 public class AppConfiguration implements WebApplicationInitializer {
@@ -29,10 +29,10 @@ public class AppConfiguration implements WebApplicationInitializer {
 	@Override
 	public void onStartup(ServletContext servletContext) throws ServletException {
 		AnnotationConfigWebApplicationContext annotationWebContext = new AnnotationConfigWebApplicationContext();
-		annotationWebContext.register(WebConfiguration.class, AppConfiguration.class);
+		annotationWebContext.register(AppConfiguration.class,WebConfiguration.class);
 		annotationWebContext.setServletContext(servletContext);
 		DispatcherServlet dispachterServlet = new DispatcherServlet(annotationWebContext);
-		ServletRegistration.Dynamic servlet = ((ServletContext) annotationWebContext).addServlet("DashBoard", dispachterServlet);
+		ServletRegistration.Dynamic servlet = servletContext.addServlet("dashboard", dispachterServlet);
 		servlet.setLoadOnStartup(1);
 		servlet.addMapping("/");
 	}

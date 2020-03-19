@@ -31,6 +31,23 @@
 
 	<section id="main">
 		<div class="container">
+		  <c:if test="${not empty successMessage}">
+                <div class="alert alert-success" role="alert">
+                    <i class="fa fa-check fa-2x"></i> &nbsp;&nbsp;&nbsp;&nbsp;<strong><spring:message
+                        code="label.success"/>:</strong>
+                    <c:out value="${successMessage}"/>
+                </div>
+            </c:if>
+            <c:if test="${not empty errorMessage}">
+                <div class="alert alert-danger" role="alert">
+                    <i class="fa fa-exclamation-triangle fa-2x"></i>
+                    &nbsp;&nbsp;&nbsp;&nbsp;<strong><spring:message
+                        code="label.error"/>:</strong>
+                    <c:out value="${errorMessage}"/>
+                </div>
+            </c:if>
+		
+		
 			<h1 id="homeTitle">
 				<c:out value="${NbRowComputer}">
 				</c:out>
@@ -40,9 +57,9 @@
 			<div id="actions" class="form-horizontal">
 				<div class="pull-left">
 					<form id="searchForm" action="#" method="GET" class="form-inline">
-
+					
 						<input type="search" id="searchbox" name="search"
-							class="form-control" placeholder="${search}" /> <input
+							class="form-control" placeholder="${search}"/> <input
 							type="submit" id="searchsubmit" value="Filter by name"
 							class="btn btn-primary" />
 					</form>

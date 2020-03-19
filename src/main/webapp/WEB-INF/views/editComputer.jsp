@@ -22,12 +22,26 @@
 <body>
 	<header class="navbar navbar-inverse navbar-fixed-top">
 		<div class="container">
-			<a class="navbar-brand" href="dashboard.html"> Application -
+			<a class="navbar-brand" href="dashboard"> Application -
 				Computer Database </a>
 		</div>
 	</header>
 	<section id="main">
 		<div class="container">
+		<c:if test="${not empty successMessage}">
+                <div class="alert alert-success" role="alert">
+                    <i class="fa fa-check fa-2x"></i> &nbsp;&nbsp;&nbsp;&nbsp;
+                    <c:out value="${successMessage}"/>
+                </div>
+            </c:if>
+            <c:if test="${not empty errorMessage}">
+                <div class="alert alert-danger" role="alert">
+                    <i class="fa fa-exclamation-triangle fa-2x"></i>
+                    &nbsp;&nbsp;&nbsp;&nbsp;
+                    <c:out value="${errorMessage}"/>
+                </div>
+            </c:if>
+		
 			<div class="row">
 				<div class="col-xs-8 col-xs-offset-2 box">
 					<div class="label label-default pull-right">
@@ -76,8 +90,8 @@
 							</div>
 						</fieldset>
 						<div class="actions pull-right">
-							<input type="submit" value="Edit" class="btn btn-primary" href="DashBoard">
-							or <a href="DashBoard" class="btn btn-default">Cancel</a>
+							<input type="submit" value="Edit" class="btn btn-primary" href="dashboard">
+							or <a href="dashboard" class="btn btn-default">Cancel</a>
 						</div>
 					</form>
 				</div>

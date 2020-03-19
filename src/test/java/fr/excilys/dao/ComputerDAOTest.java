@@ -30,14 +30,12 @@ public class ComputerDAOTest {
 
 	private final int INTENDED_USE_RETURN_VALUE = 1;
 	private final int TAILLE_PAGE = 10;
+	@Autowired
 	private ComputerDAO computerDAO;
+	@Autowired
 	private ComputerMapper computerMapper;
 	
-	@Autowired
-	public void setComputerDAO(ComputerDAO computerDAO, ComputerMapper computerMapper) {
-		this.computerDAO = computerDAO;
-		this.computerMapper = computerMapper; 
-	}
+	
 	
 	@Test
 	public void testgetNBRows() {

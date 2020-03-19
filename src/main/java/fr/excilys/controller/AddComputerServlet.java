@@ -1,4 +1,4 @@
-package fr.excilys.servlet;
+package fr.excilys.controller;
 
 import static java.util.stream.Collectors.toList;
 
@@ -48,7 +48,7 @@ public class AddComputerServlet {
 			@RequestParam(required = false, value = "errorMessage") String errorMessage) {
 
 		ModelAndView modelAndView = new ModelAndView();
-		if (errorMessage.isEmpty() && !errorMessage.isBlank()) {
+		if (errorMessage != null && !errorMessage.isBlank()) {
 			modelAndView.addObject("errorMessage", errorMessage);
 		}
 

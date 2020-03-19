@@ -1,34 +1,18 @@
-package fr.excilys.servlet;
+package fr.excilys.controller;
 
-import java.io.IOException;
-import java.util.ArrayList;
-import java.util.List;
+import java.util.HashMap;
 import java.util.Map;
-
-import javax.servlet.ServletConfig;
-import javax.servlet.ServletException;
-import javax.servlet.annotation.WebServlet;
-import javax.servlet.http.HttpServlet;
-import javax.servlet.http.HttpServletRequest;
-import javax.servlet.http.HttpServletResponse;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
-import org.springframework.web.context.support.SpringBeanAutowiringSupport;
 import org.springframework.web.servlet.ModelAndView;
 
-import fr.excilys.dto.CompanyDTO;
-import fr.excilys.dto.ComputerDTO;
-import fr.excilys.exception.DatabaseDAOException;
 import fr.excilys.exception.DatabaseManipulationException;
-import fr.excilys.exception.ValidatorException;
-import fr.excilys.model.Computer;
 import fr.excilys.pagination.Paginate;
 import fr.excilys.service.ComputerService;
 import fr.excilys.validator.EnumMessageErrorValidation;
@@ -41,7 +25,7 @@ public class DashBoardServlet {
 	private static final String DELETE_COMPUTER = "deleteComputer";
 	private ComputerService computerService;
 	private Paginate page;
-	private Map<String, String> valuesToTransfert;
+	private Map<String, String> valuesToTransfert = new HashMap<String, String>();
 
 	public static Logger LOGGER = LoggerFactory.getLogger(DashBoardServlet.class);
 
@@ -65,6 +49,7 @@ public class DashBoardServlet {
 		setMessage(errorMessage, "errorMessage", modelAndView);
 		setMessage(successMessage, "successMessage", modelAndView);
 
+		setValuesToTransfert( pageIterator, NbRowComputer, maxPage, pageSize, orderBy, search);
 		try {
 			page.paginate(valuesToTransfert, modelAndView);
 		} catch (DatabaseManipulationException databaseManipulationException) {
@@ -92,7 +77,7 @@ public class DashBoardServlet {
 	private void setValuesToTransfert(String pageIterator, String NbRowComputer, String maxPage, String pageSize,
 			String orderBy, String search) {
 		valuesToTransfert.clear();
-		valuesToTransfert.put("pagIterator", pageIterator);
+		valuesToTransfert.put("pageIterator", pageIterator);
 		valuesToTransfert.put("NbRowComputer", NbRowComputer);
 		valuesToTransfert.put("maxPage", maxPage);
 		valuesToTransfert.put("order", orderBy);
@@ -101,7 +86,7 @@ public class DashBoardServlet {
 	}
 	
 	private void setMessage(String errorMessage, String messageTitle, ModelAndView modelAndView) {
-		if ((!errorMessage.isEmpty()) && (!errorMessage.isBlank())) {
+		if (( errorMessage != null ) && (!errorMessage.isBlank())) {
 			modelAndView.addObject(messageTitle, errorMessage);
 		}
 	}

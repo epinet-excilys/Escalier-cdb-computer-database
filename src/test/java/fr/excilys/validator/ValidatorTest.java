@@ -15,19 +15,19 @@ import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
 import fr.excilys.config.AppConfiguration;
 import fr.excilys.model.Computer;
 
-@RunWith(SpringJUnit4ClassRunner.class)
-@ContextConfiguration(classes = {AppConfiguration.class})
+//@RunWith(SpringJUnit4ClassRunner.class)
+//@ContextConfiguration(classes = {AppConfiguration.class})
 public class ValidatorTest {
-	private static LocalDate localDate = LocalDate.now().minusYears(2);
-	private LocalDate localDate2 = LocalDate.now().minusYears(1);
-	private LocalDate localDateNull = null;
-	private LocalDate localDateOld = LocalDate.of(1777, 01, 01);
-	private Validator validator;
-	
-	
-	public ValidatorTest(Validator validator) {
-		this.validator = validator;
-	}
+//	private static LocalDate localDate = LocalDate.now().minusYears(2);
+//	private LocalDate localDate2 = LocalDate.now().minusYears(1);
+//	private LocalDate localDateNull = null;
+//	private LocalDate localDateOld = LocalDate.of(1777, 01, 01);
+//	private Validator validator;
+//	
+//	
+//	public ValidatorTest(Validator validator) {
+//		this.validator = validator;
+//	}
 	
 	
 //

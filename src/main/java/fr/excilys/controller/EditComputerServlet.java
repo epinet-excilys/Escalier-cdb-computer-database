@@ -1,4 +1,4 @@
-package fr.excilys.servlet;
+package fr.excilys.controller;
 
 import java.io.IOException;
 import java.time.LocalDate;
@@ -43,8 +43,6 @@ public class EditComputerServlet extends HttpServlet {
 	private ComputerMapper computerMapper;
 	private CompanyMapper companyMapper;
 	private Validator validator;
-	
-	
 
 	public EditComputerServlet(ComputerService computerService, CompanyService companyService,
 			ComputerMapper computerMapper, CompanyMapper companyMapper, Validator validator) {
@@ -62,13 +60,14 @@ public class EditComputerServlet extends HttpServlet {
 			@RequestParam(required = false, value = "errorMessage") String errorMessage) {
 		ModelAndView modelAndView = new ModelAndView();
 
-		if(!errorMessage.isEmpty() && !errorMessage.isBlank()) {
+		if(errorMessage != null && !errorMessage.isBlank()) {
 			modelAndView.addObject("errorMessage",errorMessage);
 		}
 
 		try {
 			
 			int computerToEditID = Integer.parseInt(computerId);
+			
 			List<Company> companyList = companyService.getAllCompany();
 			List<CompanyDTO> companyDTOList = new ArrayList<>();
 
@@ -80,6 +79,7 @@ public class EditComputerServlet extends HttpServlet {
 			modelAndView.addObject("computer", computerDTO);
 			modelAndView.addObject("companyDTOList", companyDTOList);
 			modelAndView.addObject("computerId", computerToEditID);
+			imprimer(modelAndView.toString());
 			modelAndView.setViewName(EDIT_COMPUTER);
 
 		} catch (ValidatorException validationException) {
@@ -124,5 +124,9 @@ public class EditComputerServlet extends HttpServlet {
 		if ((!errorMessage.isEmpty()) && (!errorMessage.isBlank())) {
 			modelAndView.addObject(messageTitle, errorMessage);
 		}
+	}
+	
+	private void imprimer(String s) {
+		System.out.println(s);
 	}
 }

@@ -7,6 +7,8 @@ import java.util.Map;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
+import org.apache.commons.lang3.builder.ReflectionToStringBuilder;
+import org.apache.commons.lang3.builder.ToStringStyle;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 import org.springframework.web.servlet.ModelAndView;
@@ -51,15 +53,27 @@ public class Paginate {
 		
 		setPageSize(valuesToTransfert);
 		setPageIterator(valuesToTransfert);
-		if ((valuesToTransfert.get("search") != null) && !valuesToTransfert.get("search").isBlank()) {
-			this.searchTerm = valuesToTransfert.get("search");
-		}
+		setSearchTerm(valuesToTransfert);
+		setOrderBy(valuesToTransfert);
 		
+	}
+
+
+	private void setOrderBy(Map<String, String> valuesToTransfert) {
 		if ((valuesToTransfert.get("order") != null)  && !(valuesToTransfert.get("order").isBlank()))  {
 			this.orderBy = valuesToTransfert.get("order");
+		} else {
+			this.orderBy = null;
 		}
 	}
 
+	private void setSearchTerm(Map<String, String> valuesToTransfert) {
+		if ((valuesToTransfert.get("search") != null) && !valuesToTransfert.get("search").isBlank()) {
+			this.searchTerm = valuesToTransfert.get("search");
+		} else {
+			this.searchTerm = null;
+		}
+	}
 
 	private void setPageIterator(Map<String,String> valuesToTransfert) {
 		if (valuesToTransfert.get("pageIterator") != null) {
@@ -68,7 +82,6 @@ public class Paginate {
 			this.pageIterator = 0;
 		}
 	}
-
 
 	private void setPageSize(Map<String,String> valuesToTransfert) {
 		if (valuesToTransfert.get("taillePage") != null) {
@@ -125,7 +138,6 @@ public class Paginate {
 	}
 
 	private void whichPaginateToCall() {
-		
 		if(searchTerm != null && !searchTerm.equals("") ) {
 			paginateSearchByTerm();
 		}else if (orderBy != null &&  !orderBy.equals("")) {
@@ -135,5 +147,9 @@ public class Paginate {
 		}
 	}
 	
+	@Override
+	public String toString() {
+		return ReflectionToStringBuilder.toString(this,ToStringStyle.JSON_STYLE);
+	}
 	
 }
