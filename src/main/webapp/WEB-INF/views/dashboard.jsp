@@ -5,13 +5,14 @@
 
 <%@taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core"%>
 <%@taglib prefix="fn" uri="http://java.sun.com/jsp/jstl/functions"%>
+<%@ taglib prefix="spring" uri="http://www.springframework.org/tags"%>
 
 <!DOCTYPE html>
 
 
 <html>
 <head>
-<title>Computer Database - JSP Version</title>
+<title><spring:message code="label.title" /></title>
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <meta charset="utf-8">
 <!-- Bootstrap -->
@@ -24,56 +25,75 @@
 <body>
 	<header class="navbar navbar-inverse navbar-fixed-top">
 		<div class="container">
-			<a class="navbar-brand" href="dashboard"> Application - Computer
-				Database </a>
+			<a class="navbar-brand" href="dashboard"> <spring:message
+					code="label.header" />
+			</a>
 		</div>
 	</header>
 
 	<section id="main">
 		<div class="container">
-		  <c:if test="${not empty successMessage}">
-                <div class="alert alert-success" role="alert">
-                    <i class="fa fa-check fa-2x"></i> &nbsp;&nbsp;&nbsp;&nbsp;<strong><spring:message
-                        code="label.success"/>:</strong>
-                    <c:out value="${successMessage}"/>
+			<c:if test="${not empty successMessage}">
+				<div class="alert alert-success" role="alert">
+					<i class="fa fa-check fa-2x"></i> &nbsp;&nbsp;&nbsp;&nbsp;
+					<c:out value="${successMessage}" />
+				</div>
+			</c:if>
+			<c:if test="${not empty errorMessage}">
+				<div class="alert alert-danger" role="alert">
+					<i class="fa fa-exclamation-triangle fa-2x"></i>
+					&nbsp;&nbsp;&nbsp;&nbsp;
+					<c:out value="${errorMessage}" />
+				</div>
+			</c:if>
+			
+			 <div class="dropdown ">
+                <button class="btn btn-info dropdown-toggle" type="button"
+                        id="dropdownMenuButton" data-toggle="dropdown" aria-haspopup="true"
+                        aria-expanded="false">
+                    <spring:message code="label.lang"/>
+                </button>
+                
+                
+                <div class="dropdown-menu" aria-labelledby="dropdownMenuButton">
+                    <a class="dropdown-item" href="?lang=en"><spring:message
+                            code="label.english"/></a>
+                    <a class="dropdown-item" href="?lang=fr"><spring:message
+                            code="label.french"/></a>
                 </div>
-            </c:if>
-            <c:if test="${not empty errorMessage}">
-                <div class="alert alert-danger" role="alert">
-                    <i class="fa fa-exclamation-triangle fa-2x"></i>
-                    &nbsp;&nbsp;&nbsp;&nbsp;<strong><spring:message
-                        code="label.error"/>:</strong>
-                    <c:out value="${errorMessage}"/>
-                </div>
-            </c:if>
-		
-		
+            </div>
+
+
 			<h1 id="homeTitle">
 				<c:out value="${NbRowComputer}">
 				</c:out>
-				Computers founds in DataBase
+				<spring:message code="label.computerNumberRow" />
 			</h1>
 
 			<div id="actions" class="form-horizontal">
 				<div class="pull-left">
+				<spring:message code="label.search"/>
 					<form id="searchForm" action="#" method="GET" class="form-inline">
-					
+
 						<input type="search" id="searchbox" name="search"
-							class="form-control" placeholder="${search}"/> <input
-							type="submit" id="searchsubmit" value="Filter by name"
-							class="btn btn-primary" />
+							class="form-control" placeholder="${search}" /> 
+							
+							<input type="submit" id="searchsubmit"
+							value= <spring:message code="label.filterByName"/>
+							class= "btn btn-primary" />
+					
 					</form>
 				</div>
 				<div class="pull-right">
-					<a class="btn btn-success" id="addComputer" href="addComputer">Add
-						Computer</a> <a class="btn btn-default" id="editComputer" href="#"
-						onclick="$.fn.toggleEditMode();">Edit</a>
+					<a class="btn btn-success" id="addComputer" href="addComputer"><spring:message code="label.addComputer"/></a> 
+					<a class="btn btn-default" id="editComputer" href="#" 
+					onclick="$.fn.toggleEditMode();"><spring:message code="label.editComputer"/></a>
 				</div>
 			</div>
 		</div>
 
 		<form id="deleteForm" action="dashboard/deleteComputer" method="POST">
-			<input type="hidden" name="idSelectionAsList" value="">
+			<input type="hidden" name="selection" value="">
 		</form>
 
 		<div class="container" style="margin-top: 10px;">
@@ -88,18 +108,10 @@
 									class="fa fa-trash-o fa-lg"></i>
 							</a>
 						</span></th>
-						 <th>
-                          <a href="dashboard?order=Computer">Computer name</a>
-                        </th>
-                        <th>
-                            <a href="dashboard?order=Introduced">Introduced date</a>
-                        </th>
-                        <th>
-                          <a href="dashboard?order=Discontinued">  Discontinued date</a>
-                        </th>
-                        <th>
-                            <a href="dashboard?order=Company">Company</a>
-                        </th>
+						<th><a href="dashboard?order=Computer"><spring:message code="label.computerName"/></a></th>
+						<th><a href="dashboard?order=Introduced"><spring:message code="label.dateIntro"/></a></th>
+						<th><a href="dashboard?order=Discontinued"><spring:message code="label.dateDisco"/></a></th>
+						<th><a href="dashboard?order=Company"><spring:message code="label.company"/></a></th>
 					</tr>
 				</thead>
 
@@ -124,8 +136,8 @@
 	<footer class="navbar-fixed-bottom">
 		<div class="container text-center">
 			<ul class="pagination">
-			
-			
+
+
 				<li><c:if test="${pageIterator>0}">
 						<a
 							href="dashboard?pageIterator=${ pageIterator - 1 }
@@ -135,19 +147,17 @@
 							aria-label="Previous"> <span aria-hidden="true">&laquo;</span>
 						</a>
 					</c:if></li>
-					
-					
+
+
 				<c:if test="${pageIterator < (maxPage+1)}">
 					<li><a
-										href="dashboard?pageIterator=${pageIterator }
+						href="dashboard?pageIterator=${pageIterator }
 											<c:if test="${ taillePage != null }">&taillePage=${ taillePage }</c:if>
 											<c:if test="${ (search != null) and (search != '') }">&search=${ search }
 											</c:if>
 											<c:if test="${(orderName != null) and (orderName != '') }">&orderName=${ orderName }
 											</c:if>"
-											value="${pageIterator}">[${pageIterator}]
-						
-						</a></li>
+						value="${pageIterator}">[${pageIterator}] </a></li>
 				</c:if>
 				<li><c:if test="${pageIterator < (maxPage)}">
 						<a
@@ -162,27 +172,24 @@
 
 			<div class="btn-group btn-group-sm pull-right" role="group">
 				<a
-				href="dashboard?pageIterator=0&taillePage=10
+					href="dashboard?pageIterator=0&taillePage=10
 					<c:if test="${ (search != null) and (search != '') }">&search=${ search }</c:if>
 										<c:if test="${ order != null and (order != '') }">&order=${ order }</c:if>">
 					<button type="button" class="btn btn-default"
 						onclick="<c:set var="pageIterator" value="0" />">10</button>
-				</a>
-				<a
+				</a> <a
 					href="dashboard?pageIterator=0&taillePage=20
 					<c:if test="${ (search != null) and (search != '') }">&search=${ search }</c:if>
 										<c:if test="${ order != null and (order != '') }">&order=${ order }</c:if>">
 					<button type="button" class="btn btn-default"
 						onclick="<c:set var="pageIterator" value="0" />">20</button>
-				</a>
-				<a
+				</a> <a
 					href="dashboard?pageIterator=0&taillePage=50
 					<c:if test="${ (search != null) and (search != '') }">&search=${ search }</c:if>
 										<c:if test="${ order != null and (order != '') }">&order=${ order }</c:if>">
 					<button type="button" class="btn btn-default"
 						onclick="<c:set var="pageIterator" value="0" />">50</button>
-				</a>
-				<a
+				</a> <a
 					href="dashboard?pageIterator=0&taillePage=100
 					<c:if test="${ (search != null) and (search != '') }">&search=${ search }</c:if>
 										<c:if test="${ order != null and (order != '') }">&order=${ order }</c:if>">
@@ -190,7 +197,7 @@
 						onclick="<c:set var="pageIterator" value="0" />">100</button>
 				</a>
 
-		</div>
+			</div>
 	</footer>
 	<script src="resources/js/jquery.min.js"></script>
 	<script src="resources/js/bootstrap.min.js"></script>

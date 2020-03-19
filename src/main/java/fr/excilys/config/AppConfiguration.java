@@ -23,8 +23,7 @@ import org.springframework.web.servlet.DispatcherServlet;
 @PropertySource(value = "classpath:application.properties")
 public class AppConfiguration implements WebApplicationInitializer {
 	
-	@Autowired
-	Environment environment;
+	
 
 	@Override
 	public void onStartup(ServletContext servletContext) throws ServletException {
@@ -38,7 +37,7 @@ public class AppConfiguration implements WebApplicationInitializer {
 	}
 	
 	@Bean
-	DataSource datasource() {
+	DataSource datasource(Environment environment) {
 		DriverManagerDataSource driverManagerDataSource = new DriverManagerDataSource();
 		driverManagerDataSource.setDriverClassName(environment.getProperty(EnumProperties.PROPERTIES_DRIVER.getMessage()));
 		driverManagerDataSource.setUrl(environment.getProperty(EnumProperties.PROPERTIES_URL.getMessage()));

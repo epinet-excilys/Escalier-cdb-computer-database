@@ -63,9 +63,10 @@ public class Dashboard {
 	}
 
 	@PostMapping(value = "/" + DELETE_COMPUTER)
-	public ModelAndView deleteComputer(@RequestParam(value = "idSelectionAsList") String idSelectionAsList) {
+	public ModelAndView deleteComputer(@RequestParam(value = "selection") String idSelectionAsList) {
 		
 		ModelAndView modelAndView = new ModelAndView("redirect:/"+DASHBOARD);
+		
 		if(idSelectionAsList != null && !idSelectionAsList.isBlank()) {
 			computerService.deleteByGroup(idSelectionAsList);
 			setMessage(EnumMessageErrorValidation.SUCCESS_DELETE.getMessage(), "successMessage", modelAndView);

@@ -2,7 +2,6 @@ package fr.excilys.validator;
 
 import java.time.DateTimeException;
 import java.time.LocalDate;
-import java.time.format.DateTimeParseException;
 
 import org.springframework.stereotype.Component;
 
