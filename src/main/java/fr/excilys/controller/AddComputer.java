@@ -23,17 +23,17 @@ import fr.excilys.validator.EnumMessageErrorValidation;
 import fr.excilys.validator.Validator;
 
 @Controller
-public class AddComputerServlet {
+public class AddComputer {
 
 	private static final String ADD_COMPUTER = "addComputer";
-	private static final String DASHBOARD = "DashBoard";
+	private static final String DASHBOARD = "dashboard";
 	private ComputerService computerService;
 	private CompanyService companyService;
 	private ComputerMapper computerMapper;
 	private Validator validator;
 	
 
-	public AddComputerServlet(ComputerService computerService, CompanyService companyService,
+	public AddComputer(ComputerService computerService, CompanyService companyService,
 			ComputerMapper computerMapper,  Validator validator) {
 
 		this.computerService = computerService;

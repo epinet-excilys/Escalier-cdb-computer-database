@@ -34,7 +34,7 @@ import fr.excilys.validator.EnumMessageErrorValidation;
 import fr.excilys.validator.Validator;
 
 @Controller
-public class EditComputerServlet extends HttpServlet {
+public class EditComputer extends HttpServlet {
 
 	private static final String EDIT_COMPUTER = "editComputer";
 	private static final String DASHBOARD = "dashboard";
@@ -44,7 +44,7 @@ public class EditComputerServlet extends HttpServlet {
 	private CompanyMapper companyMapper;
 	private Validator validator;
 
-	public EditComputerServlet(ComputerService computerService, CompanyService companyService,
+	public EditComputer(ComputerService computerService, CompanyService companyService,
 			ComputerMapper computerMapper, CompanyMapper companyMapper, Validator validator) {
 
 		this.computerService = computerService;
@@ -76,7 +76,7 @@ public class EditComputerServlet extends HttpServlet {
 			Computer computer = computerService.findByID(computerToEditID).get();
 			ComputerDTO computerDTO =computerMapper.fromComputerToComputerDTO(computer);
 			
-			modelAndView.addObject("computer", computerDTO);
+			modelAndView.addObject("computerDTO", computerDTO);
 			modelAndView.addObject("companyDTOList", companyDTOList);
 			modelAndView.addObject("computerId", computerToEditID);
 			modelAndView.setViewName(EDIT_COMPUTER);
@@ -90,7 +90,7 @@ public class EditComputerServlet extends HttpServlet {
 	
 	@PostMapping(value = "/editComputer")
 	public ModelAndView editComputer(@RequestParam(value = "computerId") String computerId,
-			@RequestParam(value = "computerName") String computerName,
+			@RequestParam(value = "computerNameArenvoyer") String computerName,
 			@RequestParam(required = false, value = "introduced") String introduced,
 			@RequestParam(required = false, value = "discontinued") String discontinued,
 			@RequestParam(required = false, value = "companyId") String companyId){
@@ -109,7 +109,6 @@ public class EditComputerServlet extends HttpServlet {
 
 			Computer computer = computerMapper.fromComputerDTOToComputer(computerDTO);
 			computerService.update(computer);
-
 			modelAndView.addObject("successMessage", EnumMessageErrorValidation.SUCCESS_UPDATE.getMessage());
 			modelAndView.setViewName("redirect:/" + DASHBOARD);
 		} catch (ValidatorException validationException) {

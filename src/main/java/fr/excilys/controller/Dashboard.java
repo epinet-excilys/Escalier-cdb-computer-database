@@ -19,7 +19,7 @@ import fr.excilys.validator.EnumMessageErrorValidation;
 
 @Controller
 @RequestMapping(value = "/dashboard")
-public class DashBoardServlet {
+public class Dashboard {
 
 	private static final String DASHBOARD = "dashboard";
 	private static final String DELETE_COMPUTER = "deleteComputer";
@@ -27,9 +27,9 @@ public class DashBoardServlet {
 	private Paginate page;
 	private Map<String, String> valuesToTransfert = new HashMap<String, String>();
 
-	public static Logger LOGGER = LoggerFactory.getLogger(DashBoardServlet.class);
+	public static Logger LOGGER = LoggerFactory.getLogger(Dashboard.class);
 
-	public DashBoardServlet(ComputerService computerService, Paginate pagination) {
+	public Dashboard(ComputerService computerService, Paginate pagination) {
 		this.computerService = computerService;
 		this.page = pagination;
 	}
@@ -62,11 +62,11 @@ public class DashBoardServlet {
 
 	}
 
-	@PostMapping(value = "/"+DASHBOARD+ "/" + DELETE_COMPUTER)
+	@PostMapping(value = "/" + DELETE_COMPUTER)
 	public ModelAndView deleteComputer(@RequestParam(value = "idSelectionAsList") String idSelectionAsList) {
 		
 		ModelAndView modelAndView = new ModelAndView("redirect:/"+DASHBOARD);
-		if(!idSelectionAsList.isEmpty() && !idSelectionAsList.isBlank()) {
+		if(idSelectionAsList != null && !idSelectionAsList.isBlank()) {
 			computerService.deleteByGroup(idSelectionAsList);
 			setMessage(EnumMessageErrorValidation.SUCCESS_DELETE.getMessage(), "successMessage", modelAndView);
 		}

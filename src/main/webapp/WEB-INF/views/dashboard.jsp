@@ -72,8 +72,8 @@
 			</div>
 		</div>
 
-		<form id="deleteForm" action="/dashboard/deleteComputer" method="POST">
-			<input type="hidden" name="selection" value="">
+		<form id="deleteForm" action="dashboard/deleteComputer" method="POST">
+			<input type="hidden" name="idSelectionAsList" value="">
 		</form>
 
 		<div class="container" style="margin-top: 10px;">

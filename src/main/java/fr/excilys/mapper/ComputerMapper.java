@@ -100,6 +100,7 @@ public final class ComputerMapper implements RowMapper<Computer> {
 	
 	public Computer fromComputerDTOToComputer(ComputerDTO computerDTO) {
 		
+		int computerId = computerDTO.getId();
 		String computerName = computerDTO.getName();
 		LocalDate introducedDate = fromStringToLocalDate(computerDTO.getIntroducedDate());
 		LocalDate discontinuedDate = fromStringToLocalDate(computerDTO.getDiscontinuedDate());
@@ -109,7 +110,7 @@ public final class ComputerMapper implements RowMapper<Computer> {
 		Company company = (companyId != 0 ? (companyDAO.findByID((companyId))).get(0) : (null));
 
 		
-		return new Computer.Builder().setNameBuild(computerName).setIntroducedDateBuild(introducedDate)
+		return new Computer.Builder().setIdBuild(computerId).setNameBuild(computerName).setIntroducedDateBuild(introducedDate)
 				.setDiscontinuedDateBuild(discontinuedDate).setIdCompagnyBuild(company).build();
 		
 	}

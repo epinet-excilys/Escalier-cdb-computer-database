@@ -73,15 +73,31 @@
 							<div class="form-group">
 								<label for="companyId">Company</label>
 								<c:choose>
-									<c:when test="${empty companyOfComputer}">
+									<c:when test="${empty computerDTO.companyDTO.name}">
 									No Company
 								</c:when>
 									<c:otherwise>
-									${companyOfComputer}
+									${computerDTO.companyDTO.name}
 								</c:otherwise>
 								</c:choose>
+								
 								<select class="form-control" id="companyId" name="companyId">
-									<option value="0">--</option>
+									<c:choose>
+									<c:when test="${empty computerDTO.companyDTO.name}">
+									
+									<option value="0"> -- </option>
+								</c:when>
+									<c:otherwise>
+									<option value="${computerDTO.companyDTO.id}"><c:out
+												value="${computerDTO.companyDTO.name}" /></option>
+								</c:otherwise>
+								</c:choose>
+								<c:choose>
+									<c:when test="${not empty computerDTO.companyDTO.name}">
+									
+									<option value="0"> -- </option>
+								</c:when>
+								</c:choose>
 									<c:forEach items="${ companyDTOList }" var="company">
 										<option value="${ company.id }"><c:out
 												value="${ company.name }" /></option>
