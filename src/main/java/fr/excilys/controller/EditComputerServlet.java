@@ -79,7 +79,6 @@ public class EditComputerServlet extends HttpServlet {
 			modelAndView.addObject("computer", computerDTO);
 			modelAndView.addObject("companyDTOList", companyDTOList);
 			modelAndView.addObject("computerId", computerToEditID);
-			imprimer(modelAndView.toString());
 			modelAndView.setViewName(EDIT_COMPUTER);
 
 		} catch (ValidatorException validationException) {
@@ -126,7 +125,4 @@ public class EditComputerServlet extends HttpServlet {
 		}
 	}
 	
-	private void imprimer(String s) {
-		System.out.println(s);
-	}
 }
