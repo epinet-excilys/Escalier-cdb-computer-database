@@ -3,6 +3,7 @@ package fr.excilys.model;
 import java.time.LocalDate;
 import org.apache.commons.lang3.builder.ReflectionToStringBuilder;
 import org.apache.commons.lang3.builder.ToStringStyle;
+import org.apache.commons.lang3.builder.HashCodeBuilder;
 
 public class Computer {
 
@@ -101,14 +102,7 @@ public class Computer {
 
 	@Override
 	public int hashCode() {
-		final int prime = 31;
-		int result = 1;
-		result = prime * result + ((company == null) ? 0 : company.hashCode());
-		result = prime * result + ((discontinuedDate == null) ? 0 : discontinuedDate.hashCode());
-		result = prime * result + id;
-		result = prime * result + ((introducedDate == null) ? 0 : introducedDate.hashCode());
-		result = prime * result + ((name == null) ? 0 : name.hashCode());
-		return result;
+		return HashCodeBuilder.reflectionHashCode(this);
 	}
 
 	@Override

@@ -56,10 +56,10 @@
                 
                 
                 <div class="dropdown-menu" aria-labelledby="dropdownMenuButton">
-                    <a class="dropdown-item" href="?lang=en"><spring:message
-                            code="label.english"/></a>
-                    <a class="dropdown-item" href="?lang=fr"><spring:message
-                            code="label.french"/></a>
+                    <a class="dropdown-item" href="?lang=en">
+                    <spring:message code="label.english"/></a>
+                    <a class="dropdown-item" href="?lang=fr">
+                    <spring:message code="label.french"/></a>
                 </div>
             </div>
 

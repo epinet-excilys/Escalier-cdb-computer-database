@@ -7,6 +7,7 @@ import java.util.List;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.servlet.ModelAndView;
 
@@ -23,6 +24,7 @@ import fr.excilys.validator.EnumMessageErrorValidation;
 import fr.excilys.validator.Validator;
 
 @Controller
+@RequestMapping(value = "/addComputer")
 public class AddComputer {
 
 	private static final String ADD_COMPUTER = "addComputer";
@@ -43,7 +45,7 @@ public class AddComputer {
 
 	}
 
-	@GetMapping(value = "/" + ADD_COMPUTER)
+	@GetMapping
 	public ModelAndView companyDTOListView(
 			@RequestParam(required = false, value = "errorMessage") String errorMessage) {
 
@@ -64,7 +66,7 @@ public class AddComputer {
 
 	}
 
-	@PostMapping(value = "/" + ADD_COMPUTER)
+	@PostMapping
 	public ModelAndView addComputerView(@RequestParam(value = "computerName") String computerName,
 			@RequestParam(required = false, value = "introduced") String introduced,
 			@RequestParam(required = false, value = "discontinued") String discontinued,

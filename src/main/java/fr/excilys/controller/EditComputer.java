@@ -17,6 +17,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.context.support.SpringBeanAutowiringSupport;
 import org.springframework.web.servlet.ModelAndView;
@@ -34,6 +35,7 @@ import fr.excilys.validator.EnumMessageErrorValidation;
 import fr.excilys.validator.Validator;
 
 @Controller
+@RequestMapping(value = "/editComputer")
 public class EditComputer extends HttpServlet {
 
 	private static final String EDIT_COMPUTER = "editComputer";
@@ -55,7 +57,7 @@ public class EditComputer extends HttpServlet {
 		
 	}
 	
-	@GetMapping(value = "/" + EDIT_COMPUTER)
+	@GetMapping
 	public ModelAndView getComputerToEdit(@RequestParam(value = "computerId") String computerId,
 			@RequestParam(required = false, value = "errorMessage") String errorMessage) {
 		ModelAndView modelAndView = new ModelAndView();
@@ -88,7 +90,7 @@ public class EditComputer extends HttpServlet {
 		return modelAndView;
 	}
 	
-	@PostMapping(value = "/editComputer")
+	@PostMapping
 	public ModelAndView editComputer(@RequestParam(value = "computerId") String computerId,
 			@RequestParam(value = "computerNameArenvoyer") String computerName,
 			@RequestParam(required = false, value = "introduced") String introduced,
