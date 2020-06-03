@@ -57,9 +57,9 @@
                 
                 <div class="dropdown-menu" aria-labelledby="dropdownMenuButton">
                     <a class="dropdown-item" href="?lang=en">
-                    <spring:message code="label.english"/></a>
+                    <spring:message code="label.english"/><img src="resources/img/united-kingdom.png" width="60" height="60"></a>
                     <a class="dropdown-item" href="?lang=fr">
-                    <spring:message code="label.french"/></a>
+                    <spring:message code="label.french"/><img src="resources/img/france.png" width="60" height="60"></a>
                 </div>
             </div>
 

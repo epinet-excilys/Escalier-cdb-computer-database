@@ -29,12 +29,13 @@ public final class ComputerDAO {
 	private ComputerMapper computerMapper;
 	private NamedParameterJdbcTemplate namedParameterJdbcTemplate;
 
-	public ComputerDAO(DataSource datasource, ComputerMapper computerMapper) {
-		this.namedParameterJdbcTemplate = new NamedParameterJdbcTemplate(datasource);
+	public ComputerDAO(NamedParameterJdbcTemplate namedParameterJdbcTemplate, ComputerMapper computerMapper) {
+		this.namedParameterJdbcTemplate = namedParameterJdbcTemplate;
 		this.computerMapper = computerMapper;
 	}
 
 	public int create(Computer computer) {
+		
 		if (computer != null) {
 			if (!computer.getName().isEmpty()) {
 				try {
@@ -167,6 +168,7 @@ public final class ComputerDAO {
 	}
 
 	public List<Computer> findAllPaginateSearchLike(String search, int ligneDebutOffSet, int taillePage) {
+		
 		try {
 			MapSqlParameterSource parameterMap = new MapSqlParameterSource().addValue("offset", ligneDebutOffSet)
 					.addValue("pageSize", taillePage).addValue("search", '%' + search + '%');
@@ -231,10 +233,12 @@ public final class ComputerDAO {
 	}
 
 	private String getOrderByStatement(String order) {
+		 
 		return EnumSQLCommand.GET_ALL_PAGINATE_ORDER_BY_STATEMENT.getMessage() + order + " LIMIT :offset, :pageSize;";
 	}
 
 	private Integer getValueOfCompany(Computer computer) {
+		
 		if (computer.getCompany() != null) {
 			return computer.getCompany().getId();
 		} else {
@@ -243,12 +247,14 @@ public final class ComputerDAO {
 	}
 
 	private Timestamp getValueOfIntroducedDate(Computer computer) {
+		
 		return computer.getIntroducedDate() != null
 				? Timestamp.valueOf(computer.getIntroducedDate().atTime(LocalTime.MIDNIGHT))
 				: null;
 	}
 
 	private Timestamp getValueOfDiscontinuedDate(Computer computer) {
+		
 		return computer.getDiscontinuedDate() != null
 				? Timestamp.valueOf(computer.getDiscontinuedDate().atTime(LocalTime.MIDNIGHT))
 				: null;

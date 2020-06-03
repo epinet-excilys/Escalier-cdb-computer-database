@@ -62,7 +62,6 @@ public class AddComputer {
 			modelAndView.setViewName("redirect:/"+ADD_COMPUTER);
 		}
 		
-		
 		return modelAndView;
 
 	}

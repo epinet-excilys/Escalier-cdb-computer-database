@@ -70,7 +70,7 @@
 						<div class="actions pull-right">
 							<input type="submit"
 								value=<spring:message code="label.add" /> class="btn btn-primary"> 
-								or <a href="dashboard" class="btn btn-default"><spring:message code="label.cancel" /></a>
+								<spring:message code="label.or" />  <a href="dashboard" class="btn btn-default"><spring:message code="label.cancel" /></a>
 						</div>
 					</form>
 				</div>

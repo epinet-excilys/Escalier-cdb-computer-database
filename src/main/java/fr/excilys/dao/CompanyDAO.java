@@ -26,8 +26,8 @@ public final class CompanyDAO {
 	private CompanyMapper companyMapper;
 	private NamedParameterJdbcTemplate namedParameterJdbcTemplate;
 
-	public CompanyDAO(DataSource datasource, CompanyMapper companyMapper) {
-		this.namedParameterJdbcTemplate = new NamedParameterJdbcTemplate(datasource);
+	public CompanyDAO(NamedParameterJdbcTemplate namedParameterJdbcTemplate, CompanyMapper companyMapper) {
+		this.namedParameterJdbcTemplate = namedParameterJdbcTemplate;
 		this.companyMapper = companyMapper;
 	}
 
@@ -50,7 +50,6 @@ public final class CompanyDAO {
 
 	public List<Company> findByID(int idSearch) {
 		
-		Optional<Company> optionalCompany = Optional.empty();
 		try {
 			MapSqlParameterSource parameterMap = new MapSqlParameterSource().addValue("idCompany", idSearch); 
 			

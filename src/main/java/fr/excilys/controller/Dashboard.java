@@ -56,7 +56,6 @@ public class Dashboard {
 			setMessage(EnumMessageErrorValidation.ERROR_PAGINATION.getMessage(), "errorMessage", modelAndView);
 		}
 
-		setValuesToTransfert(pageIterator, NbRowComputer, maxPage, pageSize, orderBy, search);
 
 		return modelAndView;
 

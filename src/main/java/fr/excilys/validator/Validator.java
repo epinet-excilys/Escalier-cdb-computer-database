@@ -82,7 +82,6 @@ public class Validator {
 		} catch (DateTimeException dateTimeException) {
 			throw new ValidatorException(EnumMessageErrorValidation.ERROR_DATE_FORMAT.getMessage());
 		}
-//		throw new ValidatorException(EnumMessageErrorValidation.ERROR_DATE_VALUE.getMessage());
 	}
 
 }

@@ -33,10 +33,12 @@ public enum EnumSQLCommand {
 	private String message; 
 	
 	EnumSQLCommand(String message) {
+		
 		this.message = message;
 	}
 	
 	public String getMessage() {
+		
 		return this.message;
 	}
 	

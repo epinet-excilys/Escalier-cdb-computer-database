@@ -11,6 +11,7 @@ import org.springframework.context.annotation.ComponentScan;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.context.annotation.PropertySource;
 import org.springframework.core.env.Environment;
+import org.springframework.jdbc.core.namedparam.NamedParameterJdbcTemplate;
 import org.springframework.jdbc.datasource.DriverManagerDataSource;
 import org.springframework.web.WebApplicationInitializer;
 import org.springframework.web.context.support.AnnotationConfigWebApplicationContext;
@@ -45,5 +46,10 @@ public class AppConfiguration implements WebApplicationInitializer {
 		driverManagerDataSource.setPassword(environment.getProperty(EnumProperties.PROPERTIES_PASSWORD.getMessage()));
 		
 		return driverManagerDataSource;
+	}
+	
+	@Bean
+	NamedParameterJdbcTemplate namedParameterJdbcTemplate(DataSource datasource) {
+		return new NamedParameterJdbcTemplate(datasource);
 	}
 }
