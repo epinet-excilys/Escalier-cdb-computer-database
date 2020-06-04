@@ -7,6 +7,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.servlet.ModelAndView;
 
+import fr.excilys.dto.AddAndEditComputerParameterDTO;
 import fr.excilys.dto.CompanyDTO;
 import fr.excilys.dto.ComputerDTO;
 import fr.excilys.exception.ValidatorException;
@@ -56,17 +57,26 @@ public class EditComputerService {
 		
 	}
 
-	public void editComputerInService(String computerId,String computerName,
-			String introduced,String discontinued, String companyId) throws ValidatorException
+	public void editComputerInService(AddAndEditComputerParameterDTO addAndEditComputerParameterDTO) throws ValidatorException
 	{
-		validator.validateFields(computerName, introduced, discontinued, companyId);
+		validator.validateFields(
+				addAndEditComputerParameterDTO.getComputerName(),
+				addAndEditComputerParameterDTO.getIntroduced(),
+				addAndEditComputerParameterDTO.getDiscontinued(),
+				addAndEditComputerParameterDTO.getCompanyId());
 
 		CompanyDTO companyDTO = new CompanyDTO();
-		if(!companyId.isBlank() && !companyId.isEmpty() ) {
-			companyDTO.setId(Integer.parseInt(companyId));
+		
+		if(!addAndEditComputerParameterDTO.getCompanyId().isBlank() && !addAndEditComputerParameterDTO.getCompanyId().isEmpty() ) {
+			companyDTO.setId(Integer.parseInt(addAndEditComputerParameterDTO.getCompanyId()));
 		}
-		ComputerDTO computerDTO = new ComputerDTO(computerName, introduced, discontinued, companyDTO);
-		computerDTO.setId(Integer.parseInt(computerId));
+		ComputerDTO computerDTO = new ComputerDTO(
+				addAndEditComputerParameterDTO.getComputerName(),
+				addAndEditComputerParameterDTO.getIntroduced(),
+				addAndEditComputerParameterDTO.getDiscontinued(),
+				companyDTO);
+		
+		computerDTO.setId(Integer.parseInt(addAndEditComputerParameterDTO.getCompanyId()));
 
 		Computer computer = computerMapper.fromComputerDTOToComputer(computerDTO);
 		computerService.update(computer);

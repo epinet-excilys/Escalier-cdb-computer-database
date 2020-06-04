@@ -21,6 +21,14 @@
 <link href="resources/css/font-awesome.css" rel="stylesheet"
 	media="screen">
 <link href="resources/css/main.css" rel="stylesheet" media="screen">
+<style>
+      tr:nth-of-type(odd) {
+      background-color:#fff;
+    }
+    tr:nth-of-type(even) {
+      background-color:#ccc;
+    }
+</style>
 </head>
 <body>
 	<header class="navbar navbar-inverse navbar-fixed-top">
@@ -109,8 +117,8 @@
 				</thead>
 
 				<tbody id="results">
-					<c:forEach items="${computerList}" var="computer">
-						<tr>
+					<c:forEach items="${computerList}" var="computer" varStatus="loop">
+						<tr class="${loop.index % 2 == 0 ? 'even' : 'odd' }">
 							<td class="editMode"><input type="checkbox" name="cb"
 								class="cb" value="${computer.id }"></td>
 							<td><a href="editComputer?computerId=${computer.id}"
@@ -135,7 +143,7 @@
 				<c:if test="${pageIterator>0}">
 						<a
 							href="dashboard?pageIterator=${ pageIterator - 1 }
-										<c:if test="${ taillePage != null }">&taillePage=${ taillePage }</c:if>
+										<c:if test="${ pageSize != null }">&pageSize=${ pageSize }</c:if>
 										<c:if test="${ (search != null) and (search != '') }">&search=${ search }</c:if>
 										<c:if test="${ orderName != null and (orderName != '') }">&orderName=${ orderName }</c:if>"
 							aria-label="Previous"> <span aria-hidden="true">&lArr;</span>
@@ -145,7 +153,7 @@
 					<c:if test="${pageIterator >= (2)}">
 					<li><a
 						href="dashboard?pageIterator=${pageIterator - 2 }
-											<c:if test="${ taillePage != null }">&taillePage=${ taillePage }</c:if>
+											<c:if test="${ pageSize != null }">&pageSize=${ pageSize }</c:if>
 											<c:if test="${ (search != null) and (search != '') }">&search=${ search }
 											</c:if>
 											<c:if test="${(orderName != null) and (orderName != '') }">&orderName=${ orderName }
@@ -157,7 +165,7 @@
 				<c:if test="${pageIterator >= (1)}">
 					<li><a
 						href="dashboard?pageIterator=${pageIterator - 1 }
-											<c:if test="${ taillePage != null }">&taillePage=${ taillePage }</c:if>
+											<c:if test="${ pageSize != null }">&pageSize=${ pageSize }</c:if>
 											<c:if test="${ (search != null) and (search != '') }">&search=${ search }
 											</c:if>
 											<c:if test="${(orderName != null) and (orderName != '') }">&orderName=${ orderName }
@@ -168,7 +176,7 @@
 				<c:if test="${pageIterator < (maxPage+1)}">
 					<li><a
 						href="dashboard?pageIterator=${pageIterator }
-											<c:if test="${ taillePage != null }">&taillePage=${ taillePage }</c:if>
+											<c:if test="${ pageSize != null }">&pageSize=${ pageSize }</c:if>
 											<c:if test="${ (search != null) and (search != '') }">&search=${ search }
 											</c:if>
 											<c:if test="${(orderName != null) and (orderName != '') }">&orderName=${ orderName }
@@ -179,7 +187,7 @@
 				<c:if test="${pageIterator < (maxPage )}">
 					<li><a
 						href="dashboard?pageIterator=${pageIterator + 1 }
-											<c:if test="${ taillePage != null }">&taillePage=${ taillePage }</c:if>
+											<c:if test="${ pageSize != null }">&pageSize=${ pageSize }</c:if>
 											<c:if test="${ (search != null) and (search != '') }">&search=${ search }
 											</c:if>
 											<c:if test="${(orderName != null) and (orderName != '') }">&orderName=${ orderName }
@@ -190,7 +198,7 @@
 				<c:if test="${pageIterator < (maxPage-1 )}">
 					<li><a
 						href="dashboard?pageIterator=${pageIterator + 2 }
-											<c:if test="${ taillePage != null }">&taillePage=${ taillePage }</c:if>
+											<c:if test="${ pageSize != null }">&pageSize=${ pageSize }</c:if>
 											<c:if test="${ (search != null) and (search != '') }">&search=${ search }
 											</c:if>
 											<c:if test="${(orderName != null) and (orderName != '') }">&orderName=${ orderName }
@@ -201,7 +209,7 @@
 				<li><c:if test="${pageIterator < (maxPage)}">
 						<a
 							href="dashboard?pageIterator=${ pageIterator + 1 }
-										<c:if test="${ taillePage != null }">&taillePage=${ taillePage }</c:if>
+										<c:if test="${ pageSize != null }">&pageSize=${ pageSize }</c:if>
 										<c:if test="${ (search != null) and (search != '') }">&search=${ search }</c:if>
 										<c:if test="${ order != null and (order != '') }">&order=${ order }</c:if>"
 							aria-label="Next"> <span aria-hidden="true">&rArr;</span>
@@ -211,25 +219,25 @@
 
 			<div class="btn-group btn-group-sm pull-right" role="group">
 				<a
-					href="dashboard?pageIterator=0&taillePage=10
+					href="dashboard?pageIterator=0&pageSize=10
 					<c:if test="${ (search != null) and (search != '') }">&search=${ search }</c:if>
 										<c:if test="${ order != null and (order != '') }">&order=${ order }</c:if>">
 					<button type="button" class="btn btn-default"
 						onclick="<c:set var="pageIterator" value="0" />">10</button>
 				</a> <a
-					href="dashboard?pageIterator=0&taillePage=20
+					href="dashboard?pageIterator=0&pageSize=20
 					<c:if test="${ (search != null) and (search != '') }">&search=${ search }</c:if>
 										<c:if test="${ order != null and (order != '') }">&order=${ order }</c:if>">
 					<button type="button" class="btn btn-default"
 						onclick="<c:set var="pageIterator" value="0" />">20</button>
 				</a> <a
-					href="dashboard?pageIterator=0&taillePage=50
+					href="dashboard?pageIterator=0&pageSize=50
 					<c:if test="${ (search != null) and (search != '') }">&search=${ search }</c:if>
 										<c:if test="${ order != null and (order != '') }">&order=${ order }</c:if>">
 					<button type="button" class="btn btn-default"
 						onclick="<c:set var="pageIterator" value="0" />">50</button>
 				</a> <a
-					href="dashboard?pageIterator=0&taillePage=100
+					href="dashboard?pageIterator=0&pageSize=100
 					<c:if test="${ (search != null) and (search != '') }">&search=${ search }</c:if>
 										<c:if test="${ order != null and (order != '') }">&order=${ order }</c:if>">
 					<button type="button" class="btn btn-default"

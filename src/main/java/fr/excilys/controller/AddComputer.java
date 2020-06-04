@@ -7,6 +7,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.servlet.ModelAndView;
 
+import fr.excilys.dto.AddAndEditComputerParameterDTO;
 import fr.excilys.exception.ValidatorException;
 import fr.excilys.service.AddComputerService;
 import fr.excilys.validator.EnumMessageErrorValidation;
@@ -44,16 +45,13 @@ public class AddComputer {
 	}
 
 	@PostMapping
-	public ModelAndView addComputerView(@RequestParam(value = "computerName") String computerName,
-			@RequestParam(required = false, value = "introduced") String introduced,
-			@RequestParam(required = false, value = "discontinued") String discontinued,
-			@RequestParam(required = false, value = "companyId") String companyId) {
+	public ModelAndView addComputerView(AddAndEditComputerParameterDTO addAndEditComputerParameterDTO) {
 
 		ModelAndView modelAndView = new ModelAndView();
 		
 		try {
 			
-			addComputerService.addComputerInService(computerName, introduced, discontinued, companyId);
+			addComputerService.addComputerInService(addAndEditComputerParameterDTO);
 			
 			modelAndView.addObject("successMessage", EnumMessageErrorValidation.SUCCESS_CREATE.getMessage());
 			modelAndView.setViewName("redirect:/"+ DASHBOARD);

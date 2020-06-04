@@ -60,7 +60,7 @@
 								<label for="computerName"><spring:message
 										code="label.computerName" /></label> <input type="text"
 									class="form-control" id="computerName"
-									name="computerNameArenvoyer" value="${computerDTO.name}"
+									name="computerName" value="${computerDTO.name}"
 									required>
 							</div>
 							<div class="form-group">

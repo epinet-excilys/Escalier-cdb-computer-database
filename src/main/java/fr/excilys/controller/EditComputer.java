@@ -9,6 +9,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.servlet.ModelAndView;
 
+import fr.excilys.dto.AddAndEditComputerParameterDTO;
 import fr.excilys.exception.ValidatorException;
 import fr.excilys.service.EditComputerService;
 import fr.excilys.validator.EnumMessageErrorValidation;
@@ -51,18 +52,14 @@ public class EditComputer extends HttpServlet {
 	}
 	
 	@PostMapping
-	public ModelAndView editComputer(@RequestParam(value = "computerId") String computerId,
-			@RequestParam(value = "computerNameArenvoyer") String computerName,
-			@RequestParam(required = false, value = "introduced") String introduced,
-			@RequestParam(required = false, value = "discontinued") String discontinued,
-			@RequestParam(required = false, value = "companyId") String companyId){
+	public ModelAndView editComputer(AddAndEditComputerParameterDTO addAndEditComputerParameterDTO){
 		
 		ModelAndView modelAndView = new ModelAndView();
-		modelAndView.addObject("computerId", Integer.parseInt(computerId));
+		modelAndView.addObject("computerId", Integer.parseInt(addAndEditComputerParameterDTO.getComputerId()));
 		
 		try {
 			
-			editComputerService.editComputerInService(computerId, computerName, introduced, discontinued, companyId);
+			editComputerService.editComputerInService(addAndEditComputerParameterDTO);
 			modelAndView.addObject("successMessage", EnumMessageErrorValidation.SUCCESS_UPDATE.getMessage());
 			modelAndView.setViewName("redirect:/" + DASHBOARD);
 			

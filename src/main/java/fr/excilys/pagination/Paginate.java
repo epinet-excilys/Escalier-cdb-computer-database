@@ -10,6 +10,7 @@ import org.springframework.stereotype.Component;
 import org.springframework.web.servlet.ModelAndView;
 
 import fr.excilys.dto.ComputerDTO;
+import fr.excilys.dto.DashBoardParameterDTO;
 import fr.excilys.exception.DatabaseDAOException;
 import fr.excilys.mapper.ComputerMapper;
 import fr.excilys.model.Computer;
@@ -21,6 +22,8 @@ public class Paginate {
 	private int pageSize;
 	private double maxPage;
 	private int NbRowComputer;
+	private int startingValueDefault = 0;
+	private int pageHeightDefault = 20; 
 	private String searchTerm;
 	private String orderBy;
 	private List<Computer> computerList = new ArrayList<>();
@@ -34,9 +37,9 @@ public class Paginate {
 	}
 	
 
-	public void paginate(Map<String,String> valuesToTransfert,ModelAndView modelAndView) {
+	public void paginate(DashBoardParameterDTO dashBoardParameterDTO,ModelAndView modelAndView) {
 		
-		getValues(valuesToTransfert);
+		getValues(dashBoardParameterDTO);
 		whichPaginateToCall();
 		mapComputerToComputerDTO();
 		setValues(modelAndView);
@@ -45,45 +48,45 @@ public class Paginate {
 	
 
 
-	public void getValues(Map<String,String> valuesToTransfert) {
+	public void getValues(DashBoardParameterDTO dashBoardParameterDTO) {
 		
-		setPageSize(valuesToTransfert);
-		setPageIterator(valuesToTransfert);
-		setSearchTerm(valuesToTransfert);
-		setOrderBy(valuesToTransfert);
+		setPageSize(dashBoardParameterDTO);
+		setPageIterator(dashBoardParameterDTO);
+		setSearchTerm(dashBoardParameterDTO);
+		setOrderBy(dashBoardParameterDTO);
 		
 	}
 
 
-	private void setOrderBy(Map<String, String> valuesToTransfert) {
-		if ((valuesToTransfert.get("order") != null)  && !(valuesToTransfert.get("order").isBlank()))  {
-			this.orderBy = valuesToTransfert.get("order");
+	private void setOrderBy(DashBoardParameterDTO dashBoardParameterDTO) {
+		if ((dashBoardParameterDTO.getOrder() != null)  && !(dashBoardParameterDTO.getOrder().isBlank()))  {
+			this.orderBy = dashBoardParameterDTO.getOrder() ;
 		} else {
 			this.orderBy = null;
 		}
 	}
 
-	private void setSearchTerm(Map<String, String> valuesToTransfert) {
-		if ((valuesToTransfert.get("search") != null) && !valuesToTransfert.get("search").isBlank()) {
-			this.searchTerm = valuesToTransfert.get("search");
+	private void setSearchTerm(DashBoardParameterDTO dashBoardParameterDTO) {
+		if ((dashBoardParameterDTO.getSearch() != null) && !dashBoardParameterDTO.getSearch().isBlank()) {
+			this.searchTerm = dashBoardParameterDTO.getSearch() ;
 		} else {
 			this.searchTerm = null;
 		}
 	}
 
-	private void setPageIterator(Map<String,String> valuesToTransfert) {
-		if (valuesToTransfert.get("pageIterator") != null) {
-			this.pageIterator = Integer.parseInt(valuesToTransfert.get("pageIterator"));
+	private void setPageIterator(DashBoardParameterDTO dashBoardParameterDTO) {
+		if (dashBoardParameterDTO.getPageIterator()  != null) {
+			this.pageIterator = Integer.parseInt(dashBoardParameterDTO.getPageIterator());
 		} else {
-			this.pageIterator = 0;
+			this.pageIterator = startingValueDefault;
 		}
 	}
 
-	private void setPageSize(Map<String,String> valuesToTransfert) {
-		if (valuesToTransfert.get("taillePage") != null) {
-			this.pageSize = Integer.parseInt(valuesToTransfert.get("taillePage") );
+	private void setPageSize(DashBoardParameterDTO dashBoardParameterDTO) {
+		if (dashBoardParameterDTO.getPageSize()  != null) {
+			this.pageSize = Integer.parseInt(dashBoardParameterDTO.getPageSize()  );
 		} else {
-			this.pageSize = 20;
+			this.pageSize = pageHeightDefault;
 		}
 	}
 
