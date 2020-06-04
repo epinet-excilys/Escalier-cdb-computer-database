@@ -28,6 +28,14 @@
 			<a class="navbar-brand" href="dashboard"> <spring:message
 					code="label.header" />
 			</a>
+			<div class= "container" align="right">
+				<a class="dropdown-item" href="?lang=en">
+	            	<img src="resources/img/united-kingdom.png" width="45" height="45"></a>
+	            	&nbsp;&nbsp;&nbsp;
+	            <a class="dropdown-item" href="?lang=fr">
+	                <img src="resources/img/france.png" width="45" height="45"></a>
+            </div>
+                    
 		</div>
 	</header>
 
@@ -47,21 +55,6 @@
 				</div>
 			</c:if>
 			
-			 <div class="dropdown ">
-                <button class="btn btn-info dropdown-toggle" type="button"
-                        id="dropdownMenuButton" data-toggle="dropdown" aria-haspopup="true"
-                        aria-expanded="false">
-                    <spring:message code="label.lang"/>
-                </button>
-                
-                
-                <div class="dropdown-menu" aria-labelledby="dropdownMenuButton">
-                    <a class="dropdown-item" href="?lang=en">
-                    <spring:message code="label.english"/><img src="resources/img/united-kingdom.png" width="60" height="60"></a>
-                    <a class="dropdown-item" href="?lang=fr">
-                    <spring:message code="label.french"/><img src="resources/img/france.png" width="60" height="60"></a>
-                </div>
-            </div>
 
 
 			<h1 id="homeTitle">
@@ -138,16 +131,39 @@
 			<ul class="pagination">
 
 
-				<li><c:if test="${pageIterator>0}">
+				<li>
+				<c:if test="${pageIterator>0}">
 						<a
 							href="dashboard?pageIterator=${ pageIterator - 1 }
 										<c:if test="${ taillePage != null }">&taillePage=${ taillePage }</c:if>
 										<c:if test="${ (search != null) and (search != '') }">&search=${ search }</c:if>
 										<c:if test="${ orderName != null and (orderName != '') }">&orderName=${ orderName }</c:if>"
-							aria-label="Previous"> <span aria-hidden="true">&laquo;</span>
+							aria-label="Previous"> <span aria-hidden="true">&lArr;</span>
 						</a>
 					</c:if></li>
+					
+					<c:if test="${pageIterator >= (2)}">
+					<li><a
+						href="dashboard?pageIterator=${pageIterator - 2 }
+											<c:if test="${ taillePage != null }">&taillePage=${ taillePage }</c:if>
+											<c:if test="${ (search != null) and (search != '') }">&search=${ search }
+											</c:if>
+											<c:if test="${(orderName != null) and (orderName != '') }">&orderName=${ orderName }
+											</c:if>"
+						value="${pageIterator - 2 }">[${pageIterator - 2 }] </a></li>
+				</c:if>
+					
 
+				<c:if test="${pageIterator >= (1)}">
+					<li><a
+						href="dashboard?pageIterator=${pageIterator - 1 }
+											<c:if test="${ taillePage != null }">&taillePage=${ taillePage }</c:if>
+											<c:if test="${ (search != null) and (search != '') }">&search=${ search }
+											</c:if>
+											<c:if test="${(orderName != null) and (orderName != '') }">&orderName=${ orderName }
+											</c:if>"
+						value="${pageIterator - 1 }">[${pageIterator - 1 }] </a></li>
+				</c:if>
 
 				<c:if test="${pageIterator < (maxPage+1)}">
 					<li><a
@@ -159,13 +175,36 @@
 											</c:if>"
 						value="${pageIterator}">[${pageIterator}] </a></li>
 				</c:if>
+				
+				<c:if test="${pageIterator < (maxPage )}">
+					<li><a
+						href="dashboard?pageIterator=${pageIterator + 1 }
+											<c:if test="${ taillePage != null }">&taillePage=${ taillePage }</c:if>
+											<c:if test="${ (search != null) and (search != '') }">&search=${ search }
+											</c:if>
+											<c:if test="${(orderName != null) and (orderName != '') }">&orderName=${ orderName }
+											</c:if>"
+						value="${pageIterator + 1 }">[${pageIterator +1 }] </a></li>
+				</c:if>
+				
+				<c:if test="${pageIterator < (maxPage-1 )}">
+					<li><a
+						href="dashboard?pageIterator=${pageIterator + 2 }
+											<c:if test="${ taillePage != null }">&taillePage=${ taillePage }</c:if>
+											<c:if test="${ (search != null) and (search != '') }">&search=${ search }
+											</c:if>
+											<c:if test="${(orderName != null) and (orderName != '') }">&orderName=${ orderName }
+											</c:if>"
+						value="${pageIterator + 2 }">[${pageIterator +2 }] </a></li>
+				</c:if>
+				
 				<li><c:if test="${pageIterator < (maxPage)}">
 						<a
 							href="dashboard?pageIterator=${ pageIterator + 1 }
 										<c:if test="${ taillePage != null }">&taillePage=${ taillePage }</c:if>
 										<c:if test="${ (search != null) and (search != '') }">&search=${ search }</c:if>
 										<c:if test="${ order != null and (order != '') }">&order=${ order }</c:if>"
-							aria-label="Next"> <span aria-hidden="true">&raquo;</span>
+							aria-label="Next"> <span aria-hidden="true">&rArr;</span>
 						</a>
 					</c:if></li>
 			</ul>
