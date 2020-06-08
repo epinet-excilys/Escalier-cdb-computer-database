@@ -97,7 +97,7 @@ public class Paginate {
 		modelAndView.addObject("pageIterator", pageIterator);
 		modelAndView.addObject("order",orderBy);
 		modelAndView.addObject("search", searchTerm);
-		modelAndView.addObject("taillePage", pageSize);
+		modelAndView.addObject("pageSize", pageSize);
 		modelAndView.addObject("computerList", computerDTOListToReturn);
 	}
 	

@@ -3,7 +3,10 @@ package fr.excilys.model;
 import java.time.LocalDate;
 import org.apache.commons.lang3.builder.ReflectionToStringBuilder;
 import org.apache.commons.lang3.builder.ToStringStyle;
+import org.hibernate.annotations.Entity;
 import org.apache.commons.lang3.builder.HashCodeBuilder;
+
+@Entity
 
 public class Computer {
 
