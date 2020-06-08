@@ -22,12 +22,13 @@
 	media="screen">
 <link href="resources/css/main.css" rel="stylesheet" media="screen">
 <style>
-      tr:nth-of-type(odd) {
-      background-color:#fff;
-    }
-    tr:nth-of-type(even) {
-      background-color:#ccc;
-    }
+tr:nth-of-type(odd) {
+	background-color: #fff;
+}
+
+tr:nth-of-type(even) {
+	background-color: #ccc;
+}
 </style>
 </head>
 <body>
@@ -36,14 +37,13 @@
 			<a class="navbar-brand" href="dashboard"> <spring:message
 					code="label.header" />
 			</a>
-			<div class= "container" align="right">
-				<a class="dropdown-item" href="?lang=en">
-	            	<img src="resources/img/united-kingdom.png" width="45" height="45"></a>
-	            	&nbsp;&nbsp;&nbsp;
-	            <a class="dropdown-item" href="?lang=fr">
-	                <img src="resources/img/france.png" width="45" height="45"></a>
-            </div>
-                    
+			<div class="container" align="right">
+				<a class="dropdown-item" href="?lang=en"> <img
+					src="resources/img/united-kingdom.png" width="45" height="45"></a>
+				&nbsp;&nbsp;&nbsp; <a class="dropdown-item" href="?lang=fr"> <img
+					src="resources/img/france.png" width="45" height="45"></a>
+			</div>
+
 		</div>
 	</header>
 
@@ -62,7 +62,7 @@
 					<c:out value="${errorMessage}" />
 				</div>
 			</c:if>
-			
+
 
 
 			<h1 id="homeTitle">
@@ -73,22 +73,22 @@
 
 			<div id="actions" class="form-horizontal">
 				<div class="pull-left">
-				<spring:message code="label.search"/>
+					<spring:message code="label.search" />
 					<form id="searchForm" action="#" method="GET" class="form-inline">
 
 						<input type="search" id="searchbox" name="search"
-							class="form-control" placeholder="${search}" /> 
-							
-							<input type="submit" id="searchsubmit"
-							value= <spring:message code="label.filterByName"/>
-							class= "btn btn-primary" />
-					
+							class="form-control" placeholder="${search}" /> <input
+							type="submit" id="searchsubmit"
+							value=<spring:message code="label.filterByName"/>
+							class="btn btn-primary" />
+
 					</form>
 				</div>
 				<div class="pull-right">
-					<a class="btn btn-success" id="addComputer" href="addComputer"><spring:message code="label.addComputer"/></a> 
-					<a class="btn btn-default" id="editComputer" href="#" 
-					onclick="$.fn.toggleEditMode();"><spring:message code="label.editComputer"/></a>
+					<a class="btn btn-success" id="addComputer" href="addComputer"><spring:message
+							code="label.addComputer" /></a> <a class="btn btn-default"
+						id="editComputer" href="#" onclick="$.fn.toggleEditMode();"><spring:message
+							code="label.editComputer" /></a>
 				</div>
 			</div>
 		</div>
@@ -109,10 +109,14 @@
 									class="fa fa-trash-o fa-lg"></i>
 							</a>
 						</span></th>
-						<th><a href="dashboard?order=Computer"><spring:message code="label.computerName"/></a></th>
-						<th><a href="dashboard?order=Introduced"><spring:message code="label.dateIntro"/></a></th>
-						<th><a href="dashboard?order=Discontinued"><spring:message code="label.dateDisco"/></a></th>
-						<th><a href="dashboard?order=Company"><spring:message code="label.company"/></a></th>
+						<th><a href="dashboard?order=Computer"><spring:message
+									code="label.computerName" /></a></th>
+						<th><a href="dashboard?order=Introduced"><spring:message
+									code="label.dateIntro" /></a></th>
+						<th><a href="dashboard?order=Discontinued"><spring:message
+									code="label.dateDisco" /></a></th>
+						<th><a href="dashboard?order=Company"><spring:message
+									code="label.company" /></a></th>
 					</tr>
 				</thead>
 
@@ -139,18 +143,16 @@
 			<ul class="pagination">
 
 
-				<li>
-				<c:if test="${pageIterator>0}">
+				<li><c:if test="${pageIterator>0}">
 						<a
 							href="dashboard?pageIterator=${ pageIterator - 1 }
 										<c:if test="${ pageSize != null }">&pageSize=${ pageSize }</c:if>
 										<c:if test="${ (search != null) and (search != '') }">&search=${ search }</c:if>
 										<c:if test="${ orderName != null and (orderName != '') }">&orderName=${ orderName }</c:if>"
-							aria-label="Previous"> <span aria-hidden="true">&lArr;</span>
+							aria-label="Previous"> <span aria-hidden="true">&lArr;&nbsp;&nbsp;</span>
 						</a>
 					</c:if></li>
-					
-					<c:if test="${pageIterator >= (2)}">
+				<c:if test="${pageIterator >= (2)}">
 					<li><a
 						href="dashboard?pageIterator=${pageIterator - 2 }
 											<c:if test="${ pageSize != null }">&pageSize=${ pageSize }</c:if>
@@ -160,7 +162,7 @@
 											</c:if>"
 						value="${pageIterator - 2 }">[${pageIterator - 2 }] </a></li>
 				</c:if>
-					
+
 
 				<c:if test="${pageIterator >= (1)}">
 					<li><a
@@ -181,9 +183,10 @@
 											</c:if>
 											<c:if test="${(orderName != null) and (orderName != '') }">&orderName=${ orderName }
 											</c:if>"
-						value="${pageIterator}">[${pageIterator}] </a></li>
+						value="${pageIterator}" style='background-color: #d4bcbc;'>[${pageIterator}]
+					</a></li>
 				</c:if>
-				
+
 				<c:if test="${pageIterator < (maxPage )}">
 					<li><a
 						href="dashboard?pageIterator=${pageIterator + 1 }
@@ -194,7 +197,7 @@
 											</c:if>"
 						value="${pageIterator + 1 }">[${pageIterator +1 }] </a></li>
 				</c:if>
-				
+
 				<c:if test="${pageIterator < (maxPage-1 )}">
 					<li><a
 						href="dashboard?pageIterator=${pageIterator + 2 }
@@ -205,14 +208,14 @@
 											</c:if>"
 						value="${pageIterator + 2 }">[${pageIterator +2 }] </a></li>
 				</c:if>
-				
+
 				<li><c:if test="${pageIterator < (maxPage)}">
 						<a
 							href="dashboard?pageIterator=${ pageIterator + 1 }
 										<c:if test="${ pageSize != null }">&pageSize=${ pageSize }</c:if>
 										<c:if test="${ (search != null) and (search != '') }">&search=${ search }</c:if>
 										<c:if test="${ order != null and (order != '') }">&order=${ order }</c:if>"
-							aria-label="Next"> <span aria-hidden="true">&rArr;</span>
+							aria-label="Next"> <span aria-hidden="true">&nbsp;&nbsp;&rArr;</span>
 						</a>
 					</c:if></li>
 			</ul>
