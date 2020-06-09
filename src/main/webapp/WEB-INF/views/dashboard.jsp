@@ -226,25 +226,25 @@ tr:nth-of-type(even) {
 					<c:if test="${ (search != null) and (search != '') }">&search=${ search }</c:if>
 										<c:if test="${ order != null and (order != '') }">&order=${ order }</c:if>">
 					<button type="button" class="btn btn-default"
-						onclick="<c:set var="pageIterator" value="10" />">10</button>
+						onclick="<c:set var="pageIterator" value="0" />">10</button>
 				</a> <a
 					href="dashboard?pageIterator=0&pageSize=20
 					<c:if test="${ (search != null) and (search != '') }">&search=${ search }</c:if>
 										<c:if test="${ order != null and (order != '') }">&order=${ order }</c:if>">
 					<button type="button" class="btn btn-default"
-						onclick="<c:set var="pageIterator" value="20" />">20</button>
+						onclick="<c:set var="pageIterator" value="0" />">20</button>
 				</a> <a
 					href="dashboard?pageIterator=0&pageSize=50
 					<c:if test="${ (search != null) and (search != '') }">&search=${ search }</c:if>
 										<c:if test="${ order != null and (order != '') }">&order=${ order }</c:if>">
 					<button type="button" class="btn btn-default"
-						onclick="<c:set var="pageIterator" value="50" />">50</button>
+						onclick="<c:set var="pageIterator" value="0" />">50</button>
 				</a> <a
 					href="dashboard?pageIterator=0&pageSize=100
 					<c:if test="${ (search != null) and (search != '') }">&search=${ search }</c:if>
 										<c:if test="${ order != null and (order != '') }">&order=${ order }</c:if>">
 					<button type="button" class="btn btn-default"
-						onclick="<c:set var="pageIterator" value="100" />">100</button>
+						onclick="<c:set var="pageIterator" value="0" />">100</button>
 				</a>
 
 			</div>

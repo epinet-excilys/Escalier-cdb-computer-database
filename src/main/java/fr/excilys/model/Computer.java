@@ -1,19 +1,38 @@
 package fr.excilys.model;
 
 import java.time.LocalDate;
+
+import javax.persistence.CascadeType;
+import javax.persistence.Column;
+import javax.persistence.Entity;
+import javax.persistence.FetchType;
+import javax.persistence.GeneratedValue;
+import javax.persistence.Id;
+import javax.persistence.JoinColumn;
+import javax.persistence.ManyToOne;
+import javax.persistence.Table;
+
 import org.apache.commons.lang3.builder.ReflectionToStringBuilder;
 import org.apache.commons.lang3.builder.ToStringStyle;
-import org.hibernate.annotations.Entity;
+
 import org.apache.commons.lang3.builder.HashCodeBuilder;
 
 @Entity
-
+@Table(name ="computer")
 public class Computer {
 
+	@Id
+	@GeneratedValue
+	@Column(name = "id")
 	private int id;
+	@Column(name ="name")
 	private String name;
+	@Column(name = "introduced")
 	private LocalDate introducedDate;
+	@Column(name = "discontinued")
 	private LocalDate discontinuedDate;
+	@ManyToOne(fetch = FetchType.LAZY, cascade =CascadeType.ALL, targetEntity = Company.class)
+	@JoinColumn(name = "company_id", referencedColumnName = "id")
 	private Company company;
 
 	private Computer(Builder builder) {
