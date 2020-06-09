@@ -5,7 +5,6 @@ import javax.servlet.ServletException;
 import javax.servlet.ServletRegistration;
 import javax.sql.DataSource;
 
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.ComponentScan;
 import org.springframework.context.annotation.Configuration;
@@ -29,7 +28,7 @@ public class AppConfiguration implements WebApplicationInitializer {
 	@Override
 	public void onStartup(ServletContext servletContext) throws ServletException {
 		AnnotationConfigWebApplicationContext annotationWebContext = new AnnotationConfigWebApplicationContext();
-		annotationWebContext.register(AppConfiguration.class,WebConfiguration.class);
+		annotationWebContext.register(AppConfiguration.class,WebConfiguration.class, HibernateConfiguration.class);
 		annotationWebContext.setServletContext(servletContext);
 		DispatcherServlet dispachterServlet = new DispatcherServlet(annotationWebContext);
 		ServletRegistration.Dynamic servlet = servletContext.addServlet("dashboard", dispachterServlet);
@@ -37,19 +36,4 @@ public class AppConfiguration implements WebApplicationInitializer {
 		servlet.addMapping("/");
 	}
 	
-	@Bean
-	DataSource datasource(Environment environment) {
-		DriverManagerDataSource driverManagerDataSource = new DriverManagerDataSource();
-		driverManagerDataSource.setDriverClassName(environment.getProperty(EnumProperties.PROPERTIES_DRIVER.getMessage()));
-		driverManagerDataSource.setUrl(environment.getProperty(EnumProperties.PROPERTIES_URL.getMessage()));
-		driverManagerDataSource.setUsername(environment.getProperty(EnumProperties.PROPERTIES_USER.getMessage()));
-		driverManagerDataSource.setPassword(environment.getProperty(EnumProperties.PROPERTIES_PASSWORD.getMessage()));
-		
-		return driverManagerDataSource;
-	}
-	
-	@Bean
-	NamedParameterJdbcTemplate namedParameterJdbcTemplate(DataSource datasource) {
-		return new NamedParameterJdbcTemplate(datasource);
-	}
 }

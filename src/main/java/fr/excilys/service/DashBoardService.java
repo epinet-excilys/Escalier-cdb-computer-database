@@ -16,8 +16,8 @@ public class DashBoardService {
 	
 	private ComputerService computerService;
 	private Paginate page;
-	private String ErrorMessage = "errorMessage";
-	private String SuccessMessage = "successMessage"; 
+	private final String ErrorMessage = "errorMessage";
+	private final String SuccessMessage = "successMessage"; 
 	
 	public DashBoardService(ComputerService computerService, Paginate page) {
 		super();

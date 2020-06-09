@@ -23,6 +23,7 @@ public class WebConfiguration implements WebMvcConfigurer {
 	@Override
 	public void configureDefaultServletHandling(DefaultServletHandlerConfigurer configurer) {
 		configurer.enable();
+		
 	}
 
 	@Bean
