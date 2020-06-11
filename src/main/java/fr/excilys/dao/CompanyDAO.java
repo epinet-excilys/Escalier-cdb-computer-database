@@ -63,7 +63,7 @@ public class CompanyDAO {
 			Session session = this.sessionFactory.getCurrentSession();
 			String hqlCommand = EnumHQLCommand.GET_STATEMENT_COMPANY.getMessage();
 			@SuppressWarnings("unchecked")
-			TypedQuery<Company> query = (TypedQuery<Company>) session.createQuery(hqlCommand).setParameter("id",idSearch);
+			TypedQuery<Company> query = (TypedQuery<Company>) session.createQuery(hqlCommand).setParameter("idCompany",idSearch);
 			return query.getResultList();
 		
 		} catch (InvalidResultSetAccessException invalidResultSetAccessException) {

@@ -16,7 +16,7 @@ import org.apache.commons.lang3.builder.ToStringStyle;
 public class Company {
 
 	@Id
-	@GeneratedValue(strategy = GenerationType.AUTO)
+	@GeneratedValue(strategy = GenerationType.IDENTITY)
 	@Column(name = "id")
 	private int id;
 	@Column(name = "name")
@@ -26,6 +26,11 @@ public class Company {
 		this.id = builder.idBuild;
 		this.name = builder.nameBuild;
 	}
+	
+	public Company() {
+		
+	}
+
 
 	public int getId() {
 		return id;

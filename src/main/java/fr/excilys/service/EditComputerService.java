@@ -48,10 +48,10 @@ public class EditComputerService {
 	}
 	
 	public ComputerDTO computerDTOtoDisplayForEdit (String computerId) {
-		
+
 		int computerToEditID = Integer.parseInt(computerId);
-		ComputerDTO computerDTO = computerMapper.fromComputerToComputerDTO(
-				computerService.findByID(computerToEditID).get());
+		Computer computer = computerService.findByID(computerToEditID).get();
+		ComputerDTO computerDTO = computerMapper.fromComputerToComputerDTO(computer);
 		
 		return computerDTO;
 		

@@ -26,15 +26,13 @@ public class ComputerDAO {
 
 	public static Logger LOGGER = LoggerFactory.getLogger(ComputerDAO.class);
 
-	private ComputerMapper computerMapper;
 	private SessionFactory sessionFactory;
 
-	public ComputerDAO(SessionFactory sessionfactory,ComputerMapper computerMapper) {
+	public ComputerDAO(SessionFactory sessionfactory) {
 		this.sessionFactory = sessionfactory ;
-		this.computerMapper = computerMapper;
 	}
 
-	@Transactional
+
 	public int create(Computer computer) {
 
 		if (computer != null) {
@@ -58,7 +56,6 @@ public class ComputerDAO {
 		throw new DatabaseDAOException("ComputerNull");
 	}
 
-	@Transactional
 	public int delete(int idSuppression) {
 
 		if ((Integer) idSuppression != null) {
@@ -80,7 +77,6 @@ public class ComputerDAO {
 		throw new DatabaseDAOException("Delete");
 	}
 
-	@Transactional
 	public int update(Computer computer) {
 
 		if (!("").equals(computer.getName())) {
@@ -107,7 +103,6 @@ public class ComputerDAO {
 		throw new DatabaseDAOException("Update");
 	}
 
-	@Transactional
 	public int deleteByGroup(List<Integer> listIDToDelete) {
 
 		try {
@@ -125,14 +120,14 @@ public class ComputerDAO {
 		throw new DatabaseDAOException("DeleteByGroup");
 	}
 
-	@Transactional
 	public List<Computer> findByID(int idSearch) {
 
 		try {
+
 			Session session = this.sessionFactory.getCurrentSession();
 			String hqlCommand = EnumHQLCommand.GET_STATEMENT.getMessage();
-			@SuppressWarnings("unchecked")
 			TypedQuery<Computer> query = (TypedQuery<Computer>) session.createQuery(hqlCommand).setParameter("id",idSearch);
+
 			return query.getResultList();
 
 		} catch (InvalidResultSetAccessException invalidResultSetAccessException) {
@@ -143,7 +138,6 @@ public class ComputerDAO {
 		throw new DatabaseDAOException("FindById");
 	}
 
-	@Transactional
 	public List<Computer> findAll() {
 
 		try {
@@ -163,7 +157,6 @@ public class ComputerDAO {
 		throw new DatabaseDAOException("findAll");
 	}
 
-	@Transactional
 	public List<Computer> findAllPaginate(int ligneDebutOffSet, int taillePage) {
 
 		try {
@@ -184,7 +177,6 @@ public class ComputerDAO {
 		throw new DatabaseDAOException("FindAllPaginate");
 	}
 
-	@Transactional
 	public List<Computer> findAllPaginateSearchLike(String search, int ligneDebutOffSet, int taillePage) {
 
 		try {
@@ -207,7 +199,6 @@ public class ComputerDAO {
 		throw new DatabaseDAOException("FindAllPaginateSearch");
 	}
 
-	@Transactional
 	public List<Computer> findAllPaginateOrder(int ligneDebutOffSet, int taillePage, String order) {
 
 		try {
@@ -228,15 +219,14 @@ public class ComputerDAO {
 		throw new DatabaseDAOException("FindAllPaginateOrder");
 	}
 
-	@Transactional
-	public int getNbRow() {
+	public long getNbRow() {
 
 		try {
 			Session session = this.sessionFactory.getCurrentSession();
 			String hqlCommand = EnumHQLCommand.GET_NB_ROW_STATEMENT.getMessage();
 			Query query = session.createQuery(hqlCommand);
 			
-			return query.executeUpdate();
+			return (long) query.list().get(0);
 
 		} catch (InvalidResultSetAccessException invalidResultSetAccessException) {
 			LOGGER.error(EnumErrorSQL.BDD_WRONG_SQL_SYNTAX.getMessage() + invalidResultSetAccessException.getMessage());
@@ -246,7 +236,7 @@ public class ComputerDAO {
 		throw new DatabaseDAOException("NbRows");
 
 	}
-	@Transactional
+
 	public int getNbRowSearch(String search) {
 
 		try {
@@ -266,7 +256,7 @@ public class ComputerDAO {
 
 	private String getOrderByStatement(String order) {
 
-		return EnumSQLCommand.GET_ALL_PAGINATE_ORDER_BY_STATEMENT.getMessage() + order + ";";
+		return EnumHQLCommand.GET_ALL_PAGINATE_ORDER_BY_STATEMENT.getMessage() + order;
 	}
 
 	private Integer getValueOfCompany(Computer computer) {

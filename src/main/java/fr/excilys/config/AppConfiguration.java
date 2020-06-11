@@ -24,9 +24,9 @@ import org.springframework.web.servlet.DispatcherServlet;
 public class AppConfiguration implements WebApplicationInitializer {
 	
 	@Override
-	public void onStartup(ServletContext servletContext) throws ServletException {
+	public void onStartup(ServletContext servletContext){
 		AnnotationConfigWebApplicationContext annotationWebContext = new AnnotationConfigWebApplicationContext();
-		annotationWebContext.register(AppConfiguration.class,WebConfiguration.class, HibernateConfiguration.class);
+		annotationWebContext.register(AppConfiguration.class, WebConfiguration.class, HibernateConfiguration.class);
 		annotationWebContext.setServletContext(servletContext);
 		DispatcherServlet dispachterServlet = new DispatcherServlet(annotationWebContext);
 		ServletRegistration.Dynamic servlet = servletContext.addServlet("dashboard", dispachterServlet);

@@ -26,14 +26,19 @@ public class ComputerDTO {
 		this.companyDTO = companyDTO;
 	}
 	public ComputerDTO(Builder builder) {
+		this.id = builder.idBuild;
+		this.name = builder.nameBuild;
+		this.introducedDate = builder.introducedDateBuild;
+		this.discontinuedDate = builder.discontinuedDateBuild;
+		this.companyDTO = builder.companyDTOBuild;
 	}
 	
 	public static class Builder {
 		private int idBuild;
 		private String nameBuild;
-		private LocalDate introducedDateBuild;
-		private LocalDate discontinuedDateBuild;
-		private Company companyBuild;
+		private String introducedDateBuild;
+		private String discontinuedDateBuild;
+		private CompanyDTO companyDTOBuild;
 
 		public Builder setIdBuild(int id) {
 			this.idBuild = id;
@@ -45,18 +50,18 @@ public class ComputerDTO {
 			return this;
 		}
 
-		public Builder setIntroducedDateBuild(LocalDate introduced) {
+		public Builder setIntroducedDateBuild(String introduced) {
 			this.introducedDateBuild = introduced;
 			return this;
 		}
 
-		public Builder setDiscontinuedDateBuild(LocalDate dicontinued) {
+		public Builder setDiscontinuedDateBuild(String dicontinued) {
 			this.discontinuedDateBuild = dicontinued;
 			return this;
 		}
 
-		public Builder setIdCompagnyBuild(Company company) {
-			this.companyBuild = company;
+		public Builder setCompagnyBuild(CompanyDTO companyDTO) {
+			this.companyDTOBuild = companyDTO;
 			return this;
 		}
 

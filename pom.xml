@@ -27,7 +27,7 @@
 		<HickariCP-version>2.6.1</HickariCP-version>
 		<Apache-commons-version>3.9</Apache-commons-version>
 		<Spring-version>5.2.4.RELEASE</Spring-version>
-		<hibernate-version>4.3.5.Final</hibernate-version>
+		<hibernate-version>5.4.2.Final</hibernate-version>
 
 	</properties>
 

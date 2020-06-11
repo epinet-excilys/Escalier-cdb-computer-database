@@ -1,6 +1,7 @@
 package fr.excilys.config;
 
 import javax.sql.DataSource;
+import javax.transaction.Transactional;
 
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
@@ -38,7 +39,6 @@ public class HibernateConfiguration {
         LocalSessionFactoryBean factoryBean = new LocalSessionFactoryBean();
         factoryBean.setDataSource(datasource(environment));
         factoryBean.setAnnotatedClasses(Computer.class, Company.class);
-        factoryBean.setPackagesToScan("model","dao");
         return factoryBean;
     }
 

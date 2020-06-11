@@ -85,21 +85,30 @@ public final class ComputerMapper implements RowMapper<Computer> {
 
 	public ComputerDTO fromComputerToComputerDTO(Computer computer) {
 
-		CompanyDTO companyDTO = new CompanyDTO.Builder()
-				.setIdBuild((computer.getCompany().getId() == 0 ? 0 : computer.getCompany().getId()))
-				.setNameBuild((computer.getCompany().getName() == null ? null : computer.getCompany().getName()))
+		CompanyDTO companyDTO = new CompanyDTO.Builder().build();
+		Company company = computer.getCompany();
+		
+		if(company != null) {
+		companyDTO = new CompanyDTO.Builder()
+				.setIdBuild((company.getId() == 0 ? 0 : company.getId()))
+				.setNameBuild((company.getName() == null ? null : company.getName()))
 				.build();
-
-		ComputerDTO computerDTO = new ComputerDTO(computer.getName(),
-				computer.getIntroducedDate() == null ? null : computer.getIntroducedDate().toString(),
-				computer.getDiscontinuedDate() == null ? null : computer.getDiscontinuedDate().toString(), companyDTO);
-		computerDTO.setId(computer.getId());
-
+		}
+		
+		
+		ComputerDTO computerDTO = new ComputerDTO.Builder()
+				.setNameBuild(computer.getName())
+				.setIntroducedDateBuild(computer.getIntroducedDate() == null ? null : computer.getIntroducedDate().toString())
+				.setDiscontinuedDateBuild(computer.getDiscontinuedDate() == null ? null : computer.getDiscontinuedDate().toString())
+				.setIdBuild(computer.getId())
+				.setCompagnyBuild(companyDTO)
+				.build();
+		
 		return computerDTO;
 	}
 	
 	public Computer fromComputerDTOToComputer(ComputerDTO computerDTO) {
-		
+
 		int computerId = computerDTO.getId();
 		String computerName = computerDTO.getName();
 		LocalDate introducedDate = fromStringToLocalDate(computerDTO.getIntroducedDate());
@@ -109,7 +118,6 @@ public final class ComputerMapper implements RowMapper<Computer> {
 		
 		Company company = (companyId != 0 ? (companyDAO.findByID((companyId))).get(0) : (null));
 
-		
 		return new Computer.Builder().setIdBuild(computerId).setNameBuild(computerName).setIntroducedDateBuild(introducedDate)
 				.setDiscontinuedDateBuild(discontinuedDate).setIdCompagnyBuild(company).build();
 		
