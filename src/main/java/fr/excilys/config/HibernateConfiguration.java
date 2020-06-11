@@ -5,7 +5,6 @@ import javax.sql.DataSource;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.core.env.Environment;
-import org.springframework.jdbc.core.namedparam.NamedParameterJdbcTemplate;
 import org.springframework.jdbc.datasource.DriverManagerDataSource;
 import org.springframework.orm.hibernate5.HibernateTransactionManager;
 import org.springframework.orm.hibernate5.LocalSessionFactoryBean;
@@ -33,17 +32,13 @@ public class HibernateConfiguration {
 		return driverManagerDataSource;
 	}
 	
-	@Bean
-	NamedParameterJdbcTemplate namedParameterJdbcTemplate(DataSource datasource) {
-		return new NamedParameterJdbcTemplate(datasource);
-	}
-	
 
     @Bean
     public LocalSessionFactoryBean sessionFactory() {
         LocalSessionFactoryBean factoryBean = new LocalSessionFactoryBean();
         factoryBean.setDataSource(datasource(environment));
         factoryBean.setAnnotatedClasses(Computer.class, Company.class);
+        factoryBean.setPackagesToScan("model","dao");
         return factoryBean;
     }
 
