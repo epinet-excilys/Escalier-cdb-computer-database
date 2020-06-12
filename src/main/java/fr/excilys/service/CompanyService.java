@@ -6,6 +6,7 @@ import java.util.Optional;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import fr.excilys.dao.CompanyDAO;
 import fr.excilys.dao.ComputerDAO;
@@ -23,6 +24,7 @@ public final class CompanyService {
 		this.companyDAO = companyDAO;
 	}
 
+	@Transactional
 	public Optional<Company> findByID(int ID) throws DatabaseDAOException{
 		Optional<Company> optionalCompany = Optional.empty();		
 		optionalCompany = Optional.of(companyDAO.findByID(ID).get(0));
@@ -30,6 +32,7 @@ public final class CompanyService {
 		return optionalCompany;
 	}
 
+	@Transactional
 	public List<Company> getAllCompany() throws DatabaseDAOException{
 		List<Company> listCompany = new ArrayList<>();
 		listCompany = companyDAO.findAll();
@@ -37,10 +40,12 @@ public final class CompanyService {
 		return listCompany;
 	}
 
+	@Transactional
 	public int getNbRows() throws DatabaseDAOException{
 		return  companyDAO.getNbRow();
 	}
 	
+	@Transactional
 	public void deleteCompany(int iDCompany) throws DatabaseDAOException{
 		companyDAO.deleteCompany(iDCompany);
 	}

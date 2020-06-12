@@ -34,7 +34,7 @@ public class CompanyDAO {
 		this.sessionFactory = sessionFactory;
 	}
 
-	@Transactional 
+ 
 	public void deleteCompany(int iDCompany) {
 		
 		try {
@@ -56,7 +56,6 @@ public class CompanyDAO {
 			throw new DatabaseDAOException("Delete Company");
 	}
 
-	@Transactional
 	public List<Company> findByID(int idSearch) {
 		
 		try {
@@ -74,7 +73,6 @@ public class CompanyDAO {
 			throw new DatabaseDAOException("FindById in Company");
 	}
 
-	@Transactional
 	public List<Company> findAll() {
 		
 		try  {
@@ -93,7 +91,7 @@ public class CompanyDAO {
 			throw new DatabaseDAOException("findAll in Company");
 	}
 
-	@Transactional
+
 	public int getNbRow() {
 
 		try {

@@ -99,7 +99,7 @@ public class ComputerService {
 	@Transactional
 	public int getNbRowsSearch(String search) throws DatabaseDAOException{
 
-		return computerDAO.getNbRowSearch(search);
+		return (int)computerDAO.getNbRowSearch(search);
 	}
 	
 	@Transactional
@@ -119,7 +119,7 @@ public class ComputerService {
 	private String getCorrectOrder (String order){
 		
 			switch (order) {
-			case "COMPUTER":
+			case "NAME":
 				return (EnumOrderBy.COMPUTER_DAO.getMessage());
 			case "INTRODUCED":
 				return (EnumOrderBy.INTRODUCED_DATE_DAO.getMessage());

@@ -27,6 +27,7 @@ public class ComputerDAO {
 	public static Logger LOGGER = LoggerFactory.getLogger(ComputerDAO.class);
 
 	private SessionFactory sessionFactory;
+	private int valueOKTransaction = 1;
 
 	public ComputerDAO(SessionFactory sessionfactory) {
 		this.sessionFactory = sessionfactory ;
@@ -40,7 +41,11 @@ public class ComputerDAO {
 				try {
 					
 					Session session = this.sessionFactory.getCurrentSession();
+					System.out.println(computer);
 					session.save(computer);
+					//TODO Stop-gap mesure, must be reimplemented
+					return valueOKTransaction;
+					
 					
 				} catch (InvalidResultSetAccessException invalidResultSetAccessException) {
 					LOGGER.error(EnumErrorSQL.BDD_WRONG_SQL_SYNTAX.getMessage()
@@ -82,16 +87,11 @@ public class ComputerDAO {
 		if (!("").equals(computer.getName())) {
 			try {
 				Session session = this.sessionFactory.getCurrentSession();
-				String hqlCommand = EnumHQLCommand.UPDATE_STATEMENT.getMessage();
-				Query query = session.createQuery(hqlCommand);
-
-				query.setParameter("id", computer.getId())
-						.setParameter("name", computer.getName())
-						.setParameter("introduced", getValueOfIntroducedDate(computer))
-						.setParameter("discontinued", getValueOfDiscontinuedDate(computer))
-						.setParameter("company.id", getValueOfCompany(computer));
-
-				return query.executeUpdate();
+				session.merge(computer);
+				
+				//TODO Stop-gap mesure, must be reimplemented
+				return valueOKTransaction;
+								
 
 			} catch (InvalidResultSetAccessException invalidResultSetAccessException) {
 				LOGGER.error(
@@ -187,7 +187,7 @@ public class ComputerDAO {
 			TypedQuery<Computer> query = (TypedQuery<Computer>) session.createQuery(hqlCommand);
 			query.setFirstResult(ligneDebutOffSet);
 			query.setMaxResults(taillePage);
-			query.setParameter("search", search);
+			query.setParameter("search", setSearchTermsInQuerySQL(search));
 			
 			return query.getResultList();
 
@@ -204,6 +204,8 @@ public class ComputerDAO {
 		try {
 			Session session = this.sessionFactory.getCurrentSession();
 			String hqlCommand = getOrderByStatement(order);
+			System.out.println("aaaaaaaaaaaaaaaa    "+ order);
+			System.out.println("aaaaaaaaaaaaaaaa    "+ hqlCommand);
 			@SuppressWarnings("unchecked")
 			TypedQuery<Computer> query = (TypedQuery<Computer>) session.createQuery(hqlCommand);
 			query.setFirstResult(ligneDebutOffSet);
@@ -237,19 +239,22 @@ public class ComputerDAO {
 
 	}
 
-	public int getNbRowSearch(String search) {
+	public long getNbRowSearch(String search) {
 
 		try {
 			Session session = this.sessionFactory.getCurrentSession();
 			String hqlCommand = EnumHQLCommand.GET_NB_ROW_LIKE_STATEMENT.getMessage();
 			Query query = session.createQuery(hqlCommand);
+			query.setParameter("search", setSearchTermsInQuerySQL(search));
 			
-			return query.executeUpdate();
+			return (long) query.list().get(0);
 			
 		} catch (InvalidResultSetAccessException invalidResultSetAccessException) {
 			LOGGER.error(EnumErrorSQL.BDD_WRONG_SQL_SYNTAX.getMessage() + invalidResultSetAccessException.getMessage());
 		} catch (DataAccessException DataAccessException) {
 			LOGGER.error(EnumErrorSQL.BDD_ACCESS_LOG.getMessage() + DataAccessException.getMessage());
+		} catch (ClassCastException classCastException) {
+			LOGGER.error(EnumErrorSQL.BDD_ACCESS_LOG.getMessage() + classCastException.getMessage());
 		}
 		throw new DatabaseDAOException("NbRowsSearch");
 	}
@@ -280,6 +285,10 @@ public class ComputerDAO {
 		return computer.getDiscontinuedDate() != null
 				? Timestamp.valueOf(computer.getDiscontinuedDate().atTime(LocalTime.MIDNIGHT))
 				: null;
+	}
+	
+	private String setSearchTermsInQuerySQL(String search) {
+		return '%' + search + '%';
 	}
 
 }

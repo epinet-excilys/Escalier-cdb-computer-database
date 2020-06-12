@@ -109,7 +109,7 @@ tr:nth-of-type(even) {
 									class="fa fa-trash-o fa-lg"></i>
 							</a>
 						</span></th>
-						<th><a href="dashboard?order=Computer"><spring:message
+						<th><a href="dashboard?order=Name"><spring:message
 									code="label.computerName" /></a></th>
 						<th><a href="dashboard?order=Introduced"><spring:message
 									code="label.dateIntro" /></a></th>

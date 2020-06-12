@@ -38,8 +38,6 @@ public class EditComputer extends HttpServlet {
 		}
 
 		try {
-			//TODO
-			System.out.println(editComputerService.computerDTOtoDisplayForEdit(computerId).toString());
 			
 			modelAndView.addObject("computerDTO", editComputerService.computerDTOtoDisplayForEdit(computerId));
 			modelAndView.addObject("companyDTOList", editComputerService.companyDTOListToDisplay());
