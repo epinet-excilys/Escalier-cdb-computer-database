@@ -187,7 +187,7 @@ tr:nth-of-type(even) {
 					</a></li>
 				</c:if>
 
-				<c:if test="${pageIterator < (maxPage )}">
+				<c:if test="${pageIterator+1 < (maxPage-1 )}">
 					<li><a
 						href="dashboard?pageIterator=${pageIterator + 1 }
 											<c:if test="${ pageSize != null }">&pageSize=${ pageSize }</c:if>
@@ -195,10 +195,10 @@ tr:nth-of-type(even) {
 											</c:if>
 											<c:if test="${(orderName != null) and (orderName != '') }">&orderName=${ orderName }
 											</c:if>"
-						value="${pageIterator + 1 }">[${pageIterator +1 }] </a></li>
+						value="${pageIterator + 1 }">[${pageIterator +1 }]</a></li>
 				</c:if>
 
-				<c:if test="${pageIterator < (maxPage-1 )}">
+				<c:if test="${pageIterator+1 < (maxPage-2 )}">
 					<li><a
 						href="dashboard?pageIterator=${pageIterator + 2 }
 											<c:if test="${ pageSize != null }">&pageSize=${ pageSize }</c:if>
@@ -206,10 +206,10 @@ tr:nth-of-type(even) {
 											</c:if>
 											<c:if test="${(orderName != null) and (orderName != '') }">&orderName=${ orderName }
 											</c:if>"
-						value="${pageIterator + 2 }">[${pageIterator +2 }] </a></li>
+						value="${pageIterator + 2 }">[${pageIterator +2 }]</a></li>
 				</c:if>
 
-				<li><c:if test="${pageIterator < (maxPage)}">
+				<li><c:if test="${pageIterator+1 < (maxPage+1)}">
 						<a
 							href="dashboard?pageIterator=${ pageIterator + 1 }
 										<c:if test="${ pageSize != null }">&pageSize=${ pageSize }</c:if>

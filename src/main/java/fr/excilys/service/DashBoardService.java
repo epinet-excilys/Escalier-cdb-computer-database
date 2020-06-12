@@ -32,6 +32,7 @@ public class DashBoardService {
 			page.getValues(dashBoardParameterDTO);
 			List<ComputerDTO>listToReturn = page.paginate();
 			setValueToTransfert(page);
+			
 			return listToReturn;
 			
 		} catch (DatabaseManipulationException databaseManipulationException) {

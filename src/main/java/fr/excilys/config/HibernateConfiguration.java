@@ -38,7 +38,7 @@ public class HibernateConfiguration {
     public LocalSessionFactoryBean sessionFactory() {
         LocalSessionFactoryBean factoryBean = new LocalSessionFactoryBean();
         factoryBean.setDataSource(datasource(environment));
-        factoryBean.setAnnotatedClasses(Computer.class, Company.class);
+        factoryBean.setPackagesToScan("fr.excilys.model");
         return factoryBean;
     }
 

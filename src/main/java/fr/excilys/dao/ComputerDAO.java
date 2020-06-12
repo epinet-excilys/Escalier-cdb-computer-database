@@ -41,7 +41,6 @@ public class ComputerDAO {
 				try {
 					
 					Session session = this.sessionFactory.getCurrentSession();
-					System.out.println(computer);
 					session.save(computer);
 					//TODO Stop-gap mesure, must be reimplemented
 					return valueOKTransaction;
@@ -204,8 +203,6 @@ public class ComputerDAO {
 		try {
 			Session session = this.sessionFactory.getCurrentSession();
 			String hqlCommand = getOrderByStatement(order);
-			System.out.println("aaaaaaaaaaaaaaaa    "+ order);
-			System.out.println("aaaaaaaaaaaaaaaa    "+ hqlCommand);
 			@SuppressWarnings("unchecked")
 			TypedQuery<Computer> query = (TypedQuery<Computer>) session.createQuery(hqlCommand);
 			query.setFirstResult(ligneDebutOffSet);

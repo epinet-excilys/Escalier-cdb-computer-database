@@ -102,6 +102,7 @@ public class Paginate {
 		valuesToTransfert.put("order",orderBy);
 		valuesToTransfert.put("search", searchTerm);
 		valuesToTransfert.put("pageSize", (pageSize).toString());
+		
 	}
 	
 	private void mapComputerToComputerDTO() {
