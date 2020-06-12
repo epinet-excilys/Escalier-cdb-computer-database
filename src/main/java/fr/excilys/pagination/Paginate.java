@@ -1,13 +1,13 @@
 package fr.excilys.pagination;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
 import org.apache.commons.lang3.builder.ReflectionToStringBuilder;
 import org.apache.commons.lang3.builder.ToStringStyle;
 import org.springframework.stereotype.Component;
-import org.springframework.web.servlet.ModelAndView;
 
 import fr.excilys.dto.ComputerDTO;
 import fr.excilys.dto.DashBoardParameterDTO;
@@ -18,18 +18,19 @@ import fr.excilys.service.ComputerService;
 
 @Component
 public class Paginate {
-	private int pageIterator;
-	private int pageSize;
-	private double maxPage;
-	private int NbRowComputer;
-	private int startingValueDefault = 0;
-	private int pageHeightDefault = 20; 
+	private Integer pageIterator;
+	private Integer pageSize;
+	private Double maxPage;
+	private Integer NbRowComputer;
+	private Integer startingValueDefault = 0;
+	private Integer pageHeightDefault = 20; 
 	private String searchTerm;
 	private String orderBy;
 	private List<Computer> computerList = new ArrayList<>();
 	private List<ComputerDTO> computerDTOListToReturn = new ArrayList<>();
 	private ComputerService computerService;
 	private ComputerMapper computerMapper;
+	private Map<String, String> valuesToTransfert = new HashMap<String, String>();
 	
 	public Paginate(ComputerService computerService, ComputerMapper computerMapper) {
 	 this.computerService=computerService;	
@@ -37,16 +38,19 @@ public class Paginate {
 	}
 	
 
-	public void paginate(DashBoardParameterDTO dashBoardParameterDTO,ModelAndView modelAndView) {
+	public List<ComputerDTO> paginate() {
 		
-		getValues(dashBoardParameterDTO);
 		whichPaginateToCall();
 		mapComputerToComputerDTO();
-		setValues(modelAndView);
+		setValues();
+		return computerDTOListToReturn ;
 
 	}
 	
-
+	public Map<String, String>  returnMapedValues(){
+		
+		return valuesToTransfert;
+	}
 
 	public void getValues(DashBoardParameterDTO dashBoardParameterDTO) {
 		
@@ -54,7 +58,6 @@ public class Paginate {
 		setPageIterator(dashBoardParameterDTO);
 		setSearchTerm(dashBoardParameterDTO);
 		setOrderBy(dashBoardParameterDTO);
-		
 		
 	}
 
@@ -91,15 +94,14 @@ public class Paginate {
 		}
 	}
 
-	private void setValues(ModelAndView modelAndView) {
+	private void setValues() {
 		
-		modelAndView.addObject("NbRowComputer", NbRowComputer);
-		modelAndView.addObject("maxPage", maxPage);
-		modelAndView.addObject("pageIterator", pageIterator);
-		modelAndView.addObject("order",orderBy);
-		modelAndView.addObject("search", searchTerm);
-		modelAndView.addObject("pageSize", pageSize);
-		modelAndView.addObject("computerList", computerDTOListToReturn);
+		valuesToTransfert.put("NbRowComputer", (NbRowComputer).toString());
+		valuesToTransfert.put("maxPage", (maxPage).toString());
+		valuesToTransfert.put("pageIterator", (pageIterator).toString());
+		valuesToTransfert.put("order",orderBy);
+		valuesToTransfert.put("search", searchTerm);
+		valuesToTransfert.put("pageSize", (pageSize).toString());
 	}
 	
 	private void mapComputerToComputerDTO() {

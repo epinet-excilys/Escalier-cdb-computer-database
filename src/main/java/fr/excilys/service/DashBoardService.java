@@ -1,12 +1,11 @@
 package fr.excilys.service;
 
-import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 
 import org.springframework.stereotype.Service;
-import org.springframework.transaction.annotation.Transactional;
-import org.springframework.web.servlet.ModelAndView;
 
+import fr.excilys.dto.ComputerDTO;
 import fr.excilys.dto.DashBoardParameterDTO;
 import fr.excilys.exception.DatabaseManipulationException;
 import fr.excilys.pagination.Paginate;
@@ -17,8 +16,8 @@ public class DashBoardService {
 	
 	private ComputerService computerService;
 	private Paginate page;
-	private final String ErrorMessage = "errorMessage";
-	private final String SuccessMessage = "successMessage"; 
+	private Map<String,String> valuesToReturn;
+ 
 	
 	public DashBoardService(ComputerService computerService, Paginate page) {
 		super();
@@ -27,37 +26,37 @@ public class DashBoardService {
 	}
 	
 	
-	
-	public void setMessage(String errorMessage, String messageTitle, ModelAndView modelAndView) {
-		if (( errorMessage != null ) && (!errorMessage.isBlank())) {
-			modelAndView.addObject(messageTitle, errorMessage);
-		}
-	}
-	
-	public void setBothMessage(DashBoardParameterDTO dashBoardParameterDTO, ModelAndView modelAndView) {
-		setMessage(dashBoardParameterDTO.getErrorMessage(), ErrorMessage , modelAndView);
-		setMessage(dashBoardParameterDTO.getSuccessMessage(), SuccessMessage, modelAndView);
-	}
-	
-	public void loadPage(DashBoardParameterDTO dashBoardParameterDTO, ModelAndView modelAndView) {
+	public List<ComputerDTO> loadPage(DashBoardParameterDTO dashBoardParameterDTO) throws DatabaseManipulationException {
 		
-		setBothMessage(dashBoardParameterDTO, modelAndView);
 		try {
-			page.paginate(dashBoardParameterDTO, modelAndView);
+			page.getValues(dashBoardParameterDTO);
+			List<ComputerDTO>listToReturn = page.paginate();
+			setValueToTransfert(page);
+			return listToReturn;
+			
 		} catch (DatabaseManipulationException databaseManipulationException) {
-			setMessage(EnumMessageErrorValidation.ERROR_PAGINATION.getMessage(), ErrorMessage, modelAndView);
+			throw new DatabaseManipulationException();
 		}
 		
 	}
 	
-	public void deleteComputer(String idSelectionAsList,ModelAndView modelAndView) {
+	public void deleteComputer(String idSelectionAsList) {
 
 		if(idSelectionAsList != null && !idSelectionAsList.isBlank()) {
 			computerService.deleteByGroup(idSelectionAsList);
-			setMessage(EnumMessageErrorValidation.SUCCESS_DELETE.getMessage(), "successMessage", modelAndView);
+			valuesToReturn.put("successMessage", EnumMessageErrorValidation.SUCCESS_DELETE.getMessage());
 		}
 	}
 	
+	private void setValueToTransfert(Paginate page) {
+		this.valuesToReturn = page.returnMapedValues();
+	}
+	
+	public Map<String,String> getValuesToTransfer() {
+		return valuesToReturn;
+		
+	}
+
 	
 
 }

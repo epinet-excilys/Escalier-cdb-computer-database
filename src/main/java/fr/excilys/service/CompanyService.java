@@ -4,19 +4,16 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import fr.excilys.dao.CompanyDAO;
-import fr.excilys.dao.ComputerDAO;
 import fr.excilys.exception.DatabaseDAOException;
 import fr.excilys.model.Company;
-import fr.excilys.model.Computer;
 
 
 @Service
-public final class CompanyService {
+public class CompanyService {
 
 	private CompanyDAO companyDAO;
 	
