@@ -167,5 +167,6 @@
         <module>service</module>
         <module>webapp</module>
         <module>mapper</module>
+        <module>console</module>
     </modules>
 </project>
