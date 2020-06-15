@@ -13,9 +13,10 @@ import org.springframework.test.context.ContextConfiguration;
 import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
 
 import fr.excilys.config.AppConfiguration;
+import fr.excilys.config.HibernateConfiguration;
 
 @RunWith(SpringJUnit4ClassRunner.class)
-@ContextConfiguration(classes = {AppConfiguration.class})
+@ContextConfiguration(classes = {AppConfiguration.class , HibernateConfiguration.class})
 public class ComputerMapperTest {
 
 	private ComputerMapper computerMapper;

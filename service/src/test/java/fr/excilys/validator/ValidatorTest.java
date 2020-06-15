@@ -13,12 +13,13 @@ import org.springframework.test.context.ContextConfiguration;
 import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
 
 import fr.excilys.config.AppConfiguration;
+import fr.excilys.config.HibernateConfiguration;
 import fr.excilys.exception.DatabaseDAOException;
 import fr.excilys.exception.ValidatorException;
 import fr.excilys.model.Computer;
 
 @RunWith(SpringJUnit4ClassRunner.class)
-@ContextConfiguration(classes = {AppConfiguration.class})
+@ContextConfiguration(classes = {AppConfiguration.class, HibernateConfiguration.class})
 public class ValidatorTest {
 	private static LocalDate localDate = LocalDate.now().minusYears(2);
 	private LocalDate localDate2 = LocalDate.now().minusYears(1);

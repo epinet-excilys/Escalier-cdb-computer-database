@@ -9,6 +9,7 @@ import javax.persistence.TypedQuery;
 import org.hibernate.Query;
 import org.hibernate.Session;
 import org.hibernate.SessionFactory;
+import org.hibernate.HibernateException;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.dao.DataAccessException;
@@ -27,6 +28,7 @@ public class ComputerDAO {
 
 	private SessionFactory sessionFactory;
 	private int valueOKTransaction = 1;
+	private int valueFailTransaction = 0;
 
 	public ComputerDAO(SessionFactory sessionfactory) {
 		this.sessionFactory = sessionfactory ;
@@ -39,7 +41,14 @@ public class ComputerDAO {
 			if (!computer.getName().isEmpty()) {
 				try {
 					
-					Session session = this.sessionFactory.getCurrentSession();
+					Session session;
+					try {
+					    session = sessionFactory.getCurrentSession();
+					} catch (HibernateException e) {
+					    session = sessionFactory.openSession();
+					}
+					
+					
 					session.save(computer);
 					//TODO Stop-gap mesure, must be reimplemented
 					return valueOKTransaction;
@@ -64,10 +73,16 @@ public class ComputerDAO {
 		if ((Integer) idSuppression != null) {
 			try {
 				
-				Session session = this.sessionFactory.getCurrentSession();
+				Session session ;
+				try {
+				    session = sessionFactory.getCurrentSession();
+				} catch (HibernateException e) {
+				    session = sessionFactory.openSession();
+				}
+				
 				String hqlCommand = EnumHQLCommand.DELETE_STATEMENT.getMessage();
 				Query query = session.createQuery(hqlCommand).setParameter("id", idSuppression);
-				
+
 				return query.executeUpdate();
 				
 			} catch (InvalidResultSetAccessException invalidResultSetAccessException) {
@@ -84,13 +99,17 @@ public class ComputerDAO {
 
 		if (!("").equals(computer.getName())) {
 			try {
-				Session session = this.sessionFactory.getCurrentSession();
-				session.merge(computer);
-				
-				//TODO Stop-gap mesure, must be reimplemented
-				return valueOKTransaction;
-								
+				Session session;
+				try {
+				    session = sessionFactory.getCurrentSession();
+				} catch (HibernateException e) {
+				    session = sessionFactory.openSession();
+				}
+				Computer computer2 = (Computer) (session.merge(computer));
 
+				
+				return computer2.getId();
+				
 			} catch (InvalidResultSetAccessException invalidResultSetAccessException) {
 				LOGGER.error(
 						EnumErrorSQL.BDD_WRONG_SQL_SYNTAX.getMessage() + invalidResultSetAccessException.getMessage());
@@ -104,7 +123,12 @@ public class ComputerDAO {
 	public int deleteByGroup(List<Integer> listIDToDelete) {
 
 		try {
-			Session session = this.sessionFactory.getCurrentSession();
+			Session session ;
+			try {
+			    session = sessionFactory.getCurrentSession();
+			} catch (HibernateException e) {
+			    session = sessionFactory.openSession();
+			}
 			String hqlCommand = EnumHQLCommand.DELETE_STATEMENT_GROUP.getMessage();
 			Query query = session.createQuery(hqlCommand).setParameter("idList", listIDToDelete);
 			
@@ -122,7 +146,12 @@ public class ComputerDAO {
 
 		try {
 
-			Session session = this.sessionFactory.getCurrentSession();
+			Session session ;
+			try {
+			    session = sessionFactory.getCurrentSession();
+			} catch (HibernateException e) {
+			    session = sessionFactory.openSession();
+			}
 			String hqlCommand = EnumHQLCommand.GET_STATEMENT.getMessage();
 			TypedQuery<Computer> query = (TypedQuery<Computer>) session.createQuery(hqlCommand).setParameter("id",idSearch);
 
@@ -140,7 +169,12 @@ public class ComputerDAO {
 
 		try {
 
-			Session session = this.sessionFactory.getCurrentSession();
+			Session session;
+			try {
+			    session = sessionFactory.getCurrentSession();
+			} catch (HibernateException e) {
+			    session = sessionFactory.openSession();
+			}
 			String hqlCommand = EnumHQLCommand.GET_ALL_STATEMENT.getMessage();
 			@SuppressWarnings("unchecked")
 			TypedQuery<Computer> query = (TypedQuery<Computer>) session.createQuery(hqlCommand);
@@ -158,11 +192,16 @@ public class ComputerDAO {
 	public List<Computer> findAllPaginate(int ligneDebutOffSet, int taillePage) {
 
 		try {
-			Session session = this.sessionFactory.getCurrentSession();
+			Session session ;
+			try {
+			    session = sessionFactory.getCurrentSession();
+			} catch (HibernateException e) {
+			    session = sessionFactory.openSession();
+			}
 			String hqlCommand = EnumHQLCommand.GET_ALL_STATEMENT.getMessage();
 			@SuppressWarnings("unchecked")
 			TypedQuery<Computer> query = (TypedQuery<Computer>) session.createQuery(hqlCommand);
-			query.setFirstResult(ligneDebutOffSet);
+			query.setFirstResult(getValidEntry(ligneDebutOffSet));
 			query.setMaxResults(taillePage);
 			
 			return query.getResultList();
@@ -179,7 +218,12 @@ public class ComputerDAO {
 
 		try {
 			
-			Session session = this.sessionFactory.getCurrentSession();
+			Session session ;
+			try {
+			    session = sessionFactory.getCurrentSession();
+			} catch (HibernateException e) {
+			    session = sessionFactory.openSession();
+			}
 			String hqlCommand = EnumHQLCommand.GET_ALL_PAGINATE_ORDER_LIKE_NAME_STATEMENT.getMessage();
 			@SuppressWarnings("unchecked")
 			TypedQuery<Computer> query = (TypedQuery<Computer>) session.createQuery(hqlCommand);
@@ -200,7 +244,12 @@ public class ComputerDAO {
 	public List<Computer> findAllPaginateOrder(int ligneDebutOffSet, int taillePage, String order) {
 
 		try {
-			Session session = this.sessionFactory.getCurrentSession();
+			Session session ;
+			try {
+			    session = sessionFactory.getCurrentSession();
+			} catch (HibernateException e) {
+			    session = sessionFactory.openSession();
+			}
 			String hqlCommand = getOrderByStatement(order);
 			@SuppressWarnings("unchecked")
 			TypedQuery<Computer> query = (TypedQuery<Computer>) session.createQuery(hqlCommand);
@@ -220,7 +269,12 @@ public class ComputerDAO {
 	public long getNbRow() {
 
 		try {
-			Session session = this.sessionFactory.getCurrentSession();
+			Session session ;
+			try {
+			    session = sessionFactory.getCurrentSession();
+			} catch (HibernateException e) {
+			    session = sessionFactory.openSession();
+			}
 			String hqlCommand = EnumHQLCommand.GET_NB_ROW_STATEMENT.getMessage();
 			Query query = session.createQuery(hqlCommand);
 			
@@ -238,7 +292,12 @@ public class ComputerDAO {
 	public long getNbRowSearch(String search) {
 
 		try {
-			Session session = this.sessionFactory.getCurrentSession();
+			Session session ;
+			try {
+			    session = sessionFactory.getCurrentSession();
+			} catch (HibernateException e) {
+			    session = sessionFactory.openSession();
+			}
 			String hqlCommand = EnumHQLCommand.GET_NB_ROW_LIKE_STATEMENT.getMessage();
 			Query query = session.createQuery(hqlCommand);
 			query.setParameter("search", setSearchTermsInQuerySQL(search));
@@ -285,6 +344,10 @@ public class ComputerDAO {
 	
 	private String setSearchTermsInQuerySQL(String search) {
 		return '%' + search + '%';
+	}
+	
+	private int getValidEntry(int offsetPaginate) {
+		return (offsetPaginate > 0) ? offsetPaginate : 0;
 	}
 
 }
