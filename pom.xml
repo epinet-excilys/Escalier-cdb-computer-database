@@ -6,11 +6,11 @@
 	<modelVersion>4.0.0</modelVersion>
 
 	<groupId>fr.excilys</groupId>
-	<artifactId>cdb-computer-database</artifactId>
+	<artifactId>cdb-computer-database-parent</artifactId>
 	<version>0.0.1-SNAPSHOT</version>
-	<packaging>war</packaging>
+	<packaging>pom</packaging>
 
-	<name>cdb-computer-database</name>
+	<name>cdb-computer-database-parent</name>
 
 	<properties>
 		<project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
@@ -160,4 +160,12 @@
 			</plugins>
 		</pluginManagement>
 	</build>
+	
+	  <modules>
+        <module>core</module>
+        <module>dao</module>
+        <module>service</module>
+        <module>webapp</module>
+        <module>mapper</module>
+    </modules>
 </project>

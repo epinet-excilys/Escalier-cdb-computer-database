@@ -20,7 +20,6 @@ import org.springframework.transaction.annotation.Transactional;
 
 import fr.excilys.exception.DatabaseDAOException;
 import fr.excilys.exception.EnumErrorSQL;
-import fr.excilys.mapper.CompanyMapper;
 import fr.excilys.model.Company;
 import fr.excilys.model.Computer;
 
