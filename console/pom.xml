@@ -31,7 +31,7 @@
 		</dependency>
 		<dependency>
 			<groupId>fr.excilys</groupId>
-			<artifactId>dao</artifactId>
+			<artifactId>persistence</artifactId>
 			<version>1.0-SNAPSHOT</version>
 			<scope>compile</scope>
 		</dependency>

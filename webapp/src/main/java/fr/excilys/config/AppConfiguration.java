@@ -23,7 +23,7 @@ public class AppConfiguration implements WebApplicationInitializer {
 		annotationWebContext.register(AppConfiguration.class, WebConfiguration.class, HibernateConfiguration.class);
 		annotationWebContext.setServletContext(servletContext);
 		DispatcherServlet dispachterServlet = new DispatcherServlet(annotationWebContext);
-		ServletRegistration.Dynamic servlet = servletContext.addServlet("dashboard", dispachterServlet);
+		ServletRegistration.Dynamic servlet = servletContext.addServlet("/dashboard", dispachterServlet);
 		servlet.setLoadOnStartup(1);
 		servlet.addMapping("/");
 	}
