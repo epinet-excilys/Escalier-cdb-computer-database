@@ -12,8 +12,7 @@ import org.springframework.web.servlet.DispatcherServlet;
 
 
 @Configuration
-@ComponentScan(basePackages = { "fr.excilys.dao", "fr.excilys.service", "fr.excilys.controller"
-		,"fr.excilys.pagination", "fr.excilys.mapper", "fr.excilys.validator", "fr.excilys.model"})
+@ComponentScan(basePackages = { "fr.excilys.dao","fr.excilys.model"})
 @PropertySource(value = "classpath:application.properties")
 public class AppConfiguration implements WebApplicationInitializer {
 	

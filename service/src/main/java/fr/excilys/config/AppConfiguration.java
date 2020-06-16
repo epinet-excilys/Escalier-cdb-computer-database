@@ -10,15 +10,14 @@ import org.springframework.web.WebApplicationInitializer;
 import org.springframework.web.context.support.AnnotationConfigWebApplicationContext;
 import org.springframework.web.servlet.DispatcherServlet;
 
-
 @Configuration
-//@ComponentScan(basePackages = { "fr.excilys.dao", "fr.excilys.service", "fr.excilys.controller"
-//		,"fr.excilys.pagination", "fr.excilys.mapper", "fr.excilys.validator", "fr.excilys.model"})
+@ComponentScan(basePackages = { "fr.excilys.dao", "fr.excilys.service", "fr.excilys.model", "fr.excilys.mapper",
+		"fr.excilys.validator", "fr.excilys.pagination"})
 @PropertySource(value = "classpath:application.properties")
 public class AppConfiguration implements WebApplicationInitializer {
-	
+
 	@Override
-	public void onStartup(ServletContext servletContext){
+	public void onStartup(ServletContext servletContext) {
 		AnnotationConfigWebApplicationContext annotationWebContext = new AnnotationConfigWebApplicationContext();
 		annotationWebContext.register(AppConfiguration.class, WebConfiguration.class, HibernateConfiguration.class);
 		annotationWebContext.setServletContext(servletContext);
@@ -27,5 +26,5 @@ public class AppConfiguration implements WebApplicationInitializer {
 		servlet.setLoadOnStartup(1);
 		servlet.addMapping("/");
 	}
-	
+
 }
