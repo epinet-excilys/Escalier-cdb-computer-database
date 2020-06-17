@@ -1,6 +1,5 @@
 package fr.excilys.controller;
 
-import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
@@ -16,8 +15,6 @@ import org.springframework.web.servlet.ModelAndView;
 import fr.excilys.dto.ComputerDTO;
 import fr.excilys.dto.DashBoardParameterDTO;
 import fr.excilys.exception.DatabaseManipulationException;
-import fr.excilys.pagination.Paginate;
-import fr.excilys.service.ComputerService;
 import fr.excilys.service.DashBoardService;
 import fr.excilys.validator.EnumMessageErrorValidation;
 

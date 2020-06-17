@@ -19,6 +19,7 @@ import org.springframework.web.servlet.view.JstlView;
 
 @Configuration
 @EnableWebMvc
+
 public class WebConfiguration implements WebMvcConfigurer {
 
 	@Override
