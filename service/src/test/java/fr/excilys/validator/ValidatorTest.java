@@ -1,12 +1,9 @@
 package fr.excilys.validator;
 
-import static org.junit.Assert.*;
+import static org.junit.Assert.assertTrue;
 
 import java.time.LocalDate;
 
-import org.hibernate.Hibernate;
-import org.junit.After;
-import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -16,7 +13,6 @@ import org.springframework.test.context.web.WebAppConfiguration;
 
 import fr.excilys.config.AppConfiguration;
 import fr.excilys.config.HibernateConfiguration;
-import fr.excilys.exception.DatabaseDAOException;
 import fr.excilys.exception.ValidatorException;
 import fr.excilys.model.Computer;
 

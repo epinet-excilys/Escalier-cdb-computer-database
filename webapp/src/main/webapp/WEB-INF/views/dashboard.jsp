@@ -33,11 +33,26 @@ tr:nth-of-type(even) {
 </head>
 <body>
 	<header class="navbar navbar-inverse navbar-fixed-top">
-		<div class="container">
+		<div align ="justify">
+
+
 			<a class="navbar-brand" href="dashboard"> <spring:message
 					code="label.header" />
-			</a>
-			<div class="container" align="right">
+			</a> 
+			
+			<div align ="center" >
+			<a href="${pageContext.request.contextPath}/registerPage"
+				style="color: white"><i class="fa fa-user-plus"
+				style="font-size: 24px; color: #de4e4e"></i> Add user</a> 
+				
+				
+			<a href="${pageContext.request.contextPath}/logout"
+				style="color: white"><i class="fa fa-sign-out"
+				style="font-size: 24px; color: #de4e4e" aria-hidden="true"></i>Logout</a>
+			</div>	
+				
+				
+			<div align="right">
 				<a class="dropdown-item" href="?lang=en"> <img
 					src="resources/img/united-kingdom.png" width="45" height="45"></a>
 				&nbsp;&nbsp;&nbsp; <a class="dropdown-item" href="?lang=fr"> <img
@@ -45,6 +60,8 @@ tr:nth-of-type(even) {
 			</div>
 
 		</div>
+
+
 	</header>
 
 	<section id="main">
@@ -62,6 +79,9 @@ tr:nth-of-type(even) {
 					<c:out value="${errorMessage}" />
 				</div>
 			</c:if>
+
+
+
 
 
 

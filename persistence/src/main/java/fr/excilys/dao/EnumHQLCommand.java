@@ -15,7 +15,9 @@ public enum EnumHQLCommand {
 	DELETE_STATEMENT_COMPANY("DELETE from Company company where company. id=:idCompany"),
 	DELETE_STATEMENT_COMPUTER_WHERE_COMPANY(" DELETE FROM Computer computer WHERE computer.company_id = :idCompany"),
 	GET_STATEMENT_COMPANY("SELECT company FROM Company company where company.id = :idCompany"),
-	GET_NB_ROW_STATEMENT_COMPANY("SELECT count(company.id) FROM Company company");
+	GET_NB_ROW_STATEMENT_COMPANY("SELECT count(company.id) FROM Company company"),
+	ADD_USER("SELECT user FROM Users user WHERE user.username = :username"), 
+	GET_USER_ROLE("SELECT userRole FROM UserRole userRole WHERE userRole.user.username = :username");
 	
 	
 	private String message; 
