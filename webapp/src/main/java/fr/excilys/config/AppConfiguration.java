@@ -9,7 +9,6 @@ import org.springframework.context.annotation.PropertySource;
 import org.springframework.web.WebApplicationInitializer;
 import org.springframework.web.context.support.AnnotationConfigWebApplicationContext;
 import org.springframework.web.servlet.DispatcherServlet;
-import org.springframework.web.servlet.config.annotation.EnableWebMvc;
 
 @Configuration
 @ComponentScan(basePackages = { "fr.excilys.dao", "fr.excilys.service", "fr.excilys.controller",
@@ -21,7 +20,7 @@ public class AppConfiguration implements WebApplicationInitializer {
 	public void onStartup(ServletContext servletContext){
 		AnnotationConfigWebApplicationContext annotationWebContext = new AnnotationConfigWebApplicationContext();
 		annotationWebContext.register(AppConfiguration.class, WebConfiguration.class
-				, HibernateConfiguration.class, SecurityWebApplicationInitializer.class,WebSecurityConfig.class);
+				, HibernateConfiguration.class,WebSecurityConfig.class, SecurityWebApplicationInitializer.class);
 		annotationWebContext.setServletContext(servletContext);
 		DispatcherServlet dispachterServlet = new DispatcherServlet(annotationWebContext);
 		ServletRegistration.Dynamic servlet = servletContext.addServlet("login", dispachterServlet);

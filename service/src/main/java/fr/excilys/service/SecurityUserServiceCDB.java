@@ -3,6 +3,8 @@ package fr.excilys.service;
 import java.util.ArrayList;
 import java.util.List;
 
+import javax.transaction.Transactional;
+
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.userdetails.User;
@@ -15,12 +17,13 @@ import fr.excilys.dao.UserDAO;
 import fr.excilys.model.UserRole;
 import fr.excilys.model.Users;
 
+
 @Service
-public class SecurityUserService  implements UserDetailsService {
+public class SecurityUserServiceCDB  implements UserDetailsService {
 
 	private UserDAO userDao;
 	
-	public SecurityUserService(UserDAO userDao) {
+	public SecurityUserServiceCDB(UserDAO userDao) {
 		this.userDao = userDao;
 	}
 
@@ -47,13 +50,14 @@ public class SecurityUserService  implements UserDetailsService {
 			}
 		}
 
-		UserDetails userDetails = (UserDetails) new User(user.getUsername(), //
+		UserDetails userDetails = (UserDetails) new User(user.getUsername(),
 				user.getPassword(), grantList);
 
 		return userDetails;
 	}
 	
 	private List<String> getRoleAsString (List<UserRole> userRoles) {
+		
 		List<String> rolesAsString = new ArrayList<>();
 		
 		for (UserRole userRole: userRoles) {
@@ -62,6 +66,16 @@ public class SecurityUserService  implements UserDetailsService {
 		
 		return rolesAsString;
 	}
+
+	public void addUser(Users user) {
+		
+		userDao.createUser(user);
+		
+	}
+
+
+
+
 	
 	
 

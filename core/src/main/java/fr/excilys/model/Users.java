@@ -29,6 +29,14 @@ public class Users {
     private Set<UserRole> userRole = new HashSet<>(0);
 
     public Users() {
+    	
+    }
+    
+    public Users(String username, String password, UserRole userRole) {
+        this.username = username;
+        this.password = password;
+    	this.userRole.add(userRole);
+
     }
 
     public Users(String username, String password, boolean enabled) {

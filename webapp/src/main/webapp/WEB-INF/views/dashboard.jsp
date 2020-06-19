@@ -41,7 +41,7 @@ tr:nth-of-type(even) {
 			</a> 
 			
 			<div align ="center" >
-			<a href="${pageContext.request.contextPath}/registerPage"
+			<a href="${pageContext.request.contextPath}/addUser"
 				style="color: white"><i class="fa fa-user-plus"
 				style="font-size: 24px; color: #de4e4e"></i> Add user</a> 
 				
