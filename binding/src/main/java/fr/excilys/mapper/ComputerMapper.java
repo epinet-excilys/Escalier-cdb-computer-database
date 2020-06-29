@@ -1,5 +1,6 @@
 package fr.excilys.mapper;
 
+import java.io.IOException;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.time.DateTimeException;
@@ -113,7 +114,7 @@ public final class ComputerMapper implements RowMapper<Computer> {
 		String computerName = computerDTO.getName();
 		LocalDate introducedDate = fromStringToLocalDate(computerDTO.getIntroducedDate());
 		LocalDate discontinuedDate = fromStringToLocalDate(computerDTO.getDiscontinuedDate());
-		int companyId = computerDTO.getCompanyDTO().getId();
+		int companyId = 1;//computerDTO.getCompanyDTO().getId();
 
 		
 		Company company = (companyId != 0 ? (companyDAO.findByID((companyId))).get(0) : (null));
@@ -122,7 +123,8 @@ public final class ComputerMapper implements RowMapper<Computer> {
 				.setDiscontinuedDateBuild(discontinuedDate).setIdCompagnyBuild(company).build();
 		
 	}
-
+	
+	
 	private LocalDate getLocalDateFromResultSet(ResultSet resultSet, String whichOneToGet) throws SQLException {
 
 		return (resultSet.getTimestamp(whichOneToGet) != null

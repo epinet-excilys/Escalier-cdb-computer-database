@@ -5,6 +5,7 @@ import java.time.LocalDate;
 import org.apache.commons.lang3.builder.ReflectionToStringBuilder;
 import org.apache.commons.lang3.builder.ToStringStyle;
 import org.springframework.stereotype.Service;
+import com.fasterxml.jackson.annotation.JsonProperty;
 
 import fr.excilys.model.Company;
 import fr.excilys.model.Computer;
@@ -25,6 +26,7 @@ public class ComputerDTO {
 		this.discontinuedDate = discoDateString;
 		this.companyDTO = companyDTO;
 	}
+
 	public ComputerDTO(Builder builder) {
 		this.id = builder.idBuild;
 		this.name = builder.nameBuild;
@@ -33,6 +35,16 @@ public class ComputerDTO {
 		this.companyDTO = builder.companyDTOBuild;
 	}
 	
+	//TODO : VIREZ CA
+
+//	public ComputerDTO(@JsonProperty("name") String name, @JsonProperty("introducedDate") String introducedDate,
+//			@JsonProperty("discontinuedDate") String discontinuedDate, @JsonProperty("companyDTO") CompanyDTO companyDTo) {
+//	}
+	
+	public ComputerDTO() {
+		
+	}
+
 	public static class Builder {
 		private int idBuild;
 		private String nameBuild;
@@ -69,7 +81,6 @@ public class ComputerDTO {
 			return new ComputerDTO(this);
 		}
 	}
-	
 
 	public int getId() {
 		return id;
@@ -103,18 +114,17 @@ public class ComputerDTO {
 		this.discontinuedDate = discoDateString;
 	}
 
-
 	public void setCompanyDTO(CompanyDTO companyDTO) {
 		this.companyDTO = companyDTO;
 	}
-	
+
 	public CompanyDTO getCompanyDTO() {
 		return companyDTO;
 	}
 
 	@Override
 	public String toString() {
-		return ReflectionToStringBuilder.toString(this,ToStringStyle.JSON_STYLE);
+		return ReflectionToStringBuilder.toString(this, ToStringStyle.JSON_STYLE);
 	}
 
 }
