@@ -13,16 +13,20 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import fr.excilys.dao.ComputerDAO;
+import fr.excilys.dto.ComputerDTO;
 import fr.excilys.exception.DatabaseDAOException;
+import fr.excilys.mapper.ComputerMapper;
 import fr.excilys.model.Computer;
 
 @Service
 public class ComputerService {
 
 	private ComputerDAO computerDAO;
+	private ComputerMapper computerMapper;
 
-	public ComputerService(ComputerDAO computerDAO) {
+	public ComputerService(ComputerDAO computerDAO, ComputerMapper computerMapper) {
 		this.computerDAO = computerDAO;
+		this.computerMapper = computerMapper;
 	}
 
 	@Transactional
@@ -34,6 +38,12 @@ public class ComputerService {
 	public void add(Computer computer) throws DatabaseDAOException{
 		computerDAO.create(computer);
 	}
+	@Transactional
+	public void addDTO(ComputerDTO computerDTO) {
+		Computer computerToCreate = computerMapper.fromComputerDTOToComputer(computerDTO);
+		computerDAO.create(computerToCreate);
+	}
+
 
 	@Transactional
 	public void delete(int iD) throws DatabaseDAOException{
@@ -132,5 +142,6 @@ public class ComputerService {
 			}
 			
 	}
+
 
 }
