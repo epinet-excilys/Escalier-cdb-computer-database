@@ -73,8 +73,6 @@ public class ComputerRestController {
 	@PostMapping
 	@Transactional
 	public void createComputer(@RequestBody ComputerDTO computerDTO) throws DatabaseDAOException {
-
-		System.out.println(computerDTO);
 		Computer computerToCreate = computerMapper.fromComputerDTOToComputer(computerDTO);
 		computerService.add(computerToCreate);
 
