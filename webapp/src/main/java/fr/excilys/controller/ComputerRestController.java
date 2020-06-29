@@ -56,19 +56,8 @@ public class ComputerRestController {
 
 		Optional<Computer> Optionalcomputer = Optional.empty();		
 		Computer computer = computerService.findByID(ID).get();
-		
 		return computer.getName();
 	}
-	
-	@GetMapping("/{ID}/company")
-	public Company findComputerCompanyById(@PathVariable Integer ID) throws DatabaseDAOException {
-
-		Optional<Computer> Optionalcomputer = Optional.empty();		
-		Computer computer = computerService.findByID(ID).get();
-		
-		return computer.getCompany();
-	}
-	
 	
 	@PostMapping
 	@Transactional
