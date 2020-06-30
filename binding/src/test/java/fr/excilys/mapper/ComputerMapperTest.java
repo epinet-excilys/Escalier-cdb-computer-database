@@ -14,11 +14,9 @@ import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
 import org.springframework.test.context.web.WebAppConfiguration;
 
 import fr.excilys.config.AppConfiguration;
-import fr.excilys.config.HibernateConfiguration;
-import fr.excilys.config.WebConfiguration;
 
 @RunWith(SpringJUnit4ClassRunner.class)
-@ContextConfiguration(classes = {AppConfiguration.class, HibernateConfiguration.class, WebConfiguration.class})
+@ContextConfiguration(classes = {AppConfiguration.class})
 @WebAppConfiguration
 public class ComputerMapperTest {
 

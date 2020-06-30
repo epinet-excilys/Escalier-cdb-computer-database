@@ -17,20 +17,16 @@ import org.junit.runner.RunWith;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.test.context.ContextConfiguration;
 import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
-import org.springframework.test.context.web.WebAppConfiguration;
 import org.springframework.transaction.annotation.Transactional;
 
 import fr.excilys.config.AppConfiguration;
-import fr.excilys.config.HibernateConfiguration;
-import fr.excilys.config.WebConfiguration;
 import fr.excilys.exception.DatabaseDAOException;
 import fr.excilys.model.Company;
 import fr.excilys.model.Computer;
 
 @RunWith(SpringJUnit4ClassRunner.class)
-@ContextConfiguration(classes = {AppConfiguration.class, HibernateConfiguration.class, WebConfiguration.class})
+@ContextConfiguration(classes = {AppConfiguration.class})
 @Transactional
-@WebAppConfiguration
 public class ComputerDAOTest {
 
 	private final int INTENDED_USE_RETURN_VALUE = 1;
