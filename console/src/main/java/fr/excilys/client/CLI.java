@@ -5,6 +5,7 @@ import java.util.Optional;
 import java.util.Scanner;
 
 import fr.excilys.dao.ComputerDAO;
+import fr.excilys.dto.ComputerDTO;
 import fr.excilys.mapper.ComputerMapper;
 import fr.excilys.model.Company;
 import fr.excilys.model.Computer;
@@ -121,7 +122,7 @@ public class CLI {
 		int commandeId = scannerIdComput("afficher");
 
 		if (commandeId != -1) {
-			Optional<Computer> comp = computerService.findByID(commandeId);
+			Optional<ComputerDTO> comp = computerService.findByID(commandeId);
 			if (comp.isPresent()) {
 
 				tabRep[0] = String.valueOf(comp.get().getId());
@@ -138,7 +139,7 @@ public class CLI {
 				afficher("Saisir la Date de retrait du le marché (AAAA-MM-dd)");
 				tabRep[3] = (scanner.nextLine());
 
-				afficher("Id companie Actuel : " + comp.get().getCompany().getId());
+				afficher("Id companie Actuel : " + comp.get().getCompanyDTO().getId());
 				afficher("Saisir l'id de la companie ");
 				tabRep[4] = String.valueOf(scannerIdCompan("ajoutez"));
 
@@ -165,7 +166,7 @@ public class CLI {
 
 		if (commandeId != -1) {
 
-			Computer comp = computerService.findByID(commandeId).get();
+			ComputerDTO comp = computerService.findByID(commandeId).get();
 			afficher(comp);
 
 			computerService.delete(comp.getId());
@@ -180,7 +181,7 @@ public class CLI {
 		int commandeId = scannerIdComput("afficher");
 
 		if (commandeId != -1) {
-			Optional<Computer> comp = computerService.findByID(commandeId);
+			Optional<ComputerDTO> comp = computerService.findByID(commandeId);
 			if (comp.isPresent()) {
 				afficher(comp);
 			} else {
@@ -192,9 +193,9 @@ public class CLI {
 	}
 
 	public void affiAllComput() {
-		List<Computer> list = computerService.getAllComput();
+		List<ComputerDTO> list = computerService.getAllComput();
 
-		for (Computer c : list) {
+		for (ComputerDTO c : list) {
 			afficher(c);
 		}
 
@@ -205,8 +206,8 @@ public class CLI {
 		int currentRow = 0;
 
 		do {
-			List<Computer> list = computerService.getAllPaginateComput(currentRow, TAILLE_PAGE);
-			for (Computer c : list) {
+			List<ComputerDTO> list = computerService.getAllPaginateComput(currentRow, TAILLE_PAGE);
+			for (ComputerDTO c : list) {
 				afficher(c);
 			}
 			afficher("appuyer sur [Entrée]");

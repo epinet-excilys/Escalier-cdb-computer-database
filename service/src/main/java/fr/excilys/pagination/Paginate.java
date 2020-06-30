@@ -4,6 +4,7 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.stream.Collectors;
 
 import org.apache.commons.lang3.builder.ReflectionToStringBuilder;
 import org.apache.commons.lang3.builder.ToStringStyle;
@@ -125,7 +126,7 @@ public class Paginate {
 		
 		NbRowComputer = computerService.getNbRowsSearch(searchTerm);
 		computerList.clear();
-		computerList =computerService.findAllPaginateSearchLike(searchTerm, pageIterator * pageSize, pageSize);
+		computerList =  fromDTOToComputerAsList(computerService.findAllPaginateSearchLike(searchTerm, pageIterator * pageSize, pageSize));
 		maxPage = Math.ceil(NbRowComputer / pageSize);
 		orderBy = null;
 	}
@@ -134,7 +135,7 @@ public class Paginate {
 		
 		NbRowComputer = computerService.getNbRows();
 		computerList.clear();
-		computerList = computerService.getAllPaginateComput(pageIterator * pageSize, pageSize);
+		computerList =  fromDTOToComputerAsList(computerService.getAllPaginateComput(pageIterator * pageSize, pageSize));
 		maxPage = Math.ceil(NbRowComputer / pageSize);
 		orderBy = null;
 		searchTerm = null;
@@ -154,5 +155,12 @@ public class Paginate {
 	public String toString() {
 		return ReflectionToStringBuilder.toString(this,ToStringStyle.JSON_STYLE);
 	}
+	
+	public List<Computer> fromDTOToComputerAsList (List<ComputerDTO> listComputerDTO){
+		return listComputerDTO.stream()
+				.map(computerDTO -> computerMapper.fromComputerDTOToComputer(computerDTO))
+				.collect(Collectors.toList());
+	}
+	
 	
 }

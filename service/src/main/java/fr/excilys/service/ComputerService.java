@@ -31,7 +31,14 @@ public class ComputerService {
 
 	@Transactional
 	public void update(Computer computer) throws DatabaseDAOException {
-		computerDAO.update(computer);
+
+	}
+	
+	@Transactional
+	public void updateDTO(ComputerDTO computerDTO) {
+		Computer computerToCreate = computerMapper.fromComputerDTOToComputer(computerDTO);
+		computerDAO.update(computerToCreate);
+		
 	}
 
 	@Transactional
@@ -57,37 +64,28 @@ public class ComputerService {
 	}
 
 	@Transactional
-	public Optional<Computer> findByID(int ID) throws DatabaseDAOException {
+	public Optional<ComputerDTO> findByID(int ID) throws DatabaseDAOException {
 
-		Optional<Computer> Optionalcomputer = Optional.empty();		
-		Optionalcomputer = Optional.of(computerDAO.findByID(ID).get(0));
+		Optional<ComputerDTO> Optionalcomputer = Optional.empty();		
+		Optionalcomputer = Optional.of(computerMapper.fromComputerToComputerDTO(computerDAO.findByID(ID).get(0)));
 		
 		return Optionalcomputer;
 	}
 
 	@Transactional
-	public List<Computer> getAllComput() throws DatabaseDAOException{
-		List<Computer> listComputer = new ArrayList<>();
-		listComputer = computerDAO.findAll();
-
-		return listComputer;
-
+	public List<ComputerDTO> getAllComput() throws DatabaseDAOException{
+		return converttoDTOwithMap(computerDAO.findAll());
 	}
 
 	@Transactional
-	public List<Computer> getAllPaginateComput(int ligneDebutOffSet, int taillePage) throws DatabaseDAOException{
-		List<Computer> listComputer = new ArrayList<>();
-		listComputer = computerDAO.findAllPaginate(ligneDebutOffSet, taillePage);
-		return listComputer;
+	public List<ComputerDTO> getAllPaginateComput(int ligneDebutOffSet, int taillePage) throws DatabaseDAOException{
+		return converttoDTOwithMap(computerDAO.findAllPaginate(ligneDebutOffSet, taillePage));
 
 	}
 	
 	@Transactional
-	public List<Computer> findAllPaginateSearchLike(String search, int ligneDebutOffSet, int taillePage) throws DatabaseDAOException{
-		List<Computer> listComputer = new ArrayList<>();
-		listComputer = computerDAO.findAllPaginateSearchLike(search,ligneDebutOffSet, taillePage);
-
-		return listComputer;
+	public List<ComputerDTO> findAllPaginateSearchLike(String search, int ligneDebutOffSet, int taillePage) throws DatabaseDAOException{
+		return converttoDTOwithMap(computerDAO.findAllPaginateSearchLike(search,ligneDebutOffSet, taillePage));
 	}
 	
 	@Transactional
@@ -141,6 +139,12 @@ public class ComputerService {
 				return (EnumOrderBy.COMPUTER_DAO.getMessage());
 			}
 			
+	}
+
+	private List<ComputerDTO> converttoDTOwithMap(List<Computer> listComputer) {
+		return listComputer.stream()
+		.map(computer -> computerMapper.fromComputerToComputerDTO(computer))
+		.collect(Collectors.toList());
 	}
 
 

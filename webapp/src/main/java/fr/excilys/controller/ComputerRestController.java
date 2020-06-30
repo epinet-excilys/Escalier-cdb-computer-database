@@ -4,6 +4,7 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 
+import javax.servlet.http.HttpServletResponse;
 import javax.transaction.Transactional;
 
 import org.springframework.http.HttpStatus;
@@ -12,9 +13,12 @@ import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.util.UriComponentsBuilder;
 
 import fr.excilys.dto.ComputerDTO;
 import fr.excilys.exception.DatabaseDAOException;
@@ -25,7 +29,7 @@ import fr.excilys.service.ComputerService;
 @RequestMapping("/computers")
 public class ComputerRestController {
 	
-	List<Computer> listComputers = new ArrayList<>();
+	
 	
 	private ComputerService computerService;
 
@@ -34,28 +38,39 @@ public class ComputerRestController {
 	}
 	
 	@GetMapping
-	public ResponseEntity<List<Computer>> getAllComput() throws DatabaseDAOException{
-		listComputers = computerService.getAllComput();
+	public ResponseEntity<List<ComputerDTO>> getAllComput() throws DatabaseDAOException{
+		
+		return new ResponseEntity<>(computerService.getAllComput(),HttpStatus.OK);
 
-		return new ResponseEntity<>(listComputers,HttpStatus.OK);
+	}
+	
+	//Correspond To "http://localhost:8080/cdb-computer-database/computers?page=1&size=10"
+	@GetMapping(params = {"page","size"})
+	public ResponseEntity<List<ComputerDTO>> getComputPaginated(@RequestParam("page") int page,@RequestParam("size") int size) throws DatabaseDAOException{
+		
+		return new ResponseEntity<>(computerService.getAllPaginateComput(page, size),HttpStatus.OK);
+
+	}
+	
+	//Correspond To "http://localhost:8080/cdb-computer-database/computers?page=1&size=10"
+	@GetMapping(params = {"search","page","size"})
+	public ResponseEntity<List<ComputerDTO>> getComputSearchPaginated(@RequestParam("page") int page,@RequestParam("size") int size,
+			@RequestParam("search") String search) throws DatabaseDAOException{
+		
+		return new ResponseEntity<>(computerService.findAllPaginateSearchLike(search,page, size),HttpStatus.OK);
 
 	}
 	
 	@GetMapping("/{ID}")
-	public ResponseEntity<Computer> findByID(@PathVariable Integer ID) throws DatabaseDAOException {
+	public ResponseEntity<ComputerDTO> findByID(@PathVariable Integer ID) throws DatabaseDAOException {
 
-		Optional<Computer> Optionalcomputer = Optional.empty();		
-		Computer computer = computerService.findByID(ID).get();
-		
-		return new ResponseEntity<>(computer,HttpStatus.OK);
+		return new ResponseEntity<>(computerService.findByID(ID).get(),HttpStatus.OK);
 	}
 	
 	@GetMapping("/{ID}/name")
 	public ResponseEntity<String> findComputerNameById(@PathVariable Integer ID) throws DatabaseDAOException {
 
-		Optional<Computer> Optionalcomputer = Optional.empty();		
-		Computer computer = computerService.findByID(ID).get();
-		return new ResponseEntity<>(computer.getName(),HttpStatus.OK);
+		return new ResponseEntity<>(computerService.findByID(ID).get().getName(),HttpStatus.OK);
 	}
 	
 	@PostMapping
@@ -64,11 +79,19 @@ public class ComputerRestController {
 		return new ResponseEntity<>(computerDTO,HttpStatus.OK);
 	}
 	
-@DeleteMapping
+	@DeleteMapping("/{ID}")
 	public ResponseEntity<Integer> deleteComputer(@PathVariable Integer ID) throws DatabaseDAOException {
 		computerService.delete(ID);
-		return new ResponseEntity<>(ID, HttpStatus.OK);
+		return new ResponseEntity<>(ID,HttpStatus.OK);
 	}
+	
+	@PutMapping("/{ID}")
+	public ResponseEntity<ComputerDTO> updateComputer(@RequestBody ComputerDTO computerDTO) throws DatabaseDAOException {
+		computerService.updateDTO(computerDTO);
+		return new ResponseEntity<>(computerDTO,HttpStatus.OK);
+	}
+	
+	
 	
 	
 	
