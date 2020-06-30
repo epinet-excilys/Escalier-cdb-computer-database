@@ -64,20 +64,11 @@ public class ComputerRestController {
 		return new ResponseEntity<>(computerDTO,HttpStatus.OK);
 	}
 	
-<<<<<<< HEAD
 @DeleteMapping
-public ResponseEntity<Integer> deleteComputer(@PathVariable Integer ID) throws DatabaseDAOException {
-	computerService.delete(ID);
-	return new ResponseEntity<>(ID,HttpStatus.OK);
-}
-=======
-	@DeleteMapping
 	public ResponseEntity<Integer> deleteComputer(@PathVariable Integer ID) throws DatabaseDAOException {
 		computerService.delete(ID);
-		return new ResponseEntity<>(ID,HttpStatus.OK);
+		return new ResponseEntity<>(ID, HttpStatus.OK);
 	}
-	
->>>>>>> develop
 	
 	
 	
