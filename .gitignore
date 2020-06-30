@@ -46,6 +46,7 @@ proguard/
 *.tar.gz
 *.rar
 *.log
+*.properties
 
 
 # Apple Files
