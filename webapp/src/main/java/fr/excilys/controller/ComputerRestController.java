@@ -1,11 +1,6 @@
 package fr.excilys.controller;
 
-import java.util.ArrayList;
 import java.util.List;
-import java.util.Optional;
-
-import javax.servlet.http.HttpServletResponse;
-import javax.transaction.Transactional;
 
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -18,11 +13,9 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
-import org.springframework.web.util.UriComponentsBuilder;
 
 import fr.excilys.dto.ComputerDTO;
 import fr.excilys.exception.DatabaseDAOException;
-import fr.excilys.model.Computer;
 import fr.excilys.service.ComputerService;
 
 @RestController
@@ -52,7 +45,7 @@ public class ComputerRestController {
 
 	}
 	
-	//Correspond To "http://localhost:8080/cdb-computer-database/computers?page=1&size=10"
+	//Correspond To "http://localhost:8080/cdb-computer-database/computers?search=inch&page=1&size=10"
 	@GetMapping(params = {"search","page","size"})
 	public ResponseEntity<List<ComputerDTO>> getComputSearchPaginated(@RequestParam("page") int page,@RequestParam("size") int size,
 			@RequestParam("search") String search) throws DatabaseDAOException{

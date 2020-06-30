@@ -6,6 +6,7 @@ import java.util.Optional;
 import javax.persistence.TypedQuery;
 import javax.sql.DataSource;
 
+import org.hibernate.HibernateException;
 import org.hibernate.Query;
 import org.hibernate.Session;
 import org.hibernate.SessionFactory;
@@ -37,7 +38,12 @@ public class CompanyDAO {
 	public void deleteCompany(int iDCompany) {
 		
 		try {
-			Session session = this.sessionFactory.getCurrentSession();
+			Session session;
+			try {
+			    session = sessionFactory.getCurrentSession();
+			} catch (HibernateException e) {
+			    session = sessionFactory.openSession();
+			}
 			String hqlCommandComputer = EnumHQLCommand.DELETE_STATEMENT_COMPUTER_WHERE_COMPANY.getMessage();
 			String hqlCommandCompany = EnumHQLCommand.DELETE_STATEMENT_COMPANY.getMessage();
 			
@@ -58,7 +64,12 @@ public class CompanyDAO {
 	public List<Company> findByID(int idSearch) {
 		
 		try {
-			Session session = this.sessionFactory.getCurrentSession();
+			Session session;
+			try {
+			    session = sessionFactory.getCurrentSession();
+			} catch (HibernateException e) {
+			    session = sessionFactory.openSession();
+			}
 			String hqlCommand = EnumHQLCommand.GET_STATEMENT_COMPANY.getMessage();
 			@SuppressWarnings("unchecked")
 			TypedQuery<Company> query = (TypedQuery<Company>) session.createQuery(hqlCommand).setParameter("idCompany",idSearch);
@@ -95,7 +106,12 @@ public class CompanyDAO {
 
 		try {
 			
-			Session session = this.sessionFactory.getCurrentSession();
+			Session session;
+			try {
+			    session = sessionFactory.getCurrentSession();
+			} catch (HibernateException e) {
+			    session = sessionFactory.openSession();
+			}
 			String hqlCommand = EnumHQLCommand.GET_NB_ROW_STATEMENT_COMPANY.getMessage();
 			Query query = session.createQuery(hqlCommand);
 			
