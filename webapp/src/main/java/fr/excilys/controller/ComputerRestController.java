@@ -15,6 +15,7 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
 import fr.excilys.dto.ComputerDTO;
+import fr.excilys.dto.RestControllerParameter;
 import fr.excilys.exception.DatabaseDAOException;
 import fr.excilys.service.ComputerService;
 
@@ -39,18 +40,20 @@ public class ComputerRestController {
 	
 	//Correspond To "http://localhost:8080/cdb-computer-database/computers?page=1&size=10"
 	@GetMapping(params = {"page","size"})
-	public ResponseEntity<List<ComputerDTO>> getComputPaginated(@RequestParam("page") int page,@RequestParam("size") int size) throws DatabaseDAOException{
+	public ResponseEntity<List<ComputerDTO>> getComputPaginated(RestControllerParameter restControllerParameter) throws DatabaseDAOException{
 		
-		return new ResponseEntity<>(computerService.getAllPaginateComput(page, size),HttpStatus.OK);
+		return new ResponseEntity<>(computerService.getAllPaginateComput(restControllerParameter.getPage()
+				,restControllerParameter.getSize()),HttpStatus.OK);
 
 	}
 	
 	//Correspond To "http://localhost:8080/cdb-computer-database/computers?search=inch&page=1&size=10"
 	@GetMapping(params = {"search","page","size"})
-	public ResponseEntity<List<ComputerDTO>> getComputSearchPaginated(@RequestParam("page") int page,@RequestParam("size") int size,
-			@RequestParam("search") String search) throws DatabaseDAOException{
+	public ResponseEntity<List<ComputerDTO>> getComputSearchPaginated(RestControllerParameter restControllerParameter) throws DatabaseDAOException{
 		
-		return new ResponseEntity<>(computerService.findAllPaginateSearchLike(search,page, size),HttpStatus.OK);
+		return new ResponseEntity<>(computerService.findAllPaginateSearchLike(restControllerParameter.getSearch()
+				,restControllerParameter.getPage()
+				,restControllerParameter.getSize()),HttpStatus.OK);
 
 	}
 	
