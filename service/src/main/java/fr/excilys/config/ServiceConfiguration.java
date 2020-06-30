@@ -1,25 +1,31 @@
 package fr.excilys.config;
 
+import javax.servlet.ServletContext;
+import javax.servlet.ServletRegistration;
 import javax.sql.DataSource;
-import javax.transaction.Transactional;
 
 import org.springframework.context.annotation.Bean;
+import org.springframework.context.annotation.ComponentScan;
 import org.springframework.context.annotation.Configuration;
+import org.springframework.context.annotation.PropertySource;
 import org.springframework.core.env.Environment;
 import org.springframework.jdbc.datasource.DriverManagerDataSource;
 import org.springframework.orm.hibernate5.HibernateTransactionManager;
 import org.springframework.orm.hibernate5.LocalSessionFactoryBean;
 import org.springframework.transaction.PlatformTransactionManager;
 import org.springframework.transaction.annotation.EnableTransactionManagement;
+import org.springframework.web.WebApplicationInitializer;
+import org.springframework.web.context.support.AnnotationConfigWebApplicationContext;
+import org.springframework.web.servlet.DispatcherServlet;
 
-import fr.excilys.model.Company;
-import fr.excilys.model.Computer;
 
 @Configuration
+@ComponentScan(basePackages = { "fr.excilys.dao", "fr.excilys.service", "fr.excilys.controller"
+		,"fr.excilys.pagination", "fr.excilys.mapper", "fr.excilys.validator", "fr.excilys.model", "fr.excilys.config"})
+@PropertySource(value = "classpath:application.properties")
 @EnableTransactionManagement
-public class HibernateConfiguration {
+public class ServiceConfiguration{
 	
-
 	Environment environment;
 	
 	@Bean
@@ -49,5 +55,4 @@ public class HibernateConfiguration {
         return transactionManager;
     }
 	
-
 }

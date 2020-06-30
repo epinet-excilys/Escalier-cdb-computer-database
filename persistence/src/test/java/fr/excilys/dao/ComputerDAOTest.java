@@ -19,13 +19,13 @@ import org.springframework.test.context.ContextConfiguration;
 import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
 import org.springframework.transaction.annotation.Transactional;
 
-import fr.excilys.config.AppConfiguration;
+import fr.excilys.config.PersistenceConfiguration;
 import fr.excilys.exception.DatabaseDAOException;
 import fr.excilys.model.Company;
 import fr.excilys.model.Computer;
 
 @RunWith(SpringJUnit4ClassRunner.class)
-@ContextConfiguration(classes = {AppConfiguration.class})
+@ContextConfiguration(classes = {PersistenceConfiguration.class})
 @Transactional
 public class ComputerDAOTest {
 

@@ -1,6 +1,7 @@
 package fr.excilys.mapper;
 
-import static org.junit.Assert.*;
+import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.fail;
 
 import java.time.LocalDate;
 import java.time.Month;
@@ -13,10 +14,10 @@ import org.springframework.test.context.ContextConfiguration;
 import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
 import org.springframework.test.context.web.WebAppConfiguration;
 
-import fr.excilys.config.AppConfiguration;
+import fr.excilys.config.PersistenceConfiguration;
 
 @RunWith(SpringJUnit4ClassRunner.class)
-@ContextConfiguration(classes = {AppConfiguration.class})
+@ContextConfiguration(classes = {PersistenceConfiguration.class})
 @WebAppConfiguration
 public class ComputerMapperTest {
 

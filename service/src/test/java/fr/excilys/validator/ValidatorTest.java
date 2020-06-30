@@ -11,13 +11,12 @@ import org.springframework.test.context.ContextConfiguration;
 import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
 import org.springframework.test.context.web.WebAppConfiguration;
 
-import fr.excilys.config.AppConfiguration;
-import fr.excilys.config.HibernateConfiguration;
+import fr.excilys.config.ServiceConfiguration;
 import fr.excilys.exception.ValidatorException;
 import fr.excilys.model.Computer;
 
 @RunWith(SpringJUnit4ClassRunner.class)
-@ContextConfiguration(classes = {AppConfiguration.class,HibernateConfiguration.class})
+@ContextConfiguration(classes = {ServiceConfiguration.class})
 @WebAppConfiguration
 public class ValidatorTest {
 	private static LocalDate localDate = LocalDate.now().minusYears(2);

@@ -19,7 +19,7 @@ import org.springframework.transaction.annotation.EnableTransactionManagement;
 		,"fr.excilys.pagination", "fr.excilys.mapper", "fr.excilys.validator", "fr.excilys.model", "fr.excilys.config", "fr.excilys.exception"})
 @PropertySource(value = "classpath:application.properties")
 @EnableTransactionManagement
-public class AppConfiguration {
+public class PersistenceConfiguration {
 	
 
 	Environment environment;
