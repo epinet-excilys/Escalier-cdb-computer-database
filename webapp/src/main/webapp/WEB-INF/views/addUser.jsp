@@ -67,8 +67,8 @@
 								<label for="role">User Role</label> <select class="form-control"
 									id="role" name="role" required="required">
 									<option value="" selected>Select user's role</option>
-									<option value="ROLE_ADMIN">ADMIN</option>
-									<option value="ROLE_USER">USER</option>
+									<option value="ADMIN">ADMIN</option>
+									<option value="USER">USER</option>
 								</select>
 							</div>
 							<button class="btn btn-primary" type="submit">Create new

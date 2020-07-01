@@ -1,17 +1,14 @@
 package fr.excilys.mapper;
 
-import java.io.IOException;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.time.DateTimeException;
 import java.time.LocalDate;
 import java.time.format.DateTimeFormatter;
-import java.time.format.DateTimeParseException;
 import java.util.Optional;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.jdbc.core.RowMapper;
 import org.springframework.stereotype.Component;
 
@@ -114,7 +111,7 @@ public final class ComputerMapper implements RowMapper<Computer> {
 		String computerName = computerDTO.getName();
 		LocalDate introducedDate = fromStringToLocalDate(computerDTO.getIntroducedDate());
 		LocalDate discontinuedDate = fromStringToLocalDate(computerDTO.getDiscontinuedDate());
-		int companyId = 1;//computerDTO.getCompanyDTO().getId();
+		int companyId = computerDTO.getCompanyDTO().getId();
 
 		
 		Company company = (companyId != 0 ? (companyDAO.findByID((companyId))).get(0) : (null));

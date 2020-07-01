@@ -3,8 +3,6 @@ package fr.excilys.service;
 import java.util.ArrayList;
 import java.util.List;
 
-import javax.transaction.Transactional;
-
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.userdetails.User;
@@ -14,6 +12,8 @@ import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.stereotype.Service;
 
 import fr.excilys.dao.UserDAO;
+import fr.excilys.dto.UserDTO;
+import fr.excilys.mapper.UserMapper;
 import fr.excilys.model.UserRole;
 import fr.excilys.model.Users;
 
@@ -22,9 +22,11 @@ import fr.excilys.model.Users;
 public class SecurityUserServiceCDB  implements UserDetailsService {
 
 	private UserDAO userDao;
+	private UserMapper userMapper;
 	
-	public SecurityUserServiceCDB(UserDAO userDao) {
+	public SecurityUserServiceCDB(UserDAO userDao, UserMapper userMapper) {
 		this.userDao = userDao;
+		this.userMapper = userMapper;
 	}
 
 	@Override
@@ -67,9 +69,20 @@ public class SecurityUserServiceCDB  implements UserDetailsService {
 		return rolesAsString;
 	}
 
-	public void addUser(Users user) {
+	public void addUser(UserDTO userDTO) {
 		
-		userDao.createUser(user);
+		userDao.createUser(userMapper.fromUserDTOtoUser(userDTO));
+		userDao.createUserRole(userMapper.fromUserDTOtoUserRole(userDTO));
+		
+	}
+
+	//TODO VIRER AVANT RENDU 
+	public List<Users> getAllUsers() {
+		
+		
+		
+		return userDao.getAllUser();
+
 		
 	}
 

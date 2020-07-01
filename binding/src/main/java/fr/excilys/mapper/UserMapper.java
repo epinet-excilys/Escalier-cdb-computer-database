@@ -8,21 +8,24 @@ import java.util.HashSet;
 import java.util.Set;
 
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
+import org.springframework.stereotype.Component;
 
+@Component
 public class UserMapper {
 
-	public static Users fromUserDTOtoUser(UserDTO userDTO) {
+	public Users fromUserDTOtoUser(UserDTO userDTO) {
 
 		String passwordHash = new BCryptPasswordEncoder().encode(userDTO.getPassword());
-		Users user = new Users(userDTO.getUsername(), passwordHash, true);
-		UserRole userRole = new UserRole(user, userDTO.getRole());
-		Set<UserRole> userRoleSet = new HashSet<>();
-
-		userRoleSet.add(userRole);
-		user.setUserRole(userRoleSet);
+		Users user = new Users(userDTO.getUsername(), passwordHash);
 
 		return user;
 
+	}
+	
+	public UserRole fromUserDTOtoUserRole(UserDTO userDTO) {
+		UserRole userRole = new UserRole(userDTO.getUsername(), userDTO.getRole());
+		
+		return userRole;
 	}
 
 

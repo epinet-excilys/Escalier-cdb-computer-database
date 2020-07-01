@@ -7,12 +7,9 @@ import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.servlet.ModelAndView;
 
-import fr.excilys.dao.UserDAO;
 import fr.excilys.dto.UserDTO;
-import fr.excilys.mapper.UserMapper;
 import fr.excilys.service.SecurityUserServiceCDB;
 
 @Controller
@@ -38,7 +35,7 @@ public class AddUser {
     public ModelAndView register(UserDTO userDTO) {
         ModelAndView modelAndView = new ModelAndView("redirect:/dashboard");
 
-        securityUserServiceCDB.addUser(UserMapper.fromUserDTOtoUser(userDTO));
+        securityUserServiceCDB.addUser(userDTO);
 
         setMessage("user Added", SuccessMessage, modelAndView);
 
