@@ -46,7 +46,7 @@ tr:nth-of-type(even) {
 				style="font-size: 24px; color: #de4e4e"></i> Add user</a> 
 				
 				
-			<a href="${pageContext.request.contextPath}/login"
+			<a href="${pageContext.request.contextPath}/logoutSuccessful"
 				style="color: white"><i class="fa fa-sign-out"
 				style="font-size: 24px; color: #de4e4e" aria-hidden="true"></i>Logout</a>
 			</div>	

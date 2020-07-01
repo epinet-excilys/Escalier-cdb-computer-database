@@ -21,7 +21,7 @@
 <body>
 
 <h2>Login to Computer Database</h2>
-<form name='f' action="${pageContext.request.contextPath}/j_spring_security_check" method='POST'>
+<form name='f' action="${pageContext.request.contextPath}/dashboard" method='POST'>
 <!-- /login?error=true -->
      <c:if test="${param.error == 'true'}">
          <div style="color:red;margin:10px 0px;">
