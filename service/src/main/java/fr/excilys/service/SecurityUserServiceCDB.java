@@ -3,6 +3,8 @@ package fr.excilys.service;
 import java.util.ArrayList;
 import java.util.List;
 
+import javax.transaction.Transactional;
+
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.userdetails.User;
@@ -76,20 +78,6 @@ public class SecurityUserServiceCDB  implements UserDetailsService {
 		
 	}
 
-	//TODO VIRER AVANT RENDU 
-	public List<Users> getAllUsers() {
-		
-		
-		
-		return userDao.getAllUser();
-
-		
-	}
-
-
-
-
-	
 	
 
 }

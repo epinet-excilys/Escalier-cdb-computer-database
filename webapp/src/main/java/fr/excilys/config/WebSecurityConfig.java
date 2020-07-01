@@ -44,6 +44,8 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
 		http.authorizeRequests().antMatchers("/editComputer", "/deleteComputer", "/addComputer")
 				.access("hasRole('ROLE_ADMIN')");
 
+		http.authorizeRequests().antMatchers("/computers").authenticated().and().httpBasic();
+		
 		http.authorizeRequests().and().exceptionHandling().accessDeniedPage("/403");
 
 		http.authorizeRequests().and().formLogin().loginProcessingUrl("/j_spring_security_check").loginPage("/login")
