@@ -37,11 +37,16 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
         .authorizeRequests()
         .antMatchers("/", "/login", "/logoutSuccessful").permitAll()
         .antMatchers(HttpMethod.GET, "/computers/**").hasAnyRole("ADMIN","USER")
+        .antMatchers(HttpMethod.POST, "/computers/**").hasAnyRole("ADMIN")
+        .antMatchers(HttpMethod.DELETE, "/computers/**").hasAnyRole("ADMIN")
+        .antMatchers(HttpMethod.PUT, "/computers/**").hasAnyRole("ADMIN")
         .antMatchers(HttpMethod.GET, "/dashboard/**").hasAnyRole("ADMIN","USER")
         .antMatchers(HttpMethod.POST, "/dashboard").hasAnyRole("ADMIN","USER")
         .antMatchers(HttpMethod.POST, "/deleteComputer/**").hasRole("ADMIN")
         .antMatchers(HttpMethod.GET, "/addComputer/**").hasRole("ADMIN")
         .antMatchers(HttpMethod.POST, "/addComputer/**").hasRole("ADMIN")
+        .antMatchers(HttpMethod.GET, "/addUser/**").hasRole("ADMIN")
+        .antMatchers(HttpMethod.POST, "/addUser/**").hasRole("ADMIN")
         
         
         
