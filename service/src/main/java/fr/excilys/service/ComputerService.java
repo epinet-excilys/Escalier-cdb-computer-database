@@ -32,7 +32,7 @@ public class ComputerService {
 	}
 	
 	@Transactional
-	public void updateDTO(ComputerDTO computerDTO) {
+	public void updateDTO(ComputerDTO computerDTO)throws DatabaseDAOException  {
 		Computer computerToCreate = computerMapper.fromComputerDTOToComputer(computerDTO);
 		computerDAO.update(computerToCreate);
 		
@@ -44,7 +44,7 @@ public class ComputerService {
 	}
 
 	@Transactional
-	public void addDTO(ComputerDTO computerDTO) {
+	public void addDTO(ComputerDTO computerDTO) throws DatabaseDAOException {
 		Computer computerToCreate = computerMapper.fromComputerDTOToComputer(computerDTO);
 		computerDAO.create(computerToCreate);
 	}
