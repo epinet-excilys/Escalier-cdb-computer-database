@@ -55,10 +55,12 @@ public class CompanyDAO {
 			
 		} catch (InvalidResultSetAccessException invalidResultSetAccessException) {
 			LOGGER.error(EnumErrorSQL.BDD_WRONG_SQL_SYNTAX.getMessage() + invalidResultSetAccessException.getMessage());
+			throw new DatabaseDAOException("Delete Company");
 		} catch (DataAccessException DataAccessException) {
 			LOGGER.error(EnumErrorSQL.BDD_ACCESS_LOG.getMessage() + DataAccessException.getMessage());
-		}
 			throw new DatabaseDAOException("Delete Company");
+		}
+			
 	}
 
 	public List<Company> findByID(int idSearch) {
