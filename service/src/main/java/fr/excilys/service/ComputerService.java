@@ -62,8 +62,10 @@ public class ComputerService {
 	@Transactional
 	public Optional<ComputerDTO> findByID(int ID) throws DatabaseDAOException {
 
-		Optional<ComputerDTO> Optionalcomputer = Optional.empty();		
-		Optionalcomputer = Optional.of(computerMapper.fromComputerToComputerDTO(computerDAO.findByID(ID).get(0)));
+		Optional<ComputerDTO> Optionalcomputer = Optional.empty();	
+		if( ! computerDAO.findByID(ID).isEmpty()) {
+			Optionalcomputer = Optional.of(computerMapper.fromComputerToComputerDTO(computerDAO.findByID(ID).get(0)));
+		}
 		
 		return Optionalcomputer;
 	}

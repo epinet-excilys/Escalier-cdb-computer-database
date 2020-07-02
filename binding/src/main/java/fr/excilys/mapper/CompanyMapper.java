@@ -2,17 +2,13 @@ package fr.excilys.mapper;
 
 import java.sql.ResultSet;
 import java.sql.SQLException;
-import java.util.List;
 import java.util.Optional;
-import java.util.stream.Collectors;
 
 import org.springframework.jdbc.core.RowMapper;
 import org.springframework.stereotype.Component;
 
 import fr.excilys.dto.CompanyDTO;
-import fr.excilys.dto.ComputerDTO;
 import fr.excilys.model.Company;
-import fr.excilys.model.Computer;
 
 @Component
 public final class CompanyMapper implements RowMapper<Company> {

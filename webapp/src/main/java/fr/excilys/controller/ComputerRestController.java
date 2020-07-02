@@ -32,7 +32,7 @@ public class ComputerRestController {
 	}
 	
 	@GetMapping
-	public ResponseEntity<List<ComputerDTO>> getAllComput() throws DatabaseDAOException{
+	public ResponseEntity<List<ComputerDTO>> getAllComput(){
 		
 		return new ResponseEntity<>(computerService.getAllComput(),HttpStatus.OK);
 
@@ -40,7 +40,7 @@ public class ComputerRestController {
 	
 	//Correspond To "http://localhost:8080/cdb-computer-database/computers?page=1&size=10"
 	@GetMapping(params = {"page","size"})
-	public ResponseEntity<List<ComputerDTO>> getComputPaginated(RestControllerParameter restControllerParameter) throws DatabaseDAOException{
+	public ResponseEntity<List<ComputerDTO>> getComputPaginated(RestControllerParameter restControllerParameter){
 		
 		return new ResponseEntity<>(computerService.getAllPaginateComput(restControllerParameter.getPage()
 				,restControllerParameter.getSize()),HttpStatus.OK);
@@ -49,7 +49,7 @@ public class ComputerRestController {
 	
 	//Correspond To "http://localhost:8080/cdb-computer-database/computers?search=inch&page=1&size=10"
 	@GetMapping(params = {"search","page","size"})
-	public ResponseEntity<List<ComputerDTO>> getComputSearchPaginated(RestControllerParameter restControllerParameter) throws DatabaseDAOException{
+	public ResponseEntity<List<ComputerDTO>> getComputSearchPaginated(RestControllerParameter restControllerParameter){
 		
 		return new ResponseEntity<>(computerService.findAllPaginateSearchLike(restControllerParameter.getSearch()
 				,restControllerParameter.getPage()
@@ -58,31 +58,36 @@ public class ComputerRestController {
 	}
 	
 	@GetMapping("/{ID}")
-	public ResponseEntity<ComputerDTO> findByID(@PathVariable Integer ID) throws DatabaseDAOException {
-
-		return new ResponseEntity<>(computerService.findByID(ID).get(),HttpStatus.OK);
+	public ResponseEntity<ComputerDTO> findByID(@PathVariable Integer ID) {
+		
+		if(computerService.findByID(ID).isEmpty()) {
+			return new ResponseEntity<>(new ComputerDTO(),HttpStatus.NOT_FOUND);
+		}else {
+			return new ResponseEntity<>(computerService.findByID(ID).get(),HttpStatus.OK);
+		}
+	
 	}
 	
 	@GetMapping("/{ID}/name")
-	public ResponseEntity<String> findComputerNameById(@PathVariable Integer ID) throws DatabaseDAOException {
+	public ResponseEntity<String> findComputerNameById(@PathVariable Integer ID) {
 
 		return new ResponseEntity<>(computerService.findByID(ID).get().getName(),HttpStatus.OK);
 	}
 	
 	@PostMapping
-	public ResponseEntity<ComputerDTO> createComputer(@RequestBody ComputerDTO computerDTO) throws DatabaseDAOException {
+	public ResponseEntity<ComputerDTO> createComputer(@RequestBody ComputerDTO computerDTO) {
 		computerService.addDTO(computerDTO);
 		return new ResponseEntity<>(computerDTO,HttpStatus.OK);
 	}
 	
 	@DeleteMapping("/{ID}")
-	public ResponseEntity<Integer> deleteComputer(@PathVariable Integer ID) throws DatabaseDAOException {
+	public ResponseEntity<Integer> deleteComputer(@PathVariable Integer ID) {
 		computerService.delete(ID);
 		return new ResponseEntity<>(ID,HttpStatus.OK);
 	}
 	
 	@PutMapping("/{ID}")
-	public ResponseEntity<ComputerDTO> updateComputer(@RequestBody ComputerDTO computerDTO) throws DatabaseDAOException {
+	public ResponseEntity<ComputerDTO> updateComputer(@RequestBody ComputerDTO computerDTO) {
 		computerService.updateDTO(computerDTO);
 		return new ResponseEntity<>(computerDTO,HttpStatus.OK);
 	}
