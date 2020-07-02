@@ -33,7 +33,7 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
 		http
         //HTTP Basic authentication
         .httpBasic()
-        .and()
+        .and().cors().and()
         .authorizeRequests()
         .antMatchers("/", "/login", "/logoutSuccessful").permitAll()
         
