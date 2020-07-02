@@ -117,7 +117,7 @@ public class Paginate {
 		
 		NbRowComputer = computerService.getNbRows();
 		computerList.clear();
-		computerList = computerService.findAllPaginateOrder(pageIterator * pageSize, pageSize, orderBy);
+		computerList = fromDTOToComputerAsList(computerService.findAllPaginateOrder(pageIterator * pageSize, pageSize, orderBy));
 		maxPage = Math.ceil(NbRowComputer / pageSize);
 		searchTerm = null;
 	}

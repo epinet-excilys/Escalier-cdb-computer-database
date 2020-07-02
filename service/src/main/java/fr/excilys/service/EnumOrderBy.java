@@ -1,10 +1,10 @@
 package fr.excilys.service;
 
 public enum EnumOrderBy {
-	COMPUTER_DAO("computer.name"),
-	INTRODUCED_DATE_DAO("computer.introducedDate"),
-	DISCONTINUED_DATE_DAO("computer.discontinuedDate"),
-	COMPANY_DAO("company.name");
+	COMPUTER_DAO("computer.name NULLS LAST"),
+	INTRODUCED_DATE_DAO("computer.introducedDate NULLS LAST"),
+	DISCONTINUED_DATE_DAO("computer.discontinuedDate NULLS LAST"),
+	COMPANY_DAO("company.name NULLS LAST");
 	
 	private String message;
 

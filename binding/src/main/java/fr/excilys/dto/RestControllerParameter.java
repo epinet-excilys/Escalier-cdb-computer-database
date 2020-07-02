@@ -6,6 +6,7 @@ import org.springframework.stereotype.Service;
 public class RestControllerParameter {
 	
 	private String search;
+	private String orderBy;
 	
 	private int page;
 	private int size;
@@ -16,6 +17,12 @@ public class RestControllerParameter {
 	}
 	public void setSearch(String search) {
 		this.search = search;
+	}
+	public String getOrderBy() {
+		return orderBy;
+	}
+	public void setOrderBy(String orderBy) {
+		this.orderBy = orderBy;
 	}
 	public int getPage() {
 		return page;
@@ -29,7 +36,5 @@ public class RestControllerParameter {
 	public void setSize(int size) {
 		this.size = size;
 	}
-	
-
 	
 }

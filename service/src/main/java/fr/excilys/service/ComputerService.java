@@ -42,6 +42,7 @@ public class ComputerService {
 	public void add(Computer computer) throws DatabaseDAOException{
 		computerDAO.create(computer);
 	}
+
 	@Transactional
 	public void addDTO(ComputerDTO computerDTO) {
 		Computer computerToCreate = computerMapper.fromComputerDTOToComputer(computerDTO);
@@ -87,13 +88,13 @@ public class ComputerService {
 	}
 	
 	@Transactional
-	public List<Computer> findAllPaginateOrder(int ligneDebutOffSet, int taillePage, String order) throws DatabaseDAOException{
+	public List<ComputerDTO> findAllPaginateOrder(int ligneDebutOffSet, int taillePage, String order) throws DatabaseDAOException{
 		
 		String orderBy = getCorrectOrder(order.toUpperCase());
 		List<Computer> listComputer = new ArrayList<>();
 		listComputer = computerDAO.findAllPaginateOrder(ligneDebutOffSet, taillePage,orderBy);
 		
-		return listComputer;
+		return converttoDTOwithMap(listComputer);
 	}
 
 	@Transactional

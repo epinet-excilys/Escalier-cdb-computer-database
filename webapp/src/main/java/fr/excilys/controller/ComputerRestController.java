@@ -38,6 +38,20 @@ public class ComputerRestController {
 
 	}
 	
+	@GetMapping("/numbers")
+	public ResponseEntity<Integer> getNBComput(){
+		
+		return new ResponseEntity<>(computerService.getNbRows(),HttpStatus.OK);
+
+	}
+	
+	@GetMapping(params = {"search"})
+	public ResponseEntity<Integer> getNBComput(RestControllerParameter restControllerParameter){
+		
+		return new ResponseEntity<>(computerService.getNbRowsSearch(restControllerParameter.getSearch()),HttpStatus.OK);
+
+	}
+	
 	//Correspond To "http://localhost:8080/cdb-computer-database/computers?page=1&size=10"
 	@GetMapping(params = {"page","size"})
 	public ResponseEntity<List<ComputerDTO>> getComputPaginated(RestControllerParameter restControllerParameter){
@@ -54,6 +68,17 @@ public class ComputerRestController {
 		return new ResponseEntity<>(computerService.findAllPaginateSearchLike(restControllerParameter.getSearch()
 				,restControllerParameter.getPage()
 				,restControllerParameter.getSize()),HttpStatus.OK);
+
+	}
+	
+	//Correspond To "http://localhost:8080/cdb-computer-database/computers?page=1&size=10&orderBy=name"
+	@GetMapping(params = {"page","size","orderBy"})
+	public ResponseEntity<List<ComputerDTO>> getComputOrderByPaginated(RestControllerParameter restControllerParameter){
+		
+		return new ResponseEntity<>(computerService.findAllPaginateOrder(
+				restControllerParameter.getPage()
+				,restControllerParameter.getSize()
+				,restControllerParameter.getOrderBy()),HttpStatus.OK);
 
 	}
 	
