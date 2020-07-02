@@ -117,7 +117,7 @@ public class Paginate {
 		
 		NbRowComputer = computerService.getNbRows();
 		computerList.clear();
-		computerList = fromDTOToComputerAsList(computerService.findAllPaginateOrder(pageIterator * pageSize, pageSize, orderBy));
+		computerList = fromDTOToComputerAsList(computerService.findAllPaginateOrder(pageIterator , pageSize, orderBy));
 		maxPage = Math.ceil(NbRowComputer / pageSize);
 		searchTerm = null;
 	}
@@ -126,7 +126,7 @@ public class Paginate {
 		
 		NbRowComputer = computerService.getNbRowsSearch(searchTerm);
 		computerList.clear();
-		computerList =  fromDTOToComputerAsList(computerService.findAllPaginateSearchLike(searchTerm, pageIterator * pageSize, pageSize));
+		computerList =  fromDTOToComputerAsList(computerService.findAllPaginateSearchLike(searchTerm, pageIterator, pageSize));
 		maxPage = Math.ceil(NbRowComputer / pageSize);
 		orderBy = null;
 	}
@@ -135,7 +135,7 @@ public class Paginate {
 		
 		NbRowComputer = computerService.getNbRows();
 		computerList.clear();
-		computerList =  fromDTOToComputerAsList(computerService.getAllPaginateComput(pageIterator * pageSize, pageSize));
+		computerList =  fromDTOToComputerAsList(computerService.getAllPaginateComput(pageIterator, pageSize));
 		maxPage = Math.ceil(NbRowComputer / pageSize);
 		orderBy = null;
 		searchTerm = null;

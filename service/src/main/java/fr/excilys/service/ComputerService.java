@@ -78,13 +78,13 @@ public class ComputerService {
 
 	@Transactional
 	public List<ComputerDTO> getAllPaginateComput(int ligneDebutOffSet, int taillePage) throws DatabaseDAOException{
-		return converttoDTOwithMap(computerDAO.findAllPaginate(ligneDebutOffSet, taillePage));
+		return converttoDTOwithMap(computerDAO.findAllPaginate(ligneDebutOffSet * taillePage, taillePage));
 
 	}
 	
 	@Transactional
 	public List<ComputerDTO> findAllPaginateSearchLike(String search, int ligneDebutOffSet, int taillePage) throws DatabaseDAOException{
-		return converttoDTOwithMap(computerDAO.findAllPaginateSearchLike(search,ligneDebutOffSet, taillePage));
+		return converttoDTOwithMap(computerDAO.findAllPaginateSearchLike(search,ligneDebutOffSet * taillePage, taillePage));
 	}
 	
 	@Transactional
@@ -92,7 +92,7 @@ public class ComputerService {
 		
 		String orderBy = getCorrectOrder(order.toUpperCase());
 		List<Computer> listComputer = new ArrayList<>();
-		listComputer = computerDAO.findAllPaginateOrder(ligneDebutOffSet, taillePage,orderBy);
+		listComputer = computerDAO.findAllPaginateOrder(ligneDebutOffSet * taillePage, taillePage,orderBy);
 		
 		return converttoDTOwithMap(listComputer);
 	}
@@ -105,7 +105,7 @@ public class ComputerService {
 	
 	@Transactional
 	public int getNbRowsSearch(String search) throws DatabaseDAOException{
-
+		
 		return (int)computerDAO.getNbRowSearch(search);
 	}
 	

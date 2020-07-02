@@ -60,6 +60,12 @@ public class CompanyService {
 		return optionalCompanyDTO;
 	}
 	
+	@Transactional
+	public void add(CompanyDTO companyDTO) throws DatabaseDAOException{
+		
+		companyDAO.create(companyMapper.fromCompanyDTOToCompany(companyDTO));
+	}
+	
 	
 
 	@Transactional
@@ -76,6 +82,11 @@ public class CompanyService {
 		return listCompany.stream()
 		.map(company -> companyMapper.fromCompanyToCompanyDTO(company))
 		.collect(Collectors.toList());
+	}
+
+	public List<CompanyDTO> getAllPaginateCompany(int page, int size) {
+		
+		return converttoDTOwithMap(companyDAO.findAllPaginate(page*size, size));
 	}
 
 

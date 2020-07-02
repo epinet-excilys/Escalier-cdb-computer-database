@@ -2,7 +2,9 @@ package fr.excilys.dto;
 
 import org.apache.commons.lang3.builder.ReflectionToStringBuilder;
 import org.apache.commons.lang3.builder.ToStringStyle;
+import org.springframework.stereotype.Component;
 
+@Component
 public class AddAndEditComputerParameterDTO {
 	private String computerId;
 	private String computerName;

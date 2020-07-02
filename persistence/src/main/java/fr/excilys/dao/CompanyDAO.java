@@ -1,10 +1,8 @@
 package fr.excilys.dao;
 
 import java.util.List;
-import java.util.Optional;
 
 import javax.persistence.TypedQuery;
-import javax.sql.DataSource;
 
 import org.hibernate.HibernateException;
 import org.hibernate.Query;
@@ -14,10 +12,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.dao.DataAccessException;
 import org.springframework.jdbc.InvalidResultSetAccessException;
-import org.springframework.jdbc.core.namedparam.MapSqlParameterSource;
-import org.springframework.jdbc.core.namedparam.NamedParameterJdbcTemplate;
 import org.springframework.stereotype.Repository;
-import org.springframework.transaction.annotation.Transactional;
 
 import fr.excilys.exception.DatabaseDAOException;
 import fr.excilys.exception.EnumErrorSQL;
@@ -26,12 +21,48 @@ import fr.excilys.model.Computer;
 
 @Repository
 public class CompanyDAO {
+	
+	private final int valueOKTransaction = 1;
+	private final int valueFailTransaction = 0;
 
 	public static Logger LOGGER = LoggerFactory.getLogger(CompanyDAO.class);
 	private SessionFactory sessionFactory;
 
 	public CompanyDAO(SessionFactory sessionFactory) {
 		this.sessionFactory = sessionFactory;
+	}
+	
+	public int create(Company company) {
+
+		if (company != null) {
+			if (!company.getName().isEmpty()) {
+				try {
+					
+					Session session;
+					try {
+					    session = sessionFactory.getCurrentSession();
+					} catch (HibernateException e) {
+					    session = sessionFactory.openSession();
+					}
+					
+					
+					session.save(company);
+					//TODO Stop-gap mesure, must be reimplemented
+					return valueOKTransaction;
+					
+					
+				} catch (InvalidResultSetAccessException invalidResultSetAccessException) {
+					LOGGER.error(EnumErrorSQL.BDD_WRONG_SQL_SYNTAX.getMessage()
+							+ invalidResultSetAccessException.getMessage());
+				} catch (DataAccessException DataAccessException) {
+					LOGGER.error(EnumErrorSQL.BDD_ACCESS_LOG.getMessage() + DataAccessException.getMessage());
+				} catch (NullPointerException npException) {
+					LOGGER.error(EnumErrorSQL.BDD_NULL_OBJECT_LOG.getMessage() + npException.getMessage());
+				}
+			}
+			throw new DatabaseDAOException("Create");
+		}
+		throw new DatabaseDAOException("ComputerNull");
 	}
 
  
@@ -125,6 +156,35 @@ public class CompanyDAO {
 			LOGGER.error(EnumErrorSQL.BDD_ACCESS_LOG.getMessage() + DataAccessException.getMessage());
 		}
 		throw new DatabaseDAOException("NbRows in Company");
-	}	
+	}
+
+	public List<Company> findAllPaginate(int ligneStartOffSet, int size) {
+		try {
+			Session session ;
+			try {
+			    session = sessionFactory.getCurrentSession();
+			} catch (HibernateException e) {
+			    session = sessionFactory.openSession();
+			}
+			String hqlCommand = EnumHQLCommand.GET_ALL_STATEMENT_COMPANY.getMessage();
+			@SuppressWarnings("unchecked")
+			TypedQuery<Company> query = (TypedQuery<Company>) session.createQuery(hqlCommand);
+			query.setFirstResult(getValidEntry(ligneStartOffSet));
+			query.setMaxResults(size);
+			
+			return query.getResultList();
+
+		} catch (InvalidResultSetAccessException invalidResultSetAccessException) {
+			LOGGER.error(EnumErrorSQL.BDD_WRONG_SQL_SYNTAX.getMessage() + invalidResultSetAccessException.getMessage());
+		} catch (DataAccessException DataAccessException) {
+			LOGGER.error(EnumErrorSQL.BDD_ACCESS_LOG.getMessage() + DataAccessException.getMessage());
+		}
+		throw new DatabaseDAOException("FindAllPaginate");
+	}
+	
+	private int getValidEntry(int offsetPaginate) {
+		return (offsetPaginate > 0) ? offsetPaginate : 0;
+	}
+
 
 }
