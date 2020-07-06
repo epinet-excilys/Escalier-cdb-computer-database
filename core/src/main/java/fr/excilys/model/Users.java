@@ -9,6 +9,7 @@ import javax.persistence.Table;
 
 import org.apache.commons.lang3.builder.ReflectionToStringBuilder;
 import org.apache.commons.lang3.builder.ToStringStyle;
+import org.springframework.security.core.userdetails.UserDetails;
 
 @Entity
 @Table(name = "users")
@@ -26,6 +27,11 @@ public class Users {
 
     public Users() {
     	
+    }
+    
+    public Users(UserDetails userDetail) {
+    	this.password = userDetail.getPassword();
+    	this.username = userDetail.getUsername();
     }
     
     public Users(String username, String password) {

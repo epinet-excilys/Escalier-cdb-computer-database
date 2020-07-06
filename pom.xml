@@ -30,6 +30,10 @@
 		<hibernate-version>5.4.2.Final</hibernate-version>
 		<rest.version>2.1.1</rest.version>
 		<jackson.version>2.11.0</jackson.version>
+		<!-- -->
+		<jwtVersions>0.9.0</jwtVersions>
+		<auth0Versio>1.5.0</auth0Versio>
+		<auth0SpringSecurityApi>1.0.0</auth0SpringSecurityApi>
 
 	</properties>
 
@@ -155,12 +159,12 @@
 			<scope>provided</scope>
 		</dependency>
 
-		  <dependency>
-            <groupId>io.jsonwebtoken</groupId>
-            <artifactId>jjwt</artifactId>
-            <version>0.9.1</version>
-        </dependency>
-        
+		<dependency>
+			<groupId>io.jsonwebtoken</groupId>
+			<artifactId>jjwt</artifactId>
+			<version>0.9.1</version>
+		</dependency>
+
 	</dependencies>
 
 
