@@ -7,6 +7,7 @@ import fr.excilys.model.Users;
 import java.util.HashSet;
 import java.util.Set;
 
+import org.springframework.security.core.userdetails.User;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Component;
 
@@ -26,6 +27,14 @@ public class UserMapper {
 		UserRole userRole = new UserRole(userDTO.getUsername(), userDTO.getRole());
 		
 		return userRole;
+	}
+
+	public UserDTO fromUserToUserDTO(Users users) {
+		UserDTO userDTOToReturn = new UserDTO();
+		userDTOToReturn.setPassword(users.getPassword());
+		userDTOToReturn.setUsername(users.getUsername());
+		
+		return userDTOToReturn;
 	}
 
 

@@ -120,6 +120,25 @@ public class ComputerRestController {
 			return new ResponseEntity<>(responseHeaders, HttpStatus.INTERNAL_SERVER_ERROR);
 		}
 	}
+	
+	// Correspond to 
+	// http://localhost:8080/cdb-computer-database/computers?search=mac&page=1&size=10&orderBy=name
+	@GetMapping(params = {"search", "page", "size", "orderBy" })
+	public ResponseEntity<List<ComputerDTO>> getComputOrderByPaginatedAndSearch(
+			RestControllerParameter restControllerParameter) {
+
+		try {
+
+			return new ResponseEntity<>(computerService.findAllPaginateOrderAndSearch(
+					restControllerParameter.getSearch(),
+					restControllerParameter.getPage(),
+					restControllerParameter.getSize(), restControllerParameter.getOrderBy()), HttpStatus.OK);
+		} catch (DatabaseDAOException databaseDAOException) {
+			HttpHeaders responseHeaders = new HttpHeaders();
+			responseHeaders.set("ExceptionError", databaseDAOException.getMessage());
+			return new ResponseEntity<>(responseHeaders, HttpStatus.INTERNAL_SERVER_ERROR);
+		}
+	}
 
 	@GetMapping("/{ID}")
 	public ResponseEntity<ComputerDTO> findByID(@PathVariable Integer ID) {

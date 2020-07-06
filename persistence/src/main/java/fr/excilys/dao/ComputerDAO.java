@@ -6,16 +6,15 @@ import java.util.List;
 
 import javax.persistence.TypedQuery;
 
+import org.hibernate.HibernateException;
 import org.hibernate.Query;
 import org.hibernate.Session;
 import org.hibernate.SessionFactory;
-import org.hibernate.HibernateException;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.dao.DataAccessException;
 import org.springframework.jdbc.InvalidResultSetAccessException;
 import org.springframework.stereotype.Repository;
-import org.springframework.transaction.annotation.Transactional;
 
 import fr.excilys.exception.DatabaseDAOException;
 import fr.excilys.exception.EnumErrorSQL;
@@ -264,6 +263,33 @@ public class ComputerDAO {
 			LOGGER.error(EnumErrorSQL.BDD_ACCESS_LOG.getMessage() + DataAccessException.getMessage());
 		}
 		throw new DatabaseDAOException("FindAllPaginateOrder");
+	}
+	
+	public List<Computer> findAllPaginateSearchLikeAndOrder(String search, int ligneDebutOffSet, int taillePage, String orderBy) {
+
+		try {
+			
+			Session session ;
+			try {
+			    session = sessionFactory.getCurrentSession();
+			} catch (HibernateException e) {
+			    session = sessionFactory.openSession();
+			}
+			String hqlCommand = EnumHQLCommand.GET_ALL_PAGINATE_ORDER_LIKE_AND_SEARCH_NAME_STATEMENT.getMessage() + orderBy;
+			@SuppressWarnings("unchecked")
+			TypedQuery<Computer> query = (TypedQuery<Computer>) session.createQuery(hqlCommand);
+			query.setFirstResult(ligneDebutOffSet);
+			query.setMaxResults(taillePage);
+			query.setParameter("search", setSearchTermsInQuerySQL(search));
+			
+			return query.getResultList();
+
+		} catch (InvalidResultSetAccessException invalidResultSetAccessException) {
+			LOGGER.error(EnumErrorSQL.BDD_WRONG_SQL_SYNTAX.getMessage() + invalidResultSetAccessException.getMessage());
+		} catch (DataAccessException DataAccessException) {
+			LOGGER.error(EnumErrorSQL.BDD_ACCESS_LOG.getMessage() + DataAccessException.getMessage());
+		}
+		throw new DatabaseDAOException("FindAllPaginateSearchAndOrder");
 	}
 
 	public long getNbRow() {

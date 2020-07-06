@@ -1,7 +1,5 @@
 package fr.excilys.config;
 
-import javax.servlet.ServletContext;
-import javax.servlet.ServletRegistration;
 import javax.sql.DataSource;
 
 import org.springframework.context.annotation.Bean;
@@ -14,9 +12,6 @@ import org.springframework.orm.hibernate5.HibernateTransactionManager;
 import org.springframework.orm.hibernate5.LocalSessionFactoryBean;
 import org.springframework.transaction.PlatformTransactionManager;
 import org.springframework.transaction.annotation.EnableTransactionManagement;
-import org.springframework.web.WebApplicationInitializer;
-import org.springframework.web.context.support.AnnotationConfigWebApplicationContext;
-import org.springframework.web.servlet.DispatcherServlet;
 
 
 @Configuration

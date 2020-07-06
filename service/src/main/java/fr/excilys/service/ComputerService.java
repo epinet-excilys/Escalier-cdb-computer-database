@@ -96,6 +96,16 @@ public class ComputerService {
 		
 		return converttoDTOwithMap(listComputer);
 	}
+	
+	@Transactional
+	public List<ComputerDTO> findAllPaginateOrderAndSearch(String search,int ligneDebutOffSet, int taillePage, String order) throws DatabaseDAOException{
+		
+		String orderBy = getCorrectOrder(order.toUpperCase());
+		List<Computer> listComputer = new ArrayList<>();
+		listComputer = computerDAO.findAllPaginateSearchLikeAndOrder(search,ligneDebutOffSet * taillePage, taillePage,orderBy);
+		
+		return converttoDTOwithMap(listComputer);
+	}
 
 	@Transactional
 	public int getNbRows() throws DatabaseDAOException{

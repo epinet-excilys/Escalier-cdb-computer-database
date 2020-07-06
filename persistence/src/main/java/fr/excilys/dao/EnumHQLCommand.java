@@ -7,6 +7,8 @@ public enum EnumHQLCommand {
 	GET_ALL_STATEMENT("SELECT computer FROM Computer computer LEFT JOIN computer.company"),
 	GET_ALL_PAGINATE_ORDER_LIKE_NAME_STATEMENT(
 			"SELECT computer FROM Computer computer LEFT JOIN computer.company WHERE computer.name LIKE :search"),
+	GET_ALL_PAGINATE_ORDER_LIKE_AND_SEARCH_NAME_STATEMENT(
+			"SELECT computer FROM Computer computer LEFT JOIN computer.company WHERE computer.name LIKE :search ORDER BY "),
 	GET_ALL_PAGINATE_ORDER_BY_STATEMENT(
 			"SELECT computer FROM Computer computer LEFT JOIN computer.company company ORDER BY "),
 	GET_NB_ROW_STATEMENT("SELECT count(computer.id) FROM Computer computer"),
@@ -16,22 +18,19 @@ public enum EnumHQLCommand {
 	DELETE_STATEMENT_COMPUTER_WHERE_COMPANY(" DELETE FROM Computer computer WHERE computer.company.id = :id"),
 	GET_STATEMENT_COMPANY("SELECT company FROM Company company where company.id = :idCompany"),
 	GET_NB_ROW_STATEMENT_COMPANY("SELECT count(company.id) FROM Company company"),
-	ADD_USER("SELECT user FROM Users user WHERE user.username = :username"), 
+	ADD_USER("SELECT user FROM Users user WHERE user.username = :username"),
 	GET_USER_ROLE("SELECT userRole FROM UserRole userRole WHERE userRole.username = :username");
-	
-	
-	private String message; 
-	
+
+	private String message;
+
 	EnumHQLCommand(String message) {
-		
+
 		this.message = message;
 	}
-	
+
 	public String getMessage() {
-		
+
 		return this.message;
 	}
-	
-	
 
 }

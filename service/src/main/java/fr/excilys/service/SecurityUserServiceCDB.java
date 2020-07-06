@@ -2,6 +2,7 @@ package fr.excilys.service;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.stream.Collectors;
 
 import javax.transaction.Transactional;
 
@@ -76,6 +77,11 @@ public class SecurityUserServiceCDB  implements UserDetailsService {
 		userDao.createUser(userMapper.fromUserDTOtoUser(userDTO));
 		userDao.createUserRole(userMapper.fromUserDTOtoUserRole(userDTO));
 		
+	}
+	
+	public List<UserDTO> getAll() {
+		
+		return userDao.getAllUser().stream().map(users -> userMapper.fromUserToUserDTO(users)).collect(Collectors.toList());
 	}
 
 	
