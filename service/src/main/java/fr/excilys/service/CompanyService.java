@@ -88,6 +88,11 @@ public class CompanyService {
 		
 		return converttoDTOwithMap(companyDAO.findAllPaginate(page*size, size));
 	}
+	
+	@Transactional
+	public List<CompanyDTO> findAllPaginateSearchLike(String search, int ligneDebutOffSet, int taillePage) throws DatabaseDAOException{
+		return converttoDTOwithMap(companyDAO.findAllPaginateSearchLike(search,ligneDebutOffSet * taillePage, taillePage));
+	}
 
 
 }

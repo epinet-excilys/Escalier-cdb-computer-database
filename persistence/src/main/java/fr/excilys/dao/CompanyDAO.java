@@ -133,6 +133,33 @@ public class CompanyDAO {
 		}
 			throw new DatabaseDAOException("findAll in Company");
 	}
+	
+	public List<Company> findAllPaginateSearchLike(String search, int ligneDebutOffSet, int taillePage) {
+
+		try {
+			
+			Session session ;
+			try {
+			    session = sessionFactory.getCurrentSession();
+			} catch (HibernateException e) {
+			    session = sessionFactory.openSession();
+			}
+			String hqlCommand = EnumHQLCommand.GET_ALL_PAGINATE_ORDER_LIKE_NAME_STATEMENT_IN_COMPANY.getMessage();
+			@SuppressWarnings("unchecked")
+			TypedQuery<Company> query = (TypedQuery<Company>) session.createQuery(hqlCommand);
+			query.setFirstResult(ligneDebutOffSet);
+			query.setMaxResults(taillePage);
+			query.setParameter("search", setSearchTermsInQuerySQL(search));
+			
+			return query.getResultList();
+
+		} catch (InvalidResultSetAccessException invalidResultSetAccessException) {
+			LOGGER.error(EnumErrorSQL.BDD_WRONG_SQL_SYNTAX.getMessage() + invalidResultSetAccessException.getMessage());
+		} catch (DataAccessException DataAccessException) {
+			LOGGER.error(EnumErrorSQL.BDD_ACCESS_LOG.getMessage() + DataAccessException.getMessage());
+		}
+		throw new DatabaseDAOException("FindAllPaginateSearch");
+	}
 
 
 	public int getNbRow() {
@@ -184,6 +211,10 @@ public class CompanyDAO {
 	
 	private int getValidEntry(int offsetPaginate) {
 		return (offsetPaginate > 0) ? offsetPaginate : 0;
+	}
+	
+	private String setSearchTermsInQuerySQL(String search) {
+		return '%' + search + '%';
 	}
 
 

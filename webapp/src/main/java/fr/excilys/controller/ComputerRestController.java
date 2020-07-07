@@ -21,7 +21,7 @@ import fr.excilys.exception.DatabaseDAOException;
 import fr.excilys.service.ComputerService;
 
 @RestController
-@CrossOrigin(origins="**")
+@CrossOrigin(origins="*" ,allowedHeaders ="*")
 @RequestMapping("/computers")
 public class ComputerRestController {
 

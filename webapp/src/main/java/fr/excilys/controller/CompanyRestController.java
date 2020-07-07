@@ -15,12 +15,13 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 import fr.excilys.dto.CompanyDTO;
+import fr.excilys.dto.ComputerDTO;
 import fr.excilys.dto.RestControllerParameter;
 import fr.excilys.exception.DatabaseDAOException;
 import fr.excilys.service.CompanyService;
 
 @RestController
-@CrossOrigin(origins="**")
+@CrossOrigin(origins="*", allowedHeaders ="*")
 @RequestMapping("/companies")
 public class CompanyRestController {
 
@@ -79,6 +80,25 @@ public class CompanyRestController {
 		}
 
 	}
+	
+
+	// Correspond To
+	// "http://localhost:8080/cdb-computer-database/companies?search=inch&page=1&size=10"
+	@GetMapping(params = { "search", "page", "size" })
+	public ResponseEntity<List<CompanyDTO>> getCompanySearchPaginated(RestControllerParameter restControllerParameter) {
+
+		try {
+
+			return new ResponseEntity<>(companyService.findAllPaginateSearchLike(restControllerParameter.getSearch(),
+					restControllerParameter.getPage(), restControllerParameter.getSize()), HttpStatus.OK);
+
+		} catch (DatabaseDAOException databaseDAOException) {
+			HttpHeaders responseHeaders = new HttpHeaders();
+			responseHeaders.set("ExceptionError", databaseDAOException.getMessage());
+			return new ResponseEntity<>(responseHeaders, HttpStatus.INTERNAL_SERVER_ERROR);
+		}
+	}
+	
 
 	@DeleteMapping("/{ID}")
 	public ResponseEntity<Integer> deleteCompany(@PathVariable Integer ID) {

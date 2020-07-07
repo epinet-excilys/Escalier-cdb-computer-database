@@ -15,6 +15,7 @@ import org.springframework.security.config.http.SessionCreationPolicy;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
+import org.springframework.web.cors.CorsConfiguration;
 
 import fr.excilys.jwtToken.JwtTokenAuthorizationOncePerRequestFilter;
 import fr.excilys.jwtToken.JwtUnAuthorizedResponseAuthenticationEntryPoint;
@@ -55,14 +56,15 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
 	@Override
 	protected void configure(HttpSecurity http) throws Exception {
 		
-		http.csrf().disable().exceptionHandling()
+		http.cors().configurationSource(request -> new CorsConfiguration().applyPermitDefaultValues())
+		.and().csrf().disable().exceptionHandling()
 		.authenticationEntryPoint(jwtUnAuthorizedResponseAuthenticationEntryPoint).and().sessionManagement()
 		.sessionCreationPolicy(SessionCreationPolicy.STATELESS).and().authorizeRequests().anyRequest()
 		.authenticated();
 		
 		http.addFilterBefore(jwtTokenAuthorization, UsernamePasswordAuthenticationFilter.class);
 		
-		http.headers().frameOptions().sameOrigin().cacheControl();
+		http.headers().frameOptions().sameOrigin();
 
 	}
 
@@ -77,7 +79,10 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
             .antMatchers(
                 HttpMethod.POST,
                 "/login"
-            )
+            ).antMatchers(
+                    HttpMethod.POST,
+                    "/users"
+                )
             .antMatchers(HttpMethod.OPTIONS, "/**");
 	}
 

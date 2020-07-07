@@ -14,6 +14,7 @@ public enum EnumHQLCommand {
 	GET_NB_ROW_STATEMENT("SELECT count(computer.id) FROM Computer computer"),
 	GET_NB_ROW_LIKE_STATEMENT("SELECT count(computer.id) FROM Computer computer WHERE computer.name LIKE :search"),
 	GET_ALL_STATEMENT_COMPANY("SELECT company FROM Company company "),
+	GET_ALL_PAGINATE_ORDER_LIKE_NAME_STATEMENT_IN_COMPANY("SELECT company FROM Company company WHERE company.name LIKE :search"),
 	DELETE_STATEMENT_COMPANY("DELETE from Company company where company. id=:id"),
 	DELETE_STATEMENT_COMPUTER_WHERE_COMPANY(" DELETE FROM Computer computer WHERE computer.company.id = :id"),
 	GET_STATEMENT_COMPANY("SELECT company FROM Company company where company.id = :idCompany"),

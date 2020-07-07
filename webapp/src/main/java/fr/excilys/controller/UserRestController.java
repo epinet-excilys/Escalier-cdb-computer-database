@@ -18,7 +18,7 @@ import fr.excilys.exception.DatabaseDAOException;
 import fr.excilys.service.SecurityUserServiceCDB;
 
 @RestController
-@CrossOrigin(origins="**")
+@CrossOrigin(origins="*", allowedHeaders ="*")
 @RequestMapping("/users")
 public class UserRestController {
 	
@@ -27,7 +27,7 @@ public class UserRestController {
     private SecurityUserServiceCDB securityUserServiceCDB;
 
 	@PostMapping
-	public ResponseEntity<UserDTO> createComputer(@RequestBody UserDTO userDTO) {
+	public ResponseEntity<UserDTO> createUser(@RequestBody UserDTO userDTO) {
 
 		try {
 			System.out.println(userDTO.toString());
