@@ -83,10 +83,6 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
                     HttpMethod.POST,
                     "/users"
                 )
-            .antMatchers(
-                    HttpMethod.POST,
-                    "/bleu"
-                )
             .antMatchers(HttpMethod.OPTIONS, "/**");
 	}
 

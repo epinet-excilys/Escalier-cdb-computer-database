@@ -31,7 +31,9 @@ public class UserRestController {
 	public ResponseEntity<UserDTO> createUser(@RequestBody UserDTO userDTO) {
 
 		try {
+			securityUserServiceCDB.addUser(userDTO);
 			return new ResponseEntity<>(userDTO, HttpStatus.CREATED);
+
 		} catch (DatabaseDAOException databaseDAOException) {
 			HttpHeaders responseHeaders = new HttpHeaders();
 			responseHeaders.set("ExceptionError", databaseDAOException.getMessage());
