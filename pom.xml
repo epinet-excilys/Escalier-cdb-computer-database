@@ -34,6 +34,10 @@
 		<jwtVersions>0.9.0</jwtVersions>
 		<auth0Versio>1.5.0</auth0Versio>
 		<auth0SpringSecurityApi>1.0.0</auth0SpringSecurityApi>
+		<javax-servlet-version>2.3.1</javax-servlet-version>
+		<java-jwt-version>0.9.1</java-jwt-version>
+		
+		
 
 	</properties>
 
@@ -155,14 +159,14 @@
 		<dependency>
 			<groupId>javax.servlet.jsp</groupId>
 			<artifactId>javax.servlet.jsp-api</artifactId>
-			<version>2.3.1</version>
+			<version>${javax-servlet-version}</version>
 			<scope>provided</scope>
 		</dependency>
 
 		<dependency>
 			<groupId>io.jsonwebtoken</groupId>
 			<artifactId>jjwt</artifactId>
-			<version>0.9.1</version>
+			<version>${java-jwt-version}</version>
 		</dependency>
 
 	</dependencies>

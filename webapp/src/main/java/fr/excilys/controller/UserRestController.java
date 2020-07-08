@@ -26,14 +26,11 @@ public class UserRestController {
 	@Autowired
     private SecurityUserServiceCDB securityUserServiceCDB;
 	
-	
 
 	@PostMapping
 	public ResponseEntity<UserDTO> createUser(@RequestBody UserDTO userDTO) {
 
 		try {
-			System.out.println(userDTO.toString());
-			securityUserServiceCDB.addUser(userDTO);
 			return new ResponseEntity<>(userDTO, HttpStatus.CREATED);
 		} catch (DatabaseDAOException databaseDAOException) {
 			HttpHeaders responseHeaders = new HttpHeaders();

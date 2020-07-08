@@ -4,12 +4,10 @@ import java.util.Objects;
 
 import javax.naming.AuthenticationException;
 
-import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.web.bind.annotation.CrossOrigin;
-import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -35,16 +33,13 @@ public class LoginRestController {
 
 	@PostMapping
 	public ResponseEntity<?> login(@RequestBody UserDTO authentificationRequest) throws AuthenticationException {
+		
 		authenticate(authentificationRequest.getUsername(), authentificationRequest.getPassword());
 		final UserDetails userDetails = usersService.loadUserByUsername(authentificationRequest.getUsername());
 		final String token = jwtTokenUtil.generateToken(userDetails);
 		return ResponseEntity.ok(token);
 	}
-
-	@ExceptionHandler({ AuthenticationException.class })
-	public ResponseEntity<String> handleAuthenticationException(AuthenticationException e) {
-		return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body(e.getMessage());
-	}
+	
 
 	private void authenticate(String username, String password) throws AuthenticationException {
 		Objects.requireNonNull(username);
