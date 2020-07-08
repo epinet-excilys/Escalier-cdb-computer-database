@@ -25,6 +25,8 @@ public class UserRestController {
 	
 	@Autowired
     private SecurityUserServiceCDB securityUserServiceCDB;
+	
+	
 
 	@PostMapping
 	public ResponseEntity<UserDTO> createUser(@RequestBody UserDTO userDTO) {
