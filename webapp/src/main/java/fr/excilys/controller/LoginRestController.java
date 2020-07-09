@@ -45,9 +45,10 @@ public class LoginRestController {
 		Objects.requireNonNull(username);
 		Objects.requireNonNull(password);
 
+
 		try {
 			 UserDetails userDetails = usersService.loadUserByUsername(username);
-			 if(password.equals(userDetails.getPassword())) {
+			 if(!password.equals(userDetails.getPassword())) {
 				 throw new AuthenticationException("INVALID_CREDENTIALS" );
 			 }
 		} catch (UsernameNotFoundException usernameNotFoundException) {
