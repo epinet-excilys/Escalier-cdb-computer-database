@@ -20,7 +20,7 @@
 		<chLogBack-version>1.2.3</chLogBack-version>
 		<mysql-version>8.0.18</mysql-version>
 		<mockito-version>2.10.0</mockito-version>
-		<junit-version>4.12</junit-version>
+		<junit-version>4.13.1</junit-version>
 		<h2-version>1.4.195</h2-version>
 		<servlet-api-version>4.0.0-b06</servlet-api-version>
 		<jstl-version>1.2</jstl-version>
