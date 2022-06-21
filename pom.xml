@@ -18,7 +18,7 @@
 		<slf4j-api-version>1.7.5</slf4j-api-version>
 		<slf4j-version>1.7.5</slf4j-version>
 		<chLogBack-version>1.2.3</chLogBack-version>
-		<mysql-version>8.0.18</mysql-version>
+		<mysql-version>8.0.28</mysql-version>
 		<mockito-version>2.10.0</mockito-version>
 		<junit-version>4.12</junit-version>
 		<h2-version>1.4.195</h2-version>
